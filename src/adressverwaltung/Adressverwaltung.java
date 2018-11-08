@@ -5,6 +5,11 @@
  */
 package adressverwaltung;
 
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.FocusTraversalPolicy;
+import java.util.*;
+
 /**
  *
  * @author chris
@@ -17,3 +22,4 @@ public class Adressverwaltung {
     
     
 }
+
