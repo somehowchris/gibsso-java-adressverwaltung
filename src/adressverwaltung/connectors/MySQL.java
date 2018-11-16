@@ -5,10 +5,28 @@
  */
 package adressverwaltung.connectors;
 
+import adressverwaltung.models.Address;
+import java.util.ArrayList;
+
 /**
  *
  * @author chris
  */
-public class MySQL {
+public class MySQL implements Connector{
+
+    @Override
+    public Address getById(int id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public ArrayList<Address> getAll() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public ArrayList<Address> search(String input) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

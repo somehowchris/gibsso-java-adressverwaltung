@@ -5,10 +5,21 @@
  */
 package adressverwaltung.connectors;
 
+import adressverwaltung.models.Address;
+import java.util.ArrayList;
+
 /**
  *
  * @author chris
  */
-public class Connector {
+public interface Connector {
     
+    /**
+     *
+     * @param id
+     * @return
+     */
+    public Address getById(int id);
+    public ArrayList<Address> getAll();
+    public ArrayList<Address> search(String input);
 }

@@ -12,7 +12,7 @@ import java.util.ArrayList;
  *
  * @author chris
  */
-public class FileSystem implements Connector{
+public class Firebase implements Connector{
 
     @Override
     public Address getById(int id) {

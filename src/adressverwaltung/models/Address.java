@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package adressverwaltung.connectors;
+package adressverwaltung.models;
 
 /**
  *
  * @author chris
  */
-public class File {
+public class Address {
     
 }
