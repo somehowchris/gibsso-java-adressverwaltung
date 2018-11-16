@@ -3,39 +3,37 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package adressverwaltung.connectors;
+package adressverwaltung.repository;
 
-import adressverwaltung.models.Adress;
 import java.util.ArrayList;
-
+import adressverwaltung.models.Ort;
 /**
  *
  * @author chris
  */
-public class Firebase implements Connector{
+public class OrtRepository implements Repository<Ort>{
 
     @Override
-    public Object get(String table) {
+    public Ort getById(int id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    @Override
+    public Ort[] getAll() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object get(int id, String table) {
+    public Ort update(int id, Ort obj) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object put(Object obj, int id, String table) {
+    public boolean delete(int id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object post(Object obj, String table) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Object delete(int id, String table) {
+    public Ort create(Ort obj) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

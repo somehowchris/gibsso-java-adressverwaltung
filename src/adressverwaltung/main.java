@@ -5,15 +5,20 @@
  */
 package adressverwaltung;
 
+import adressverwaltung.connectors.Connector;
+
 /**
  *
  * @author chris
  */
-public class Adressverwaltung {
-
+public class main {
+    public static Connector c;
     /**
      * @param args the command line arguments
      */
+    
+    public static void main(String[] args){
+    }
     
     
 }

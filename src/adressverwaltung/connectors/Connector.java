@@ -5,21 +5,22 @@
  */
 package adressverwaltung.connectors;
 
-import adressverwaltung.models.Address;
 import java.util.ArrayList;
+import adressverwaltung.models.Adress;
 
 /**
  *
  * @author chris
  */
 public interface Connector {
-    
     /**
      *
      * @param id
      * @return
      */
-    public Address getById(int id);
-    public ArrayList<Address> getAll();
-    public ArrayList<Address> search(String input);
+    public Object get(String table);
+    public Object get(int id,String table);
+    public Object put(Object obj,int id,String table);
+    public Object post(Object obj, String table);
+    public Object delete(int id, String table);
 }

@@ -5,7 +5,7 @@
  */
 package adressverwaltung.connectors;
 
-import adressverwaltung.models.Address;
+import adressverwaltung.models.Adress;
 import java.util.ArrayList;
 
 /**
@@ -15,18 +15,29 @@ import java.util.ArrayList;
 public class MySQL implements Connector{
 
     @Override
-    public Address getById(int id) {
+    public Object get(String table) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public ArrayList<Address> getAll() {
+    public Object get(int id, String table) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public ArrayList<Address> search(String input) {
+    public Object put(Object obj, int id, String table) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public Object post(Object obj, String table) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object delete(int id, String table) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     
 }

@@ -3,39 +3,38 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package adressverwaltung.connectors;
+package adressverwaltung.repository;
+
 
 import adressverwaltung.models.Adress;
-import java.util.ArrayList;
-
 /**
  *
  * @author chris
  */
-public class Firebase implements Connector{
+public class AdressRepository implements Repository<Adress>{
 
     @Override
-    public Object get(String table) {
+    public Adress getById(int id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object get(int id, String table) {
+    public Adress[] getAll() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object put(Object obj, int id, String table) {
+    public Adress update(int id, Adress obj) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object post(Object obj, String table) {
+    public boolean delete(int id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object delete(int id, String table) {
+    public Adress create(Adress obj) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
