@@ -25,3 +25,5 @@ hs_err_pid*
 *.iml
 *.xml
 /build/
+/src/adressverwaltung/Adressverwaltung/build/
+/src/adressverwaltung/Adressverwaltung/nbproject/private/
