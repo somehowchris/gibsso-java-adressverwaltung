@@ -14,7 +14,7 @@ import java.io.PrintStream;
 
 
 public class Person {
-    private int anr;
+    private int pid;
     private String name;
     private String vorname;
     private String strasse;
@@ -23,12 +23,19 @@ public class Person {
     private String handy;
     private String email;
     
-    public Person() {
-        
+    public Person(int pid, String name, String vorname, String strasse, int oid, String telefon, String handy, String email) {
+        this.pid = pid;
+        this.name = name;
+        this.vorname = vorname;
+        this.strasse = strasse;
+        this.oid = oid;
+        this.telefon = telefon;
+        this.handy = handy;
+        this.email = email;
     }
-
-    public Person(int anr, String name, String vorname, String strasse, int oid, String telefon, String handy, String email) {
-        this.anr = anr;
+    
+    public Person( String name, String vorname, String strasse, int oid, String telefon, String handy, String email) {
+        this.pid = -1;
         this.name = name;
         this.vorname = vorname;
         this.strasse = strasse;
@@ -39,8 +46,8 @@ public class Person {
     }
     
     
-    public void setAnr(int anr) {
-        this.anr=anr;
+    public void setPid(int pid) {
+        this.pid=pid;
     }
     
     public void setName(String name) {
@@ -97,5 +104,9 @@ public class Person {
 
     public void setTelefon(String telefon) {
         this.telefon = telefon;
+    }
+
+    public int getPid() {
+        return pid;
     }
 }

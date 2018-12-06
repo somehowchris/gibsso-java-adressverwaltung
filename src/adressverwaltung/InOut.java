@@ -33,23 +33,54 @@ public class InOut {
         }
     }
 
-    public ArrayList<Person> searchPerson(String vorname, String name) {
+    public ArrayList<Person> searchPerson(String vorname, String name) throws SQLException {
         ArrayList<Person> rows  = new ArrayList<>();
-        try {
+        
             Statement stmt = c.createStatement();
-            String query = "select id, name, vorname, strasse, oid, telefon, handy, email from Adresses where name like '%"+name+"%' and vorname like '%"+vorname+"%'";
+            String query = "select pid, name, vorname, strasse, oid, telefon, handy, email from Adresses where name like '%"+name+"%' and vorname like '%"+vorname+"%'";
             ResultSet rs = stmt.executeQuery(query);
             while (rs.next()) {
-                Person p = new Person(rs.getInt("id"),rs.getString("name"),rs.getString("vorname"),rs.getString("strasse"),rs.getInt("oid"),rs.getString("telefon"),rs.getString("handy"),rs.getString("email"));
+                Person p = new Person(rs.getInt("pid"),rs.getString("name"),rs.getString("vorname"),rs.getString("strasse"),rs.getInt("oid"),rs.getString("telefon"),rs.getString("handy"),rs.getString("email"));
                 rows.add(p);
             }
-        } catch (SQLException e) {
-            System.out.println(e);
-            System.exit(0);
-        }
 
         return rows;
     }
     
+    public void savePerson(Person p) throws SQLException
+    {
+        if(p.getPid() == -1)
+        {
+            Statement stmt = c.createStatement();
+            String query = "insert into Adresses (name, vorname, strasse, oid, telefon, handy, email) values ("
+                            + "'"+p.getName()+"',"
+                            + "'"+p.getVorname()+"',"
+                            + "'"+p.getStrasse()+"',"
+                            + "null"+","
+                            + "'"+p.getTelefon()+"',"
+                            + "'"+p.getHandy()+"',"
+                            + "'"+p.getEmail()+"')";
+            stmt.execute(query);
+        }else{
+            Statement stmt = c.createStatement();
+            String query = "update Adresses set"
+                            + " name = '"+p.getName()+"',"
+                            + " vorname = '"+p.getVorname()+"',"
+                            + " strasse = '"+p.getStrasse()+"',"
+                            + " oid = null,"
+                            + " telefon = '"+p.getTelefon()+"',"
+                            + " handy = '"+p.getHandy()+"',"
+                            + " email = '"+p.getEmail()+"'"
+                            + " where pid = '"+p.getPid()+"'";
+            stmt.execute(query);
+        }
     
+    }
+    
+    public void deletePerson(Person p) throws SQLException
+    {
+        Statement stmt = c.createStatement();
+            String query = "delete from Adresses where pid = '"+p.getPid()+"'";
+            stmt.execute(query);
+    }
 }

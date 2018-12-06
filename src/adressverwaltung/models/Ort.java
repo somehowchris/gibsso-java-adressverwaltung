@@ -37,7 +37,4 @@ public class Ort {
     public void setPlz(int plz) {
         this.plz = plz;
     }
-    
-    
-    
 }

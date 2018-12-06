@@ -9,7 +9,10 @@ import adressverwaltung.models.Person;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.FocusTraversalPolicy;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -18,6 +21,7 @@ import java.util.ArrayList;
 public class AdressveraltunsForm extends javax.swing.JFrame {
 
     InOut dataLayer;
+    Person cp;
     /**
      * Creates new form AdressveraltunsForm
      */
@@ -137,9 +141,19 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
         });
 
         jButton4.setText("Löschen");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Speichern");
         jButton3.setPreferredSize(new java.awt.Dimension(80, 29));
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Suchen");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -149,6 +163,11 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
         });
 
         jButton1.setText("Neu");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -290,13 +309,62 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         
-        ArrayList<Person> px = dataLayer.searchPerson(jVorname.getText(),jName.getText());
+        ArrayList<Person> px = null;
+        try {
+            px = dataLayer.searchPerson(jVorname.getText(),jName.getText());
+        } catch (SQLException ex) {
+            Logger.getLogger(AdressveraltunsForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Person p = px.get(0);
-        jName.setText(p.getName());
-        jVorname.setText(p.getVorname());
-        jTelNr.setText(p.getHandy());
+        cp = p;
+        ShowPerson();
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        try {
+            IntoPerson();
+            dataLayer.savePerson(cp);
+        } catch (SQLException ex) {
+            Logger.getLogger(AdressveraltunsForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        cp = new Person("","", "", -1, "", "", "");
+        ShowPerson();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        IntoPerson();
+        try {
+            dataLayer.deletePerson(cp);
+        } catch (SQLException ex) {
+            Logger.getLogger(AdressveraltunsForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        cp = new Person("","", "", -1, "", "", "");
+        ShowPerson();
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void ShowPerson()
+    {
+        jName.setText(cp.getName());
+        jVorname.setText(cp.getVorname());
+        jStrasse.setText(cp.getStrasse());
+        jHandy.setText(cp.getTelefon());
+        jTelNr.setText(cp.getHandy());
+        jEmail.setText(cp.getEmail());
+    }
+    
+    private void IntoPerson()
+    {
+        cp.setName(jName.getText());
+        cp.setVorname(jVorname.getText());
+        cp.setStrasse(jStrasse.getText());
+        cp.setTelefon(jHandy.getText());
+        cp.setHandy(jTelNr.getText());
+        cp.setEmail(jEmail.getText());
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
