@@ -6,25 +6,25 @@
 package adressverwaltung.repository;
 
 
-import adressverwaltung.models.Adress;
+import adressverwaltung.models.Person;
 /**
  *
  * @author chris
  */
-public class AdressRepository implements Repository<Adress>{
+public class AdressRepository implements Repository<Person>{
 
     @Override
-    public Adress getById(int id) {
+    public Person getById(int id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Adress[] getAll() {
+    public Person[] getAll() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Adress update(int id, Adress obj) {
+    public Person update(int id, Person obj) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -34,7 +34,7 @@ public class AdressRepository implements Repository<Adress>{
     }
 
     @Override
-    public Adress create(Adress obj) {
+    public Person create(Person obj) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

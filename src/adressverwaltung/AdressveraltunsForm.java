@@ -5,6 +5,7 @@
  */
 package adressverwaltung;
 
+import adressverwaltung.models.Person;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.FocusTraversalPolicy;
@@ -16,11 +17,15 @@ import java.util.ArrayList;
  */
 public class AdressveraltunsForm extends javax.swing.JFrame {
 
+    InOut dataLayer;
     /**
      * Creates new form AdressveraltunsForm
      */
-    public AdressveraltunsForm() {
+    public AdressveraltunsForm(InOut dtl) {
         initComponents();
+        
+        dataLayer = dtl;
+        
         ArrayList<Component> comp = new ArrayList<>();
         comp.add(this.jName);
         comp.add(this.jVorname);
@@ -31,6 +36,16 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
         comp.add(this.jEmail);
         
         setFocusTraversalPolicy(new FtpFormPerson(comp));
+    } 
+    
+    public void fillPerson(Person p)
+    {
+        jName.setText(p.getName());
+        jVorname.setText(p.getVorname());
+        jStrasse.setText(p.getStrasse());
+        jTelNr.setText(p.getTelefon());
+        jHandy.setText(p.getHandy());
+        jEmail.setText(p.getEmail());
     }
 
     /**
@@ -127,6 +142,11 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
         jButton3.setPreferredSize(new java.awt.Dimension(80, 29));
 
         jButton2.setText("Suchen");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton1.setText("Neu");
 
@@ -268,40 +288,14 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jVornameActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AdressveraltunsForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AdressveraltunsForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AdressveraltunsForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AdressveraltunsForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new AdressveraltunsForm().setVisible(true);
-            }
-        });
-    }
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        
+        ArrayList<Person> px = dataLayer.searchPerson(jVorname.getText(),jName.getText());
+        Person p = px.get(0);
+        jName.setText(p.getName());
+        jVorname.setText(p.getVorname());
+        jTelNr.setText(p.getHandy());
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

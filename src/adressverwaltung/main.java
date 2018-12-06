@@ -5,19 +5,21 @@
  */
 package adressverwaltung;
 
-import adressverwaltung.connectors.Connector;
-
 /**
  *
  * @author chris
  */
 public class main {
-    public static Connector c;
+    public static InOut c;
+    public static AdressveraltunsForm a;
     /**
      * @param args the command line arguments
      */
     
     public static void main(String[] args){
+        c = new InOut("jdbc:mysql://localhost:3306/Adressverwaltung", "root", "root");
+        a = new AdressveraltunsForm(c);
+        a.setVisible(true);
     }
     
     
