@@ -17,9 +17,7 @@ public class main {
      */
     
     public static void main(String[] args){
-        c = new InOut("jdbc:mysql://localhost:3306/Adressverwaltung", "root", "root");
-        a = new AdressveraltunsForm(c);
-        a.setVisible(true);
+        new InOut(null);
     }
     
     

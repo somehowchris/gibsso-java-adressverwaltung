@@ -27,3 +27,4 @@ hs_err_pid*
 /build/
 /src/adressverwaltung/Adressverwaltung/build/
 /src/adressverwaltung/Adressverwaltung/nbproject/private/
+/nbproject/private/
