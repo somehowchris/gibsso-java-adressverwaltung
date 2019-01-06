@@ -5,6 +5,10 @@
  */
 package adressverwaltung;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author chris
@@ -17,7 +21,11 @@ public class main {
      */
     
     public static void main(String[] args){
-        new InOut(null);
+        try {
+            new InOut(null);
+        } catch (SQLException ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     

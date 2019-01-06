@@ -7,7 +7,6 @@ package adressverwaltung.controller;
 
 import adressverwaltung.models.Ort;
 import adressverwaltung.models.Person;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +24,6 @@ public class DataBaseController implements Controller {
     
     EntityManager em;
     EntityManagerFactory emf;
-    
-    //TODO test delete with references
     
     public DataBaseController(HashMap<String, String> connectionValues) {
         Map properties = new HashMap();
@@ -107,7 +104,9 @@ public class DataBaseController implements Controller {
             em.getTransaction().begin();
             em.remove(ort);
             em.getTransaction().commit();
-        }        
+        }else{
+            throw new Error("References on this place still exist "+ort.getOid());
+        }
         
     }
 

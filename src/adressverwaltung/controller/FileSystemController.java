@@ -25,9 +25,8 @@ public class FileSystemController implements Controller{
 
     String fsdbdir;
     
-    
-    // TODO add redis map
-    HashMap<String, Object> redismap = new HashMap<>();
+    HashMap<Long, Person> redismapPeople = new HashMap<>();
+    HashMap<Long, Ort> redismapOrt = new HashMap<>();
     
     public FileSystemController(String dir,String sep) {
         if(!new File(dir+sep+".fsdb"+sep).exists()) new File(dir+sep+".fsdb"+sep).mkdir();
@@ -36,6 +35,7 @@ public class FileSystemController implements Controller{
     
     @Override
     public Person getPerson(Long id) {
+        if(redismapPeople.containsKey(id))return redismapPeople.get(id);
         File f = new File(fsdbdir+id+".person");
         if(f.exists()){
             BufferedReader reader;
@@ -73,6 +73,7 @@ public class FileSystemController implements Controller{
                 i++;
             }
             reader.close();
+            redismapPeople.put(id, p);
             return p;
         } catch (IOException e) {
         }
@@ -82,6 +83,7 @@ public class FileSystemController implements Controller{
 
     @Override
     public Ort getOrt(Long id) {
+        if(redismapOrt.containsKey(id))return redismapOrt.get(id);
         File f = new File(fsdbdir+id+".ort");
         if(f.exists()){
             BufferedReader reader;
@@ -105,7 +107,7 @@ public class FileSystemController implements Controller{
                 i++;
             }
             reader.close();
-            
+            redismapOrt.put(id,o);
             return o;
         } catch (IOException e) {
             e.printStackTrace();
@@ -166,6 +168,7 @@ public class FileSystemController implements Controller{
         String data = person.getId()+linesep+person.getName()+linesep+person.getVorname()+linesep+person.getStrasse()+linesep+person.getOid()+linesep+person.getTelefon()+linesep+person.getHandy()+linesep+person.getEmail();
         String file = fsdbdir+person.getId()+".person";
         writeData(data, file);
+        redismapPeople.put(person.getId(), person);
     }
     
     @Override
@@ -174,6 +177,7 @@ public class FileSystemController implements Controller{
         String data = ort.getOid()+linesep+ort.getName()+linesep+ort.getPlz();
         String file = fsdbdir+ort.getOid()+".ort";
         writeData(data, file);
+        redismapOrt.put(ort.getOid(), ort);
     }
 
     @Override
@@ -182,6 +186,7 @@ public class FileSystemController implements Controller{
         long references = getPeople(new Integer(countPeople()+""), 0).stream().filter(el -> el.getOid() == ort.getOid()).count();
         if(f.exists() && references == 0 ){
             f.delete();
+            redismapOrt.remove(ort.getOid());
         }else{
             throw new Error("References on this place still exist "+ort.getOid());
         }
@@ -190,7 +195,10 @@ public class FileSystemController implements Controller{
     @Override
     public void deletePerson(Person person) {
         File f = new File(fsdbdir+person.getId()+".person");
-        if(f.exists())f.delete();
+        if(f.exists()){
+            f.delete();
+            redismapPeople.remove(person.getId());
+        }
     }
 
     @Override
@@ -261,6 +269,22 @@ public class FileSystemController implements Controller{
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+    
+    public void clean(){
+        String[] ortlist = searchInDir(".ort");
+        String[] people = searchInDir(".person");
+        for(String pstrg : people){
+            Person p = new Person();
+            p.setId(new Long(pstrg.replace(".person", "")));
+            deletePerson(p);
+        }
+        
+        for(String ostrg : ortlist){
+            Ort o = new Ort();
+            o.setOid(new Long(ostrg.replace(".ort", "")));
+            deleteOrt(o);
         }
     }
 }

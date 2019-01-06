@@ -309,15 +309,6 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         
-        ArrayList<Person> px = null;
-        try {
-            px = dataLayer.searchPerson(jVorname.getText(),jName.getText());
-        } catch (SQLException ex) {
-            Logger.getLogger(AdressveraltunsForm.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Person p = px.get(0);
-        cp = p;
-        ShowPerson();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
