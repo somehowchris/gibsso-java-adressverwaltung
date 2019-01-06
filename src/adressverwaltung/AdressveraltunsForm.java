@@ -6,11 +6,13 @@
 package adressverwaltung;
 
 import adressverwaltung.models.Person;
+import adressverwaltung.models.Ort;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.FocusTraversalPolicy;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,15 +22,22 @@ import java.util.logging.Logger;
  */
 public class AdressveraltunsForm extends javax.swing.JFrame {
 
-    InOut dataLayer;
+    InOut ioLayer;
     Person cp;
+    int count = 0;
+    int current = 1;
+    boolean search = false;
+    List<Person> searchResults;
+    List<Ort> ortlist;
+    Ort o;
     /**
      * Creates new form AdressveraltunsForm
      */
-    public AdressveraltunsForm(InOut dtl) {
+    public AdressveraltunsForm() throws SQLException {
         initComponents();
-        
-        dataLayer = dtl;
+        this.setTitle("Adressverwaltung");
+        ioLayer = new InOut(null);
+        this.setVisible(true);
         
         ArrayList<Component> comp = new ArrayList<>();
         comp.add(this.jName);
@@ -40,17 +49,23 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
         comp.add(this.jEmail);
         
         setFocusTraversalPolicy(new FtpFormPerson(comp));
+        count = search ? searchResults.size() : (int) ioLayer.countPeople();
+        setPlayerButtons();
+        
+        if(count >0){
+            setPerson(ioLayer.getPeople(1, 0).get(0));
+        }else{
+            cp = new Person();
+        }
+        
+        ortlist = ioLayer.getPlaces();
+        
+        if(new Long(cp.getOid()+"") != null){
+            System.out.println(cp.getOid());
+            o = ioLayer.getOrt(cp.getOid());
+            if(o != null)selectOrt(o.getName()+" "+o.getPlz());
+        }
     } 
-    
-    public void fillPerson(Person p)
-    {
-        jName.setText(p.getName());
-        jVorname.setText(p.getVorname());
-        jStrasse.setText(p.getStrasse());
-        jTelNr.setText(p.getTelefon());
-        jHandy.setText(p.getHandy());
-        jEmail.setText(p.getEmail());
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -83,6 +98,7 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jPLZ = new javax.swing.JComboBox<>();
+        jLabel9 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -102,27 +118,17 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
 
         jLabel8.setText("Email:");
 
-        jName.setText("Ihr Name");
         jName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jNameActionPerformed(evt);
             }
         });
 
-        jVorname.setText("Ihr Vorname");
         jVorname.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jVornameActionPerformed(evt);
             }
         });
-
-        jStrasse.setText("Beispiel strasse");
-
-        jTelNr.setText("Tel Nr.");
-
-        jHandy.setText("Handy Nr.");
-
-        jEmail.setText("email");
 
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -209,6 +215,8 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
 
         jPLZ.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+        jLabel9.setText("1/x");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -246,7 +254,9 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
                                 .addComponent(jTelNr, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE)))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 136, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(17, 17, 17))
         );
         layout.setVerticalGroup(
@@ -284,19 +294,30 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel8)
                             .addComponent(jEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(11, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel9)))
+                .addContainerGap(9, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
+        if(count >= current || current == count+1){
+           current--;
+           setPerson(search ? searchResults.get(current-1) : ioLayer.getPeople(1, current-1).get(0));
+           setPlayerButtons();
+       }
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
+       if(count > current){
+           current++;
+           setPerson(search ? searchResults.get(current-1) : ioLayer.getPeople(1, current-1).get(0));
+           setPlayerButtons();
+       }
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jNameActionPerformed
@@ -308,36 +329,64 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jVornameActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        
+        try {
+            search = true;
+            searchResults = ioLayer.searchPerson(cp.getVorname(), cp.getName());
+            if(searchResults.size() > 0){
+                count = searchResults.size();
+                current = 1;
+                setPerson(searchResults.get(0));
+                setPlayerButtons();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AdressveraltunsForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         try {
-            IntoPerson();
-            dataLayer.savePerson(cp);
+            castInputToCurrentPerson();
+            long id = ioLayer.savePerson(cp);
+            setPerson(ioLayer.getPerson(id));
+            count = search ? searchResults.size() : (int) ioLayer.countPeople();
+            setPlayerButtons();
         } catch (SQLException ex) {
             Logger.getLogger(AdressveraltunsForm.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        cp = new Person("","", "", -1, "", "", "");
-        ShowPerson();
+        cp = null;
+        search = false;
+        clearInputs();
+        current = count+1;
+        setPlayerButtons();
+        castInputToCurrentPerson();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        IntoPerson();
         try {
-            dataLayer.deletePerson(cp);
+            if(cp.getId() != null)ioLayer.deletePerson(cp);
+            if(search) searchResults.remove(cp);
+            cp = null;
+            count = search ? searchResults.size() : (int) ioLayer.countPeople();
+            if(count > 0){
+                while(current > count){
+                    current--;
+                }
+                setPerson(ioLayer.getPeople(1, current > 0 ? current-1 : 0).get(0));
+                setPlayerButtons();
+            }else{
+                clearInputs();
+                current = 1;
+                setPlayerButtons();
+            }
         } catch (SQLException ex) {
             Logger.getLogger(AdressveraltunsForm.class.getName()).log(Level.SEVERE, null, ex);
         }
-        cp = new Person("","", "", -1, "", "", "");
-        ShowPerson();
     }//GEN-LAST:event_jButton4ActionPerformed
 
-    private void ShowPerson()
-    {
+    private void showCurrentPerson(){
         jName.setText(cp.getName());
         jVorname.setText(cp.getVorname());
         jStrasse.setText(cp.getStrasse());
@@ -346,8 +395,17 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
         jEmail.setText(cp.getEmail());
     }
     
-    private void IntoPerson()
-    {
+    private void clearInputs(){
+        jName.setText("");
+        jVorname.setText("");
+        jStrasse.setText("");
+        jHandy.setText("");
+        jTelNr.setText("");
+        jEmail.setText("");
+    }
+    
+    private void castInputToCurrentPerson(){
+        if(cp == null)cp = new Person();
         cp.setName(jName.getText());
         cp.setVorname(jVorname.getText());
         cp.setStrasse(jStrasse.getText());
@@ -356,6 +414,15 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
         cp.setEmail(jEmail.getText());
     }
     
+    private void setPlayerButtons(){
+        jLabel9.setText(current > count ? "New Item" : current+"/"+count);
+        jButton5.setEnabled(current != 1);
+        jButton6.setEnabled(current < count);
+    }
+    private void setPerson(Person p){
+        cp = p;
+        showCurrentPerson();
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -373,6 +440,7 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     public javax.swing.JTextField jName;
     public javax.swing.JComboBox<String> jPLZ;
     private javax.swing.JPanel jPanel1;
@@ -380,6 +448,10 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
     public javax.swing.JTextField jTelNr;
     public javax.swing.JTextField jVorname;
     // End of variables declaration//GEN-END:variables
+
+    private void selectOrt(String ort) {
+        
+    }
 }
 
 class FtpFormPerson extends FocusTraversalPolicy

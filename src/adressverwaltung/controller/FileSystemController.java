@@ -163,21 +163,23 @@ public class FileSystemController implements Controller{
     }
 
     @Override
-    public void updatePerson(Person person) {
+    public Long updatePerson(Person person) {
         String linesep = System.getProperty("line.separator");
         String data = person.getId()+linesep+person.getName()+linesep+person.getVorname()+linesep+person.getStrasse()+linesep+person.getOid()+linesep+person.getTelefon()+linesep+person.getHandy()+linesep+person.getEmail();
         String file = fsdbdir+person.getId()+".person";
         writeData(data, file);
         redismapPeople.put(person.getId(), person);
+        return person.getId();
     }
     
     @Override
-    public void updateOrt(Ort ort) {
+    public Long updateOrt(Ort ort) {
         String linesep = System.getProperty("line.separator");
         String data = ort.getOid()+linesep+ort.getName()+linesep+ort.getPlz();
         String file = fsdbdir+ort.getOid()+".ort";
         writeData(data, file);
         redismapOrt.put(ort.getOid(), ort);
+        return ort.getOid();
     }
 
     @Override
@@ -217,6 +219,22 @@ public class FileSystemController implements Controller{
     }
 
     @Override
+    public ArrayList<Ort> getOrt() {
+        int offset = 0;
+        int amount = new Integer(countOrt()+"");
+        String[] consideredFiles = searchInDir(".ort");
+        
+        ArrayList<Ort> ortlist = new ArrayList<>();
+        try{
+            for(int i = offset;i<offset+amount;i++){
+                if(consideredFiles.length > i){
+                    ortlist.add(getOrt(new Long(consideredFiles[i].replace(".ort", ""))));
+                }
+            }
+        }catch(Exception e){}
+        return ortlist;
+    }
+    
     public ArrayList<Ort> getOrt(int amount, int offset) {
         String[] consideredFiles = searchInDir(".ort");
         

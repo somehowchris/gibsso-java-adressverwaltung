@@ -8,6 +8,7 @@ package adressverwaltung;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 
 /**
  *
@@ -20,12 +21,9 @@ public class main {
      * @param args the command line arguments
      */
     
-    public static void main(String[] args){
-        try {
-            new InOut(null);
-        } catch (SQLException ex) {
-            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public static void main(String[] args) throws SQLException{
+        JFrame adv = new AdressveraltunsForm();
+        adv.setVisible(true);
     }
     
     

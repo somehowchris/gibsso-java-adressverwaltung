@@ -29,9 +29,9 @@ public interface Controller {
 
   public Long insertOrt(Ort ort);
 
-  public void updatePerson(Person person);
+  public Long updatePerson(Person person);
 
-  public void updateOrt(Ort ort);
+  public Long updateOrt(Ort ort);
 
   public void deleteOrt(Ort ort);
 
@@ -39,8 +39,10 @@ public interface Controller {
 
   public List<Person> getPeople(int amount, int offset);
 
-  public List<Ort> getOrt(int amount, int offset);
+  public List<Ort> getOrt();
 
   public Long countOrt();
+  
   public Long countPeople();
+  
 }

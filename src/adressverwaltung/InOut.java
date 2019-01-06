@@ -19,8 +19,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -36,44 +34,22 @@ public class InOut {
         if(!new File(home).canRead()) home = System.getProperty("user.dir");
         if(dotEnv == null) dotEnv = new HashMap<>();
         File dotEnvFile = new File(home);
-        if (dotEnvFile.exists() && dotEnv.isEmpty() ? !(dotEnv = getDotEnv(home, sep)).isEmpty() : true){
-            c = new DataBaseController(dotEnv);
+        if (dotEnvFile.exists() && dotEnv.isEmpty() ? !(dotEnv = DotEnv.getDotEnv(home, sep)).isEmpty() : true){
+            c = dotEnv.get("DATABASE_USE").equals("true") ? new DataBaseController(dotEnv) : new FileSystemController(home, sep);
         }else{
             c = new FileSystemController(home, sep);
         }
-        try {
-            export();
-        } catch (Exception ex) {
-            Logger.getLogger(InOut.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
-
-    private HashMap<String, String> getDotEnv(String dir,String sep) {
-        HashMap<String, String> values = new HashMap<>();
-        BufferedReader reader;
-        try {
-            reader = new BufferedReader(new FileReader(dir + sep + ".env"));
-            List<String> keys = Arrays.asList("DATABASE_USER", "DATABASE_PASSWORD", "DATABASE_HOST", "DATABASE_PORT", "DATABASE_NAME");
-            String line = reader.readLine();
-            while (line != null) {
-                if (keys.contains(line.split("=")[0])) values.put(line.split("=")[0], line.split("=").length > 1 ? line.split("=")[1] : "");
-                line = reader.readLine();
-            }
-            reader.close();
-        } catch (IOException e) {
-        }
-        return values;
-    }
-
+    
     public List<Person> searchPerson(String vorname, String name) throws SQLException {
         return c.searchPerson(new Person(vorname, name));
     }
 
-    public void savePerson(Person p) throws SQLException {
+    public long savePerson(Person p) throws SQLException {
         if (p.getId() != null){
-            c.updatePerson(p);
+            return c.updatePerson(p);
         }else{
-            c.insertPerson(p);
+            return c.insertPerson(p);
         }
     }
 
@@ -105,19 +81,19 @@ public class InOut {
         c.deleteOrt(p);
     }
 
-    public List<Ort> getPlaces(int amount,int offset) {
-        return c.getOrt(amount, offset);
+    public List<Ort> getPlaces() {
+        return c.getOrt();
     }
 
     public Ort getOrt(Long id) {
         return c.getOrt(id);
     }
     
-    public Long countOrt(){
+    public long countOrt(){
         return c.countOrt();
     }
     
-    public Long countPeople(){
+    public long countPeople(){
         return c.countPeople();
     }
     

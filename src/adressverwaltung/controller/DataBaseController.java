@@ -15,6 +15,9 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 /**
  *
@@ -79,17 +82,19 @@ public class DataBaseController implements Controller {
     }
 
     @Override
-    public void updatePerson(Person person) {
+    public Long updatePerson(Person person) {
         em.getTransaction().begin();
         em.merge(person);
         em.getTransaction().commit();
+        return person.getId();
     }
 
     @Override
-    public void updateOrt(Ort ort) {
+    public Long updateOrt(Ort ort) {
         em.getTransaction().begin();
         em.merge(ort);
         em.getTransaction().commit();
+        return ort.getOid();
     }
 
     @Override
@@ -110,7 +115,6 @@ public class DataBaseController implements Controller {
         
     }
 
-
     @Override
     public void deletePerson(Person person) {
         em.getTransaction().begin();
@@ -125,17 +129,20 @@ public class DataBaseController implements Controller {
         query.setFirstResult(offset);
         return query.getResultList();
     }
+    
     @Override
-    public List<Ort> getOrt(int amount, int offset) {
-        TypedQuery<Ort> query = em.createQuery("SELECT o FROM Ort o",Ort.class);
-        query.setMaxResults(amount);
-        query.setFirstResult(offset);
-        return query.getResultList();
+    public List<Ort> getOrt() {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Ort> cq = cb.createQuery(Ort.class);
+        Root<Ort> rootEntry = cq.from(Ort.class);
+        CriteriaQuery<Ort> all = cq.select(rootEntry);
+        TypedQuery<Ort> allQuery = em.createQuery(all);
+        return allQuery.getResultList();
     }
 
     @Override
     public Long countOrt() {
-        String sql = "SELECT COUNT(o.oid) FROM Ort o";
+        String sql = "SELECT COUNT(o.plz) FROM Ort o";
         Query q = em.createQuery(sql);
         return (long)q.getSingleResult();
     }
