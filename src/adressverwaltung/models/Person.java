@@ -26,12 +26,12 @@ public class Person implements Serializable {
     private String name;
     private String vorname;
     private String strasse;
-    private int oid;
+    private long oid;
     private String telefon;
     private String handy;
     private String email;
 
-    public Person(String name, String vorname, String strasse, int oid, String telefon, String handy, String email) {
+    public Person(String name, String vorname, String strasse, long oid, String telefon, String handy, String email) {
         this.name = name;
         this.vorname = vorname;
         this.strasse = strasse;
@@ -89,7 +89,7 @@ public class Person implements Serializable {
         return name;
     }
 
-    public int getOid() {
+    public long getOid() {
         return oid;
     }
 

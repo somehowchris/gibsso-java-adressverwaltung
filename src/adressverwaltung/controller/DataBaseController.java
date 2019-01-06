@@ -26,6 +26,8 @@ public class DataBaseController implements Controller {
     EntityManager em;
     EntityManagerFactory emf;
     
+    //TODO test delete with references
+    
     public DataBaseController(HashMap<String, String> connectionValues) {
         Map properties = new HashMap();
         properties.put("javax.persistence.jdbc.driver", "com.mysql.jdbc.Driver");
@@ -96,8 +98,17 @@ public class DataBaseController implements Controller {
     @Override
     public void deleteOrt(Ort ort) {
         em.getTransaction().begin();
-        em.remove(ort);
+        String sql = "SELECT COUNT(p.pid) FROM Person p WHERE p.oid='"+ort.getOid()+"'";
+        Query q = em.createQuery(sql);
+        long count =  (long)q.getSingleResult();
         em.getTransaction().commit();
+        
+        if(count == 0){
+            em.getTransaction().begin();
+            em.remove(ort);
+            em.getTransaction().commit();
+        }        
+        
     }
 
 

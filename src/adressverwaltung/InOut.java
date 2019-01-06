@@ -61,10 +61,11 @@ public class InOut {
     }
 
     public void savePerson(Person p) throws SQLException {
-        if (p.getId() != null)
+        if (p.getId() != null){
             c.updatePerson(p);
-        else
+        }else{
             c.insertPerson(p);
+        }
     }
 
     public void deletePerson(Person p) throws SQLException {
@@ -84,10 +85,11 @@ public class InOut {
     }
 
     public void saveOrt(Ort p) throws SQLException {
-        if (p.getOid() != null)
+        if (p.getOid() != null){
             c.updateOrt(p);
-        else
+        }else{
             c.insertOrt(p);
+        }
     }
 
     public void deleteOrt(Ort p) throws SQLException {
@@ -105,7 +107,12 @@ public class InOut {
     public Long countOrt(){
         return c.countOrt();
     }
+    
     public Long countPeople(){
         return c.countPeople();
+    }
+    //TODO export
+    public File export(){
+        return null;
     }
 }
