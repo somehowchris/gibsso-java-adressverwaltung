@@ -3,25 +3,24 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package adressverwaltung;
+package adressverwaltung.operators;
 
 import adressverwaltung.models.Person;
 
 import java.util.*;
 import java.io.File;
-import java.sql.*;
 import adressverwaltung.controller.Controller;
 import adressverwaltung.controller.DataBaseController;
 import adressverwaltung.controller.FileSystemController;
 import adressverwaltung.models.Ort;
 import java.awt.Desktop;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 
 /**
- *
+ * A middleware class to operate with the Controller interface
  * @author Nicola Temporal
  */
 public class InOut {
@@ -99,12 +98,60 @@ public class InOut {
     
     public void export() throws Exception{
         String workDir = System.getProperty("user.dir");
-        String sep = System.getProperty("file.separator");
-        File f = new File(workDir+sep+"PeopleExport.csv");
+        String sep = System.getProperty("file.separator");    
+        
+        File f = new File(workDir+sep+"PeopleExport-"+getDate()+".csv");
         if(f.exists())f.delete();
         PrintWriter pw = new PrintWriter(f);
-        StringBuilder sb = new StringBuilder();
         
+        pw.append(getHeader());
+        pw.flush();
+        
+        Long count = c.countPeople();
+        HashMap<Long,Long> exportMap = new HashMap<>();
+        int perUnit = 100;
+        int amount = (int) (count/perUnit);
+        for(int i = 0;i<amount;i++){
+            exportMap.put((long)i*perUnit,(long)i*perUnit+(perUnit-1));
+        }
+        long left = count - amount*perUnit;
+        exportMap.put((long)amount*perUnit, (long)amount*perUnit+left-1);
+        
+        for(long l : exportMap.keySet()){
+            List<Person> people = getPeople(perUnit, (int) l);
+            pw.append(getDataFromPeopleArray(people));
+            pw.flush();
+        }
+        pw.close();
+        
+        openDesktop(f.getParentFile());
+    }
+    
+    public void searchExport(List<Person> people) throws Exception{
+        String workDir = System.getProperty("user.dir");
+        String sep = System.getProperty("file.separator");    
+        
+        File f = new File(workDir+sep+"SearchExport-"+getDate()+".csv");
+        if(f.exists())f.delete();
+        PrintWriter pw = new PrintWriter(f);
+        
+        pw.append(getHeader());
+        pw.flush();
+        
+        pw.append(getDataFromPeopleArray(people));
+        pw.flush();
+        pw.close();
+        
+        openDesktop(f.getParentFile());
+    }
+    
+    private void openDesktop(File dir) throws IOException{
+        Desktop desktop = Desktop.getDesktop();
+        desktop.open(dir);
+    }
+    
+    private String getHeader(){
+        StringBuilder sb = new StringBuilder();
         sb.append("ID");
         sb.append(";");
         sb.append("Name");
@@ -124,52 +171,40 @@ public class InOut {
         sb.append("Email");
         sb.append(";");
         sb.append("\n");
-        
-        Long count = c.countPeople();
-        HashMap<Long,Long> exportMap = new HashMap<>();
-        int perUnit = 100;
-        int amount = (int) (count/perUnit);
-        for(int i = 0;i<amount;i++){
-            exportMap.put((long)i*perUnit,(long)i*perUnit+(perUnit-1));
+        return sb.toString();
+    }
+    
+    private String getDataFromPeopleArray(List<Person> people){
+        StringBuilder sb = new StringBuilder();
+        for(Person p : people){
+            Ort o = null;
+            if(new Long(p.getOid()+"") != null)o = c.getOrt(p.getId());
+
+            sb.append(p.getId());
+            sb.append(";");
+            sb.append(p.getName() != null ? p.getName(): "");
+            sb.append(";");
+            sb.append(p.getVorname() != null ? p.getVorname(): "");
+            sb.append(";");
+            sb.append(p.getStrasse() != null ? p.getStrasse(): "");
+            sb.append(";");
+            sb.append(o != null ? o.getName() : "");
+            sb.append(";");
+            sb.append(o != null ? o.getPlz(): "");
+            sb.append(";");
+            sb.append(p.getTelefon() != null ? p.getTelefon() : "");
+            sb.append(";");
+            sb.append(p.getHandy() != null ? p.getHandy(): "");
+            sb.append(";");
+            sb.append(p.getEmail() != null ? p.getEmail(): "");
+            sb.append(";");
+            sb.append("\n");
         }
-        long left = count - amount*perUnit;
-        exportMap.put((long)amount*perUnit, (long)amount*perUnit+left-1);
-        
-        
-        for(long l : exportMap.keySet()){
-            List<Person> people = getPeople(perUnit, (int) l);
-            for(Person p : people){
-                Ort o = null;
-                if(new Long(p.getOid()+"") != null)o = c.getOrt(p.getId());
-                
-                sb.append(p.getId());
-                sb.append(";");
-                sb.append(p.getName() != null ? p.getName(): "");
-                sb.append(";");
-                sb.append(p.getVorname() != null ? p.getVorname(): "");
-                sb.append(";");
-                sb.append(p.getStrasse() != null ? p.getStrasse(): "");
-                sb.append(";");
-                sb.append(o != null ? o.getName() : "");
-                sb.append(";");
-                sb.append(o != null ? o.getPlz(): "");
-                sb.append(";");
-                sb.append(p.getTelefon() != null ? p.getTelefon() : "");
-                sb.append(";");
-                sb.append(p.getHandy() != null ? p.getHandy(): "");
-                sb.append(";");
-                sb.append(p.getEmail() != null ? p.getEmail(): "");
-                sb.append(";");
-                sb.append("\n");
-            }
-            pw.append(sb.toString());
-            pw.flush();
-            sb = new StringBuilder();
-        }
-        
-        pw.close();
-        
-        Desktop desktop = Desktop.getDesktop();
-        desktop.open(f.getParentFile());
+        return sb.toString();
+    }
+    private String getDate(){
+        SimpleDateFormat formatter = new SimpleDateFormat("dd_MM_yyyy_HH_mm_ss");
+        Date date = new Date();
+        return formatter.format(date);
     }
 }

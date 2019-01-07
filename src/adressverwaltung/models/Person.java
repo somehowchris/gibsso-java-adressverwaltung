@@ -26,7 +26,7 @@ public class Person implements Serializable {
     private String name;
     private String vorname;
     private String strasse;
-    private long oid;
+    private long oid= -1;
     private String telefon;
     private String handy;
     private String email;

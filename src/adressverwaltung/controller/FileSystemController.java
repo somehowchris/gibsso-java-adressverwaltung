@@ -18,8 +18,8 @@ import java.io.IOException;
 import java.util.HashMap;
 
 /**
- *
- * @author chris
+ * A File System Controller managing the data set in a .fsdb folder of the users home
+ * @author Christof Weickhardt
  */
 public class FileSystemController implements Controller{
 
@@ -33,6 +33,9 @@ public class FileSystemController implements Controller{
         fsdbdir = dir+sep+".fsdb"+sep;
     }
     
+    /**
+    * {@inheritDoc}
+    */
     @Override
     public Person getPerson(Long id) {
         if(redismapPeople.containsKey(id))return redismapPeople.get(id);
@@ -80,7 +83,10 @@ public class FileSystemController implements Controller{
         }
         return null;
     }
-
+    
+    /**
+    * {@inheritDoc}
+    */
     @Override
     public Ort getOrt(Long id) {
         if(redismapOrt.containsKey(id))return redismapOrt.get(id);
@@ -115,7 +121,10 @@ public class FileSystemController implements Controller{
         }
         return null;
     }
-
+    
+    /**
+    * {@inheritDoc}
+    */
     @Override
     public ArrayList<Person> searchPerson(Person person) {
         String[] files = searchInDir(".person");
@@ -126,7 +135,10 @@ public class FileSystemController implements Controller{
         }
         return people;
     }
-
+    
+    /**
+    * {@inheritDoc}
+    */
     @Override
     public ArrayList<Ort> searchOrt(Ort ort) {
        String[] files = searchInDir(".ort");
@@ -137,7 +149,10 @@ public class FileSystemController implements Controller{
         }
         return ortlist;
     }
-
+    
+    /**
+    * {@inheritDoc}
+    */
     @Override
     public Long insertPerson(Person person) {
         Long id = 0L;
@@ -149,7 +164,10 @@ public class FileSystemController implements Controller{
         updatePerson(person);
         return id;
     }
-
+    
+    /**
+    * {@inheritDoc}
+    */
     @Override
     public Long insertOrt(Ort ort) {
        Long id = 0L;
@@ -161,7 +179,10 @@ public class FileSystemController implements Controller{
        updateOrt(ort);
        return id;
     }
-
+    
+    /**
+    * {@inheritDoc}
+    */
     @Override
     public Long updatePerson(Person person) {
         String linesep = System.getProperty("line.separator");
@@ -172,6 +193,9 @@ public class FileSystemController implements Controller{
         return person.getId();
     }
     
+    /**
+    * {@inheritDoc}
+    */
     @Override
     public Long updateOrt(Ort ort) {
         String linesep = System.getProperty("line.separator");
@@ -181,7 +205,10 @@ public class FileSystemController implements Controller{
         redismapOrt.put(ort.getOid(), ort);
         return ort.getOid();
     }
-
+    
+    /**
+    * {@inheritDoc}
+    */
     @Override
     public void deleteOrt(Ort ort) {
         File f = new File(fsdbdir+ort.getOid()+".ort");
@@ -193,7 +220,10 @@ public class FileSystemController implements Controller{
             throw new Error("References on this place still exist "+ort.getOid());
         }
     }
-
+    
+    /**
+    * {@inheritDoc}
+    */
     @Override
     public void deletePerson(Person person) {
         File f = new File(fsdbdir+person.getId()+".person");
@@ -202,7 +232,10 @@ public class FileSystemController implements Controller{
             redismapPeople.remove(person.getId());
         }
     }
-
+    
+    /**
+    * {@inheritDoc}
+    */
     @Override
     public ArrayList<Person> getPeople(int amount, int offset) {
         String[] consideredFiles = searchInDir(".person");
@@ -217,7 +250,10 @@ public class FileSystemController implements Controller{
         }catch(Exception e){}
         return ortlist;
     }
-
+    
+    /**
+    * {@inheritDoc}
+    */
     @Override
     public ArrayList<Ort> getOrt() {
         int offset = 0;
@@ -235,6 +271,10 @@ public class FileSystemController implements Controller{
         return ortlist;
     }
     
+    /**
+    * {@inheritDoc}
+    */
+    @Override
     public ArrayList<Ort> getOrt(int amount, int offset) {
         String[] consideredFiles = searchInDir(".ort");
         
@@ -248,19 +288,32 @@ public class FileSystemController implements Controller{
         }catch(Exception e){}
         return ortlist;
     }
-
+    
+    /**
+    * {@inheritDoc}
+    */
     @Override
     public Long countOrt() {
         Long total = new Long(searchInDir(".ort").length);
         return total;
     }
-
+    
+    /**
+     * Uses the Hibernate Library to count the people data set in your data base
+    * {@inheritDoc}
+    */
     @Override
     public Long countPeople() {
         Long total = new Long(searchInDir(".person").length);
         return total;
     }
     
+    /**
+     * Searches for files wich contain a spefic character chain
+    * @param contains String welcher nach welchem im Namen aller vorhanden Dateien im fsdb Ordner gefiltert und gesucht werden soll
+    * @return Alle Dateinamen welche die angegebene Karakterreihenfolge beinhalten im fsdb ordner
+    * @see FilenameFilter
+    */
     private String[] searchInDir(String contains){
         return new File(fsdbdir).list(new FilenameFilter() {
             @Override
@@ -270,6 +323,13 @@ public class FileSystemController implements Controller{
         });
     }
     
+    /**
+     * Writes data to the file system
+    * @param data Angabe was geschrieben werden soll
+    * @param file Angabe an welchem Ort die Daten geschrieben werden sollen
+    * @see BufferedWriter
+    * @see FileWriter
+    */
     private void writeData(String data,String file){
         BufferedWriter br = null;
         FileWriter fr = null;
@@ -290,6 +350,11 @@ public class FileSystemController implements Controller{
         }
     }
     
+    /**
+     * Cleans all the local data on the file system related to this application
+    * @see BufferedWriter
+    * @see FileWriter
+    */
     public void clean(){
         String[] ortlist = searchInDir(".ort");
         String[] people = searchInDir(".person");

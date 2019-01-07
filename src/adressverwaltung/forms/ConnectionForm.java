@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package adressverwaltung;
+package adressverwaltung.forms;
 
+import adressverwaltung.operators.DotEnv;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
@@ -20,6 +21,7 @@ import java.util.logging.Logger;
  */
 public class ConnectionForm extends javax.swing.JFrame {
     boolean tested = false;
+    // TODO set "testing connection" to "clean local storage" if fs selected
     /**
      * Creates new form ConnectionForm
      */

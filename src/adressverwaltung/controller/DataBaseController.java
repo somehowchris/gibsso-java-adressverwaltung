@@ -20,8 +20,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 /**
- *
- * @author chris
+ * A Database controller using Hibernate to communicate with the database
+ * @author Christof Weickhardt
  */
 public class DataBaseController implements Controller {
     
@@ -42,29 +42,49 @@ public class DataBaseController implements Controller {
         }
         em = (EntityManager) emf.createEntityManager();
     }
-
+    
+    /**
+    *
+    * {@inheritDoc}
+    */
     @Override
     public Person getPerson(Long id) {
         return em.find(Person.class, id);
     }
-
+    
+    /**
+    *
+    * {@inheritDoc}
+    */
     @Override
     public Ort getOrt(Long id) {
         return em.find(Ort.class, id);
     }
-
+    
+    /**
+    *
+    * {@inheritDoc}
+    */
     @Override
     public List<Person> searchPerson(Person person) {
         TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p WHERE p.name LIKE '%"+person.getName()+"%' AND p.vorname LIKE '%"+person.getVorname()+"%'",Person.class);
         return query.getResultList();
     }
-
+    
+    /**
+    *
+    * {@inheritDoc}
+    */
     @Override
     public List<Ort> searchOrt(Ort ort) {
         TypedQuery<Ort> query = em.createQuery("SELECT o FROM Ort o WHERE plz LIKE '%"+ort.getPlz()+"%' AND name LIKE '%"+ort.getName()+"%'",Ort.class);
         return query.getResultList();
     }
-
+    
+    /**
+    *
+    * {@inheritDoc}
+    */
     @Override
     public Long insertPerson(Person person) {
       em.getTransaction().begin();
@@ -72,7 +92,11 @@ public class DataBaseController implements Controller {
       em.getTransaction().commit();
       return person.getId();
     }
-
+    
+    /**
+    *
+    * {@inheritDoc}
+    */
     @Override
     public Long insertOrt(Ort ort) {
       em.getTransaction().begin();
@@ -80,7 +104,11 @@ public class DataBaseController implements Controller {
       em.getTransaction().commit();
       return ort.getOid();
     }
-
+    
+    /**
+    *
+    * {@inheritDoc}
+    */
     @Override
     public Long updatePerson(Person person) {
         em.getTransaction().begin();
@@ -88,7 +116,11 @@ public class DataBaseController implements Controller {
         em.getTransaction().commit();
         return person.getId();
     }
-
+    
+    /**
+    *
+    * {@inheritDoc}
+    */
     @Override
     public Long updateOrt(Ort ort) {
         em.getTransaction().begin();
@@ -96,7 +128,11 @@ public class DataBaseController implements Controller {
         em.getTransaction().commit();
         return ort.getOid();
     }
-
+    
+    /**
+    *
+    * {@inheritDoc}
+    */
     @Override
     public void deleteOrt(Ort ort) {
         em.getTransaction().begin();
@@ -114,14 +150,22 @@ public class DataBaseController implements Controller {
         }
         
     }
-
+    
+    /**
+    *
+    * {@inheritDoc}
+    */
     @Override
     public void deletePerson(Person person) {
         em.getTransaction().begin();
         em.remove(person);
         em.getTransaction().commit();
     }
-
+    
+    /**
+    *
+    * {@inheritDoc}
+    */
     @Override
     public List<Person> getPeople(int amount, int offset) {
         TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p",Person.class);
@@ -130,6 +174,10 @@ public class DataBaseController implements Controller {
         return query.getResultList();
     }
     
+    /**
+    *
+    * {@inheritDoc}
+    */
     @Override
     public List<Ort> getOrt() {
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -139,14 +187,34 @@ public class DataBaseController implements Controller {
         TypedQuery<Ort> allQuery = em.createQuery(all);
         return allQuery.getResultList();
     }
-
+    
+    /**
+    *
+    * {@inheritDoc}
+    */
+    @Override
+    public List<Ort> getOrt(int amount, int offset) {
+        TypedQuery<Ort> query = em.createQuery("SELECT o FROM Ort o",Ort.class);
+        query.setMaxResults(amount);
+        query.setFirstResult(offset);
+        return query.getResultList();
+    }
+    
+    /**
+    *
+    * {@inheritDoc}
+    */
     @Override
     public Long countOrt() {
         String sql = "SELECT COUNT(o.plz) FROM Ort o";
         Query q = em.createQuery(sql);
         return (long)q.getSingleResult();
     }
-
+    
+    /**
+    *
+    * {@inheritDoc}
+    */
     @Override
     public Long countPeople() {
         String sql = "SELECT COUNT(p.pid) FROM Person p";

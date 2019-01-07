@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package adressverwaltung;
+package adressverwaltung.operators;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -17,10 +17,18 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- *
+ * A small class to store and update values of a .env file in the users home directory
  * @author chris
  */
 public class DotEnv {
+    
+    /**
+     * @param dir The directory in which the .env file is place
+     * @param sep The Platform specific seperator in file paths
+     * @return A list of key and values paires found in the .env file
+     * @see BufferedReader
+     * @see HashMap
+     */
     public static HashMap<String, String> getDotEnv(String dir,String sep) {
         HashMap<String, String> values = new HashMap<>();
         BufferedReader reader;
@@ -37,6 +45,12 @@ public class DotEnv {
         }
         return values;
     }
+    /**
+     * A function to store data which the user put
+     * @throws FileNotFoundException In the event of not having a .env file
+     * @throws IOException In the event of having to the needed rights on the file
+     * @param dotEnv A key values pair list to be set in the .env file of the current users home directory
+     */
     public static void setDotEnv(HashMap<String,String> dotEnv) throws FileNotFoundException, IOException {
         String sep = System.getProperty("file.separator");
         String dir = System.getProperty("user.home");
