@@ -6,7 +6,6 @@
 package adressverwaltung.controller;
 
 import adressverwaltung.models.Ort;
-
 import adressverwaltung.models.Person;
 import java.util.List;
 

@@ -5,6 +5,7 @@
  */
 package adressverwaltung.forms;
 
+import adressverwaltung.main;
 import adressverwaltung.operators.InOut;
 import adressverwaltung.models.Person;
 import adressverwaltung.models.Ort;
@@ -14,17 +15,17 @@ import java.awt.FocusTraversalPolicy;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
-import javax.swing.JList;
-import javax.swing.ListModel;
-import javax.swing.event.ListDataListener;
 
 /**
  *
  * @author chris
  */
+//TODO search list
+//TODO town selection List
 public class AdressveraltunsForm extends javax.swing.JFrame {
 
     InOut ioLayer;
@@ -35,14 +36,15 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
     List<Person> searchResults;
     List<Ort> ortlist;
     Ort o;
+    
     /**
      * Creates new form AdressveraltunsForm
      * @throws SQLException throws a exception if needed
      */
-    public AdressveraltunsForm() throws SQLException {
+    public AdressveraltunsForm(InOut io) throws SQLException {
         initComponents();
         this.setTitle("Adressverwaltung");
-        ioLayer = new InOut(null);
+        ioLayer = io;
         this.setVisible(true);
         
         ArrayList<Component> comp = new ArrayList<>();
@@ -54,7 +56,8 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
         comp.add(this.jHandy);
         comp.add(this.jEmail);
         
-        setFocusTraversalPolicy(new FtpFormPerson(comp));
+        loadTowns();
+        this.setFocusTraversalPolicy(new FtpFormPerson(comp));
         count = search ? searchResults.size() : (int) ioLayer.countPeople();
         setPlayerButtons();
         
@@ -62,13 +65,6 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
             setPerson(ioLayer.getPeople(1, 0).get(0));
         }else{
             cp = new Person();
-        }
-        
-        ortlist = ioLayer.getPlaces();
-        System.out.println(cp.getOid());
-        if(new Long(cp.getOid()+"") != -1){
-            o = ioLayer.getOrt(cp.getOid());
-            if(o != null)selectOrt(o.getName()+" "+o.getPlz());
         }
     } 
 
@@ -107,6 +103,8 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
+        jButton8 = new javax.swing.JButton();
+        jButton9 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -194,7 +192,7 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(74, 74, 74)
+                .addGap(10, 10, 10)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -235,6 +233,16 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
         );
 
         jPLZ.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jPLZ.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jPLZActionPerformed(evt);
+            }
+        });
+        jPLZ.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jPLZPropertyChange(evt);
+            }
+        });
 
         jLabel9.setText("1/x");
 
@@ -245,60 +253,83 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jList1);
 
+        jButton8.setText("Settings");
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
+
+        jButton9.setText("Edit");
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jName)
-                            .addComponent(jVorname, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jStrasse, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPLZ, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel6))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jHandy)
-                            .addComponent(jEmail)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jTelNr, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
+                        .addComponent(jButton8))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(83, 83, 83)
-                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(17, 17, 17)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel2))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jName)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jPLZ, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jButton9))
+                                    .addComponent(jStrasse)
+                                    .addComponent(jVorname)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel8)
+                                    .addComponent(jLabel7)
+                                    .addComponent(jLabel6))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jHandy)
+                                    .addComponent(jEmail)
+                                    .addComponent(jTelNr))))
+                        .addGap(18, 18, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton8)
+                                .addGap(25, 25, 25)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel9))
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -315,7 +346,8 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
-                            .addComponent(jPLZ, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jPLZ, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton9))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
@@ -327,18 +359,7 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel8)
-                            .addComponent(jEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(55, 55, 55)
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(30, 30, 30))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)))
-                        .addComponent(jLabel9)))
+                            .addComponent(jEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -477,6 +498,27 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton7ActionPerformed
 
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+       main.viewOrtverwlatung();
+    }//GEN-LAST:event_jButton9ActionPerformed
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+       main.viewConnectionSettings();
+    }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void jPLZActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPLZActionPerformed
+       if(ortlist != null){
+            if(ortlist.stream().filter(el-> (el.getPlz()+" "+el.getName()).equals(jPLZ.getSelectedItem())).count() == 1){
+                Optional<Ort> ort = ortlist.stream().filter(el-> (el.getPlz()+" "+el.getName()).equals(jPLZ.getSelectedItem())).findFirst();
+                cp.setOid(new Integer(""+ort.get().getOid()));
+            }
+        }
+    }//GEN-LAST:event_jPLZActionPerformed
+
+    private void jPLZPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jPLZPropertyChange
+        
+    }//GEN-LAST:event_jPLZPropertyChange
+
     private void showCurrentPerson(){
         jName.setText(cp.getName());
         jVorname.setText(cp.getVorname());
@@ -486,6 +528,20 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
         jEmail.setText(cp.getEmail());
     }
     
+    private void loadTowns(){
+        jPLZ.removeAllItems();
+        jPLZ.addItem("Please select a town");
+        ortlist = ioLayer.getPlaces();
+        
+        ArrayList<String> duplicateFilterList = new ArrayList<>();
+        ortlist.forEach((ort) -> {
+            if(duplicateFilterList.contains(ort.getPlz()+" "+ort.getName()) == false){
+                jPLZ.addItem(ort.getPlz()+" "+ort.getName());
+                duplicateFilterList.add(ort.getPlz()+" "+ort.getName());
+            }
+        });
+    }
+    
     private void clearInputs(){
         jName.setText("");
         jVorname.setText("");
@@ -493,6 +549,7 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
         jHandy.setText("");
         jTelNr.setText("");
         jEmail.setText("");
+        
     }
     
     private void castInputToCurrentPerson(){
@@ -510,9 +567,19 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
         jButton5.setEnabled(current != 1);
         jButton6.setEnabled(current < count);
     }
+    
     private void setPerson(Person p){
         cp = p;
         showCurrentPerson();
+        if(new Long(cp.getOid()+"") != -1){
+            o = ioLayer.getOrt(cp.getOid());
+            if(o != null){
+                selectOrt(o.getPlz()+" "+o.getName());
+            }else{
+                o.setOid(-1L);
+            }
+        }
+        
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -522,6 +589,8 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
+    private javax.swing.JButton jButton9;
     public javax.swing.JTextField jEmail;
     public javax.swing.JTextField jHandy;
     private javax.swing.JLabel jLabel1;
@@ -544,7 +613,7 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void selectOrt(String ort) {
-        
+        jPLZ.setSelectedItem(ort);
     }
 }
 

@@ -5,7 +5,10 @@
  */
 package adressverwaltung.forms;
 
+import adressverwaltung.controller.FileSystemController;
+import adressverwaltung.main;
 import adressverwaltung.operators.DotEnv;
+import adressverwaltung.operators.InOut;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
@@ -33,7 +36,7 @@ public class ConnectionForm extends javax.swing.JFrame {
         jTextField3.setEnabled(false);
         jTextField4.setEnabled(false);
         jSpinner1.setEnabled(false);
-        
+        jLabel7.setText("");
         String sep = System.getProperty("file.separator");
         String home = System.getProperty("user.home");
         
@@ -64,10 +67,10 @@ public class ConnectionForm extends javax.swing.JFrame {
                 jRadioButton2.setSelected(true);
                 jRadioButton1.setSelected(false);
             }else{
-                jButton1.setEnabled(false);
+            jButton1.setText("Clear fsdb");
             }
         }else{
-            jButton1.setEnabled(false);
+            jButton1.setText("Clear fsdb");
         }
     }
 
@@ -270,8 +273,9 @@ public class ConnectionForm extends javax.swing.JFrame {
        jTextField3.setEnabled(false);
        jTextField4.setEnabled(false);
        jSpinner1.setEnabled(false);
-       jButton1.setEnabled(false);
+       jButton1.setEnabled(true);
        jButton2.setEnabled(true);
+       jButton1.setText("Clear fsdb");
     }//GEN-LAST:event_jRadioButton1ActionPerformed
 
     private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
@@ -283,6 +287,7 @@ public class ConnectionForm extends javax.swing.JFrame {
        jButton2.setEnabled(false);
        jSpinner1.setEnabled(true);
        tested = false;
+       jButton1.setText("Test Connection");
     }//GEN-LAST:event_jRadioButton2ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -298,13 +303,26 @@ public class ConnectionForm extends javax.swing.JFrame {
                 connectionMap.put("DATABASE_PORT", jSpinner1.getValue()+"");
             }
             DotEnv.setDotEnv(connectionMap);
+            main.setupConnection(null);
+            main.viewAdressverwaltung();
         } catch (IOException ex) {
             Logger.getLogger(ConnectionForm.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       testConnection();
+       if(jRadioButton1.isSelected()){
+           HashMap<String, String> fakeKeys = new HashMap<>();
+           fakeKeys.put("DATABASE_USE", "false");
+           try {
+               InOut io = new InOut(fakeKeys);
+               ((FileSystemController)io.c).clean();
+           } catch (SQLException ex) {
+               Logger.getLogger(ConnectionForm.class.getName()).log(Level.SEVERE, null, ex);
+           }
+       }else{
+            testConnection();
+       }
     }//GEN-LAST:event_jButton1ActionPerformed
     private void testConnection(){
         String url = "jdbc:mysql://"+jTextField1.getText()+":"+jSpinner1.getValue()+"/"+jTextField2.getText();
