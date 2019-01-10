@@ -45,11 +45,11 @@ public class ConnectionForm extends javax.swing.JFrame {
         HashMap<String,String> dotEnv = DotEnv.getDotEnv();
         
         if(!dotEnv.isEmpty() && dotEnv.containsKey("DATABASE_USE")){
-            jTextField1.setText(dotEnv.get("DATABASE_HOST"));
-            jTextField2.setText(dotEnv.get("DATABASE_NAME"));
-            jTextField3.setText(dotEnv.get("DATABASE_USER"));
-            jTextField4.setText(dotEnv.get("DATABASE_PASSWORD"));
-            jSpinner1.setValue(new Integer(dotEnv.get("DATABASE_PORT")));
+            jTextField1.setText(dotEnv.containsKey("DATABASE_HOST") ? dotEnv.get("DATABASE_HOST") : "localhost");
+            jTextField2.setText(dotEnv.containsKey("DATABASE_NAME") ? dotEnv.get("DATABASE_NAME") : "adv");
+            jTextField3.setText(dotEnv.containsKey("DATABASE_USER") ? dotEnv.get("DATABASE_USER") : "root");
+            jTextField4.setText(dotEnv.containsKey("DATABASE_PASSWORD") ? dotEnv.get("DATABASE_PASSWORD") : "" );
+            jSpinner1.setValue(new Integer(dotEnv.containsKey("DATABASE_PORT") ? dotEnv.get("DATABASE_PORT" ) : "3306"));
             if(dotEnv.get("DATABASE_USE").equals("true")){
                 jTextField1.setEnabled(true);
                 jTextField2.setEnabled(true);
