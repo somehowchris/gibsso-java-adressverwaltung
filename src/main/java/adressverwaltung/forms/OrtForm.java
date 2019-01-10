@@ -6,7 +6,13 @@
 package adressverwaltung.forms;
 
 import adressverwaltung.main;
+import adressverwaltung.models.Ort;
 import adressverwaltung.operators.InOut;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 /**
  *
  * @author chris
@@ -14,12 +20,22 @@ import adressverwaltung.operators.InOut;
 public class OrtForm extends javax.swing.JFrame {
 
     InOut ioLayer;
+    Ort town;
+    long count = 0;
+    long current = 1;
+    boolean search = false;
+    List<Ort> searchResults;
     /**
      * Creates new form OrtForm
+     * @param io
      */
     public OrtForm(InOut io) {
         initComponents();
         ioLayer = io;
+        count = io.countOrt();
+        if(count == 0)town = new Ort();
+        if(count > 0)town = ioLayer.getPlaces(1, 0).get(0);
+        setCurrentTown(town);
     }
 
     /**
@@ -96,11 +112,9 @@ public class OrtForm extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Lucida Grande", 0, 36)); // NOI18N
         jLabel1.setText("Ortsverwaltung");
 
-        jLabel2.setText("jLabel2");
+        jLabel2.setText("Name");
 
-        jTextField1.setText("jTextField1");
-
-        jLabel3.setText("jLabel3");
+        jLabel3.setText("Plz");
 
         jButton8.setText("Settings");
         jButton8.addActionListener(new java.awt.event.ActionListener() {
@@ -132,7 +146,7 @@ public class OrtForm extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
                             .addComponent(jSpinner1))
-                        .addGap(33, 33, 33)
+                        .addGap(91, 91, 91)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -148,7 +162,7 @@ public class OrtForm extends javax.swing.JFrame {
                                 .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
                         .addComponent(jButton8)))
                 .addContainerGap())
         );
@@ -196,77 +210,86 @@ public class OrtForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-//        if(count >= current || current == count+1){
-//            current--;
-//            setPerson(search ? searchResults.get(current-1) : ioLayer.getPeople(1, current-1).get(0));
-//            setPlayerButtons();
-//        }
+        if(count >= current || current == count+1){
+            current--;
+            setCurrentTown(search ? searchResults.get(new Integer(current-1+"")) : ioLayer.getPlaces(1, new Integer(current-1+"")).get(0));
+            setPlayerButtons();
+        }
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-//        if(count > current){
-//            current++;
-//            setPerson(search ? searchResults.get(current-1) : ioLayer.getPeople(1, current-1).get(0));
-//            setPlayerButtons();
-//        }
+        if(count > current){
+            current++;
+            setCurrentTown(search ? searchResults.get(new Integer(current-1+"")) : ioLayer.getPlaces(1, new Integer(current-1+"")).get(0));
+            setPlayerButtons();
+        }
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-//        try {
-//            if(cp.getId() != null)ioLayer.deletePerson(cp);
-//            if(search) searchResults.remove(cp);
-//            cp = null;
-//            count = search ? searchResults.size() : (int) ioLayer.countPeople();
-//            if(count > 0){
-//                while(current > count){
-//                    current--;
-//                }
-//                setPerson(ioLayer.getPeople(1, current > 0 ? current-1 : 0).get(0));
-//                setPlayerButtons();
-//            }else{
-//                clearInputs();
-//                current = 1;
-//                setPlayerButtons();
-//            }
-//        } catch (SQLException ex) {
-//            Logger.getLogger(AdressveraltunsForm.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        try {
+            if(town.getOid()!= null)ioLayer.deleteOrt(town);
+            if(search && searchResults.contains(town)) searchResults.remove(town);
+            town = null;
+            count = search ? searchResults.size() : (int) ioLayer.countOrt();
+            if(count > 0){
+                while(current > count){
+                    current--;
+                }
+                setCurrentTown(ioLayer.getPlaces(1, new Integer((current > 0L ? current-1L : 0L)+"")).get(0));
+                setPlayerButtons();
+            }else{
+                town = new Ort();
+                if(count == 0)search = false;
+                clearInputs();
+                current = 1;
+                setPlayerButtons();
+                setCurrentTown(town);
+            }
+            main.af.updateOrt();
+        } catch (Error ex) {
+            JOptionPane.showMessageDialog(null,"Some people might still live in this town","People in the town",JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-//        try {
-//            castInputToCurrentPerson();
-//            long id = ioLayer.savePerson(cp);
-//            setPerson(ioLayer.getPerson(id));
-//            count = search ? searchResults.size() : (int) ioLayer.countPeople();
-//            setPlayerButtons();
-//        } catch (SQLException ex) {
-//            Logger.getLogger(AdressveraltunsForm.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        try {
+            long id = ioLayer.saveOrt(getCurrentTown());
+            count = search ? searchResults.size() : (int) ioLayer.countOrt();
+            setCurrentTown(ioLayer.getOrt(id));
+            setPlayerButtons();
+            main.af.updateOrt();
+        } catch (SQLException ex) {}
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-//        try {
-//            search = true;
-//            searchResults = ioLayer.searchPerson(cp.getVorname(), cp.getName());
-//            if(searchResults.size() > 0){
-//                count = searchResults.size();
-//                current = 1;
-//                setPerson(searchResults.get(0));
-//                setPlayerButtons();
-//            }
-//        } catch (SQLException ex) {
-//            Logger.getLogger(AdressveraltunsForm.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        try {
+            search = !search;
+            if(search){
+                searchResults = ioLayer.searchOrt((int)jSpinner1.getValue(), jTextField1.getText());
+                if(searchResults.size() > 0){
+                    count = searchResults.size();
+                    current = 1;
+                    setCurrentTown(searchResults.get(0));
+                    setPlayerButtons();
+                }
+                jButton2.setText("Exit Search");
+            }else{
+                count = ioLayer.countOrt();
+                if(count == 0)town = new Ort();
+                if(count > 0)town = ioLayer.getPlaces(1, 0).get(0);
+                setCurrentTown(town);
+                jButton2.setText("Search");
+            }
+        } catch (SQLException ex) {}
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-//        cp = null;
-//        search = false;
-//        clearInputs();
-//        current = count+1;
-//        setPlayerButtons();
-//        castInputToCurrentPerson();
+        town = new Ort();
+        search = false;
+        clearInputs();
+        current = count+1;
+        setPlayerButtons();
+        setCurrentTown(town);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
@@ -293,4 +316,29 @@ public class OrtForm extends javax.swing.JFrame {
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
+
+    private void setCurrentTown(Ort town) {
+        this.town = town;
+        setPlayerButtons();
+        showCurrentTown();
+    }
+    private void showCurrentTown(){
+        jSpinner1.setValue(town != null ? town.getPlz(): 0);
+        jTextField1.setText(town != null ? town.getName() : "");
+    }
+    private Ort getCurrentTown(){
+        town.setName(jTextField1.getText());
+        town.setPlz((int)jSpinner1.getValue());
+        return town;
+    }
+    private void setPlayerButtons(){
+        jLabel9.setText(current > count ? "New Item" : current+"/"+count);
+        jButton5.setEnabled(current != 1);
+        jButton6.setEnabled(current < count);
+    }
+        
+    private void clearInputs(){
+        jSpinner1.setValue(1000);
+        jTextField1.setText("");
+    }
 }

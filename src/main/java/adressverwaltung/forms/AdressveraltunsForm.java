@@ -14,6 +14,7 @@ import java.awt.Container;
 import java.awt.FocusTraversalPolicy;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -24,8 +25,8 @@ import javax.swing.DefaultListModel;
  *
  * @author chris
  */
-//TODO search list
-//TODO town selection List
+// TODO search list
+// TODO input checks
 public class AdressveraltunsForm extends javax.swing.JFrame {
 
     InOut ioLayer;
@@ -251,6 +252,23 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        jList1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jList1MouseClicked(evt);
+            }
+        });
+        jList1.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+            }
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+                jList1CaretPositionChanged(evt);
+            }
+        });
+        jList1.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jList1ValueChanged(evt);
+            }
+        });
         jScrollPane1.setViewportView(jList1);
 
         jButton8.setText("Settings");
@@ -427,11 +445,9 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
                 
                 DefaultListModel dlm = new DefaultListModel();
                 for(Person p : searchResults){
-                    dlm.addElement("<html>"+p.getVorname()+" "+p.getName()+" <font color='white'>  Nr."+p.getId()+"</font>"+"</html");
+                    dlm.addElement(p.getVorname()+" "+p.getName());
                 }
-
                 jList1.setModel(dlm);
-
             }
             
         } catch (SQLException ex) {
@@ -452,8 +468,20 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        cp = null;
+        jButton2.setText("Search");
+        count = search ? searchResults.size() : (int) ioLayer.countPeople();
+        ortlist = ioLayer.getPlaces();
+        if(new Long(cp.getOid()+"") != -1){
+            o = ioLayer.getOrt(cp.getOid());
+            if(o != null)selectOrt(o.getName()+" "+o.getPlz());
+        }
+        DefaultListModel dlm = new DefaultListModel();
+        dlm.addElement("Search to get a list of results");
+
+        jList1.setModel(dlm);
+        searchResults = null;
         search = false;
+        cp = new Person();
         clearInputs();
         current = count+1;
         setPlayerButtons();
@@ -477,8 +505,8 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
                 current = 1;
                 setPlayerButtons();
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(AdressveraltunsForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            
         }
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -511,13 +539,30 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
             if(ortlist.stream().filter(el-> (el.getPlz()+" "+el.getName()).equals(jPLZ.getSelectedItem())).count() == 1){
                 Optional<Ort> ort = ortlist.stream().filter(el-> (el.getPlz()+" "+el.getName()).equals(jPLZ.getSelectedItem())).findFirst();
                 cp.setOid(new Integer(""+ort.get().getOid()));
+            }else{
+                if(cp != null)cp.setOid(-1);
             }
         }
     }//GEN-LAST:event_jPLZActionPerformed
 
     private void jPLZPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jPLZPropertyChange
-        
+
     }//GEN-LAST:event_jPLZPropertyChange
+
+    private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseClicked
+        
+    }//GEN-LAST:event_jList1MouseClicked
+
+    private void jList1CaretPositionChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_jList1CaretPositionChanged
+        
+    }//GEN-LAST:event_jList1CaretPositionChanged
+
+    private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
+        jList1.getSelectedIndex();
+        current = jList1.getSelectedIndex()+1;
+        setPlayerButtons();
+        setPerson(searchResults.get(jList1.getSelectedIndex()));
+    }//GEN-LAST:event_jList1ValueChanged
 
     private void showCurrentPerson(){
         jName.setText(cp.getName());
@@ -532,8 +577,10 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
         jPLZ.removeAllItems();
         jPLZ.addItem("Please select a town");
         ortlist = ioLayer.getPlaces();
-        
+        ortlist.sort(Comparator.naturalOrder());
         ArrayList<String> duplicateFilterList = new ArrayList<>();
+        jPLZ.removeAllItems();
+        jPLZ.addItem("Please select a town");
         ortlist.forEach((ort) -> {
             if(duplicateFilterList.contains(ort.getPlz()+" "+ort.getName()) == false){
                 jPLZ.addItem(ort.getPlz()+" "+ort.getName());
@@ -563,6 +610,7 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
     }
     
     private void setPlayerButtons(){
+        if(current == 0)current = 1;
         jLabel9.setText(current > count ? "New Item" : current+"/"+count);
         jButton5.setEnabled(current != 1);
         jButton6.setEnabled(current < count);
@@ -576,8 +624,11 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
             if(o != null){
                 selectOrt(o.getPlz()+" "+o.getName());
             }else{
-                o.setOid(-1L);
+                p.setOid(-1);
+                selectOrt("Please select a town");
             }
+        }else{
+            selectOrt("Please select a town");
         }
         
     }
@@ -614,6 +665,18 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
 
     private void selectOrt(String ort) {
         jPLZ.setSelectedItem(ort);
+    }
+    
+    public void updateOrt(){
+        loadTowns();
+        if(cp.getOid() != null){
+            Ort o;
+            if((o = ioLayer.getOrt(cp.getOid())) != null){
+                selectOrt(o.getPlz()+" "+o.getName());
+            }else{
+                cp.setOid(-1);
+            }
+        }
     }
 }
 

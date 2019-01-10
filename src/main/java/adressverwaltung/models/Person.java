@@ -99,7 +99,7 @@ public class Person implements Serializable {
         return name;
     }
 
-    public long getOid() {
+    public Long getOid() {
         return oid;
     }
 

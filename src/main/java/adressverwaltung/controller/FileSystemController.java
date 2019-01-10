@@ -212,7 +212,9 @@ public class FileSystemController implements Controller{
     @Override
     public void deleteOrt(Ort ort) {
         File f = new File(fsdbdir+ort.getOid()+".ort");
-        long references = getPeople(new Integer(countPeople()+""), 0).stream().filter(el -> el.getOid() == ort.getOid()).count();
+        long references = getPeople(new Integer(countPeople()+""), 0).stream().filter(el -> {
+            return el.getOid().equals(ort.getOid());
+        }).count();
         if(f.exists() && references == 0 ){
             f.delete();
             redismapOrt.remove(ort.getOid());

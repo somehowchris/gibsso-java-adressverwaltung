@@ -77,7 +77,7 @@ public class DataBaseController implements Controller {
     */
     @Override
     public List<Ort> searchOrt(Ort ort) {
-        TypedQuery<Ort> query = em.createQuery("SELECT o FROM Ort o WHERE plz LIKE '%"+ort.getPlz()+"%' AND name LIKE '%"+ort.getName()+"%'",Ort.class);
+        TypedQuery<Ort> query = em.createQuery("SELECT o FROM Ort o WHERE o.plz LIKE '%"+ort.getPlz()+"%' AND o.name LIKE '%"+ort.getName()+"%'",Ort.class);
         return query.getResultList();
     }
     
@@ -134,7 +134,7 @@ public class DataBaseController implements Controller {
     * {@inheritDoc}
     */
     @Override
-    public void deleteOrt(Ort ort) {
+    public void deleteOrt(Ort ort) throws Error{
         em.getTransaction().begin();
         String sql = "SELECT COUNT(p.pid) FROM Person p WHERE p.oid='"+ort.getOid()+"'";
         Query q = em.createQuery(sql);

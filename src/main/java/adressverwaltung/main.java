@@ -16,6 +16,7 @@ import java.util.HashMap;
  * Main operator class
  * @author Christof Weickhardt, Nicola Temporal
  */
+// TODO setup & join flow
 public class main {
     public static InOut io;
     public static AdressveraltunsForm af;

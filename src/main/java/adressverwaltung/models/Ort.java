@@ -16,7 +16,7 @@ import javax.persistence.Id;
  * @author chris
  */
 @Entity
-public class Ort implements Serializable {
+public class Ort implements Serializable, Comparable<Ort>{
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -87,6 +87,11 @@ public class Ort implements Serializable {
     public void setAll(Ort ort){
         this.name = ort.name;
         this.plz = ort.plz;
+    }
+
+    @Override
+    public int compareTo(Ort o) {
+        return this.plz == o.getPlz() ? o.name.compareToIgnoreCase(o.getName()) : this.plz - o.getPlz();
     }
     
 }

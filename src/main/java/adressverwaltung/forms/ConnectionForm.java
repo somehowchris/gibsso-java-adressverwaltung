@@ -316,7 +316,7 @@ public class ConnectionForm extends javax.swing.JFrame {
            fakeKeys.put("DATABASE_USE", "false");
            try {
                InOut io = new InOut(fakeKeys);
-               ((FileSystemController)io.c).clean();
+               ((FileSystemController)io.connection).clean();
            } catch (SQLException ex) {
                Logger.getLogger(ConnectionForm.class.getName()).log(Level.SEVERE, null, ex);
            }
