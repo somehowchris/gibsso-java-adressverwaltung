@@ -38,8 +38,12 @@ public class InOut {
         if(!new File(home).canRead()) home = System.getProperty("user.dir");
         if(dotEnv == null) dotEnv = new HashMap<>();
         File dotEnvFile = new File(home);
-        if (dotEnvFile.exists() && dotEnv.isEmpty() ? !(dotEnv = DotEnv.getDotEnv(home, sep)).isEmpty() : true){
-            connection = dotEnv.get("DATABASE_USE").equals("true") ? new DataBaseController(dotEnv) : new FileSystemController(home, sep);
+        if (dotEnvFile.exists() && dotEnv.isEmpty() ? !(dotEnv = DotEnv.getDotEnv()).isEmpty() : true){
+            if(dotEnv.containsKey("DATABASE_USE")){
+                connection = dotEnv.get("DATABASE_USE").equals("true") ? new DataBaseController(dotEnv) : new FileSystemController(home, sep);
+            }else{
+                connection = new FileSystemController(home, sep);
+            }
         }else{
             connection = new FileSystemController(home, sep);
         }

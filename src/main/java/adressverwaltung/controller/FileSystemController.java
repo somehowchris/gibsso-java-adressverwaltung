@@ -145,7 +145,7 @@ public class FileSystemController implements Controller{
         ArrayList<Ort> ortlist = new ArrayList<>();
         for(String file : files){
             Ort o = getOrt(new Long(file.replace(".ort", "")));
-            if(ort.getName().contains(ort.getName()))ortlist.add(o);
+            if(ort.getName().toLowerCase().contains(ort.getName().toLowerCase()))ortlist.add(o);
         }
         return ortlist;
     }

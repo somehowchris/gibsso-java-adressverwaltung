@@ -8,6 +8,7 @@ package adressverwaltung;
 import adressverwaltung.forms.OrtForm;
 import adressverwaltung.forms.ConnectionForm;
 import adressverwaltung.forms.AdressveraltunsForm;
+import adressverwaltung.operators.DotEnv;
 import adressverwaltung.operators.InOut;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -28,11 +29,16 @@ public class main {
      * @throws SQLException throws a exception if needed
      */
     public static void main(String[] args) throws SQLException{
+        
         io = new InOut(null);
         af = new AdressveraltunsForm(io);
         of = new OrtForm(io);
         cn = new ConnectionForm();
-        af.setVisible(true);
+        if(DotEnv.getDotEnv().keySet().contains("DATABASE_USE")){
+            af.setVisible(true);
+        }else{
+            cn.setVisible(true);
+        }
     }
     
     public static boolean setupConnection(HashMap<String,String> connection){

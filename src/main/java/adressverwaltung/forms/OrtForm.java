@@ -10,13 +10,14 @@ import adressverwaltung.models.Ort;
 import adressverwaltung.operators.InOut;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Optional;
 import javax.swing.JOptionPane;
 /**
  *
  * @author chris
  */
+// TODO input checks
+// TODO remove all references button on delete 
 public class OrtForm extends javax.swing.JFrame {
 
     InOut ioLayer;
@@ -253,11 +254,28 @@ public class OrtForm extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         try {
-            long id = ioLayer.saveOrt(getCurrentTown());
-            count = search ? searchResults.size() : (int) ioLayer.countOrt();
-            setCurrentTown(ioLayer.getOrt(id));
-            setPlayerButtons();
-            main.af.updateOrt();
+            List<Ort> searchCheck = ioLayer.searchOrt(getCurrentTown().getPlz(), getCurrentTown().getName());
+            if(searchCheck.stream().filter(el -> el.getName().equalsIgnoreCase(getCurrentTown().getName()) && el.getPlz() == getCurrentTown().getPlz()).count() == 1 && getCurrentTown().getOid() != null){
+                Optional<Ort> found = searchCheck.stream().filter(el -> el.getName().equalsIgnoreCase(getCurrentTown().getName()) && el.getPlz() == getCurrentTown().getPlz()).findFirst();
+                if(!(found.get().getOid() == getCurrentTown().getOid())){
+                    JOptionPane.showMessageDialog(null,"That town already exists","Town exists",JOptionPane.ERROR_MESSAGE);
+                    return;
+                }else{
+                    long id = ioLayer.saveOrt(getCurrentTown());
+                    count = search ? searchResults.size() : (int) ioLayer.countOrt();
+                    setCurrentTown(ioLayer.getOrt(id));
+                    setPlayerButtons();
+                    main.af.updateOrt();
+                }
+            }else if(searchCheck.stream().filter(el -> el.getName().equalsIgnoreCase(getCurrentTown().getName()) && el.getPlz() == getCurrentTown().getPlz()).count() > 0){
+                JOptionPane.showMessageDialog(null,"That town already exists","Town exists",JOptionPane.ERROR_MESSAGE);
+            }else{
+                long id = ioLayer.saveOrt(getCurrentTown());
+                count = search ? searchResults.size() : (int) ioLayer.countOrt();
+                setCurrentTown(ioLayer.getOrt(id));
+                setPlayerButtons();
+                main.af.updateOrt();
+            }
         } catch (SQLException ex) {}
     }//GEN-LAST:event_jButton3ActionPerformed
 

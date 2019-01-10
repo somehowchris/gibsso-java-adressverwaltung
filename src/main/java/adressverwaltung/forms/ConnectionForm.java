@@ -42,9 +42,9 @@ public class ConnectionForm extends javax.swing.JFrame {
         
         if(!new File(home).canRead()) home = System.getProperty("user.dir");
         
-        HashMap<String,String> dotEnv = DotEnv.getDotEnv(home, sep);
+        HashMap<String,String> dotEnv = DotEnv.getDotEnv();
         
-        if(!dotEnv.isEmpty()){
+        if(!dotEnv.isEmpty() && dotEnv.containsKey("DATABASE_USE")){
             jTextField1.setText(dotEnv.get("DATABASE_HOST"));
             jTextField2.setText(dotEnv.get("DATABASE_NAME"));
             jTextField3.setText(dotEnv.get("DATABASE_USER"));

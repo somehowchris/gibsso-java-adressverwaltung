@@ -21,15 +21,14 @@ import java.util.List;
  * @author chris
  */
 public class DotEnv {
-    
+    static String sep = System.getProperty("file.separator");
+    static String dir = System.getProperty("user.home");
     /**
-     * @param dir The directory in which the .env file is place
-     * @param sep The Platform specific seperator in file paths
      * @return A list of key and values paires found in the .env file
      * @see BufferedReader
      * @see HashMap
      */
-    public static HashMap<String, String> getDotEnv(String dir,String sep) {
+    public static HashMap<String, String> getDotEnv() {
         HashMap<String, String> values = new HashMap<>();
         BufferedReader reader;
         try {
@@ -52,8 +51,6 @@ public class DotEnv {
      * @param dotEnv A key values pair list to be set in the .env file of the current users home directory
      */
     public static void setDotEnv(HashMap<String,String> dotEnv) throws FileNotFoundException, IOException {
-        String sep = System.getProperty("file.separator");
-        String dir = System.getProperty("user.home");
         if(!new File(dir).canRead()) dir = System.getProperty("user.dir");
         File f = new File(dir + sep + ".env");
         String data = "";

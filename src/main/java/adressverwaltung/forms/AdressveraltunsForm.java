@@ -46,7 +46,6 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
         initComponents();
         this.setTitle("Adressverwaltung");
         ioLayer = io;
-        this.setVisible(true);
         
         ArrayList<Component> comp = new ArrayList<>();
         comp.add(this.jName);
