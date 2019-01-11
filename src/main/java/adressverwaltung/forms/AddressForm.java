@@ -11,16 +11,23 @@ import adressverwaltung.utils.InOut;
 import adressverwaltung.models.Person;
 import adressverwaltung.models.Town;
 import adressverwaltung.utils.CustomFocusTraversalPolicy;
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.ItemEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import org.apache.commons.validator.routines.EmailValidator;
 
 /**
  *
@@ -38,6 +45,7 @@ public class AddressForm extends javax.swing.JFrame {
     List<Town> towns;
     Town t;
     long townid;
+    HashMap<String, Boolean> validations;
     
 
     /**
@@ -74,6 +82,17 @@ public class AddressForm extends javax.swing.JFrame {
         } else {
             cp = new Person();
         }
+        
+        validations = new HashMap<>();
+        validations.put("Name",false);
+        validations.put("Vorname",false);
+        validations.put("Street",false);
+        validations.put("PLZ",false);
+        validations.put("Phone",false);
+        validations.put("Mobile",false);
+        validations.put("Email",false);
+
+        validateEntrys();
     }
 
     /**
@@ -139,16 +158,31 @@ public class AddressForm extends javax.swing.JFrame {
                 jNameActionPerformed(evt);
             }
         });
+        jName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jNameKeyReleased(evt);
+            }
+        });
 
         jVorname.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jVornameActionPerformed(evt);
             }
         });
+        jVorname.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jVornameKeyReleased(evt);
+            }
+        });
 
         jStrasse.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jStrasseActionPerformed(evt);
+            }
+        });
+        jStrasse.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jStrasseKeyReleased(evt);
             }
         });
 
@@ -162,16 +196,31 @@ public class AddressForm extends javax.swing.JFrame {
                 jTelNrPropertyChange(evt);
             }
         });
+        jTelNr.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTelNrKeyReleased(evt);
+            }
+        });
 
         jHandy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jHandyActionPerformed(evt);
             }
         });
+        jHandy.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jHandyKeyReleased(evt);
+            }
+        });
 
         jEmail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jEmailActionPerformed(evt);
+            }
+        });
+        jEmail.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jEmailKeyReleased(evt);
             }
         });
 
@@ -271,6 +320,11 @@ public class AddressForm extends javax.swing.JFrame {
         );
 
         jPLZ.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jPLZ.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jPLZItemStateChanged(evt);
+            }
+        });
         jPLZ.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jPLZActionPerformed(evt);
@@ -440,6 +494,36 @@ public class AddressForm extends javax.swing.JFrame {
     private void jTelNrPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jTelNrPropertyChange
 
     }//GEN-LAST:event_jTelNrPropertyChange
+
+    private void jNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jNameKeyReleased
+        validateEntrys();
+    }//GEN-LAST:event_jNameKeyReleased
+
+    private void jVornameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jVornameKeyReleased
+        validateEntrys();
+    }//GEN-LAST:event_jVornameKeyReleased
+
+    private void jStrasseKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jStrasseKeyReleased
+        validateEntrys();
+    }//GEN-LAST:event_jStrasseKeyReleased
+
+    private void jTelNrKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTelNrKeyReleased
+       validateEntrys();
+    }//GEN-LAST:event_jTelNrKeyReleased
+
+    private void jHandyKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jHandyKeyReleased
+        validateEntrys();
+    }//GEN-LAST:event_jHandyKeyReleased
+
+    private void jEmailKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jEmailKeyReleased
+        validateEntrys();
+    }//GEN-LAST:event_jEmailKeyReleased
+
+    private void jPLZItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jPLZItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            if(validations != null)validateEntrys();
+        }
+    }//GEN-LAST:event_jPLZItemStateChanged
     
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton5ActionPerformed
@@ -535,7 +619,7 @@ public class AddressForm extends javax.swing.JFrame {
         jButton2.setText("Search");
         count = search ? searchResults.size() : (int) ioLayer.countPeople();
         towns = ioLayer.getTowns();
-        if (new Long(cp.getOid() + "") != -1) {
+        if(cp != null)if (new Long(cp.getOid() + "") != -1) {
             t = ioLayer.getTown(cp.getOid());
             if (t != null)
                 selectTown(t.getName() + " " + t.getPlz());
@@ -690,7 +774,7 @@ public class AddressForm extends javax.swing.JFrame {
         jHandy.setText("");
         jTelNr.setText("");
         jEmail.setText("");
-
+        jPLZ.setSelectedIndex(0);
     }
 
     /**
@@ -784,6 +868,86 @@ public class AddressForm extends javax.swing.JFrame {
         loadTowns();
         if(t != null){
             selectTown(t.getPlz()+" "+t.getName());
+        }
+    }
+    
+    public void validateEntrys(){
+        if(jName.getText().trim().isEmpty()){
+            validations.put("Name", false);
+            jName.setForeground(Color.red);
+        }else{
+            validations.put("Name", true);
+            jName.setForeground(Color.black);
+        }
+        
+        if(jVorname.getText().trim().isEmpty()){
+            validations.put("Vorname", false);
+            jVorname.setForeground(Color.red);
+        }else{
+            validations.put("Vorname", true);
+            jVorname.setForeground(Color.black);
+        }
+        
+        if(jStrasse.getText().trim().isEmpty()){
+            validations.put("Street", false);
+            jStrasse.setForeground(Color.red);
+        }else{
+            validations.put("Street", true);
+            jStrasse.setForeground(Color.black);
+        }
+        
+        EmailValidator validator = EmailValidator.getInstance();
+        if (validator.isValid(jEmail.getText())) {
+            validations.put("Email", true);
+            jEmail.setForeground(Color.black);
+        } else {
+           validations.put("Email", false);
+           jEmail.setForeground(Color.red);
+        }
+        
+        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+        
+        try {
+            PhoneNumber phone = phoneUtil.parse(jHandy.getText(), "CH");
+            if(phoneUtil.getNumberType(phone) == PhoneNumberUtil.PhoneNumberType.MOBILE){
+                jHandy.setForeground(Color.black);
+                validations.put("Mobile",true);
+            }else{
+                validations.put("Mobile",false);
+                jHandy.setForeground(Color.red);
+            }
+            
+        } catch (NumberParseException ex) {
+           validations.put("Mobile",false);
+           jHandy.setForeground(Color.red);
+        }
+        
+        try {
+            PhoneNumber phone = phoneUtil.parse(jTelNr.getText(), "CH");
+            if(phoneUtil.getNumberType(phone) == PhoneNumberUtil.PhoneNumberType.FIXED_LINE){
+                validations.put("Phone",true);
+                jTelNr.setForeground(Color.black);
+            }else{
+                validations.put("Phone",false);
+                jTelNr.setForeground(Color.red);
+            }
+        } catch (NumberParseException ex) {
+           validations.put("Phone",false);
+           jTelNr.setForeground(Color.red);
+        }
+        
+        if(jPLZ.getSelectedIndex() > 0){
+            validations.put("PLZ",true);
+            jPLZ.setForeground(Color.black);
+        }else{
+           validations.put("PLZ",false);
+           jPLZ.setForeground(Color.red);
+        }
+        
+        if(validations.values().stream().filter(el -> el == true).count() == validations.size()){
+            jButton3.setEnabled(true);
+        }else{
+            jButton3.setEnabled(false);
         }
     }
 }
