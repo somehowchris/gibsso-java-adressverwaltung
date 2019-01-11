@@ -9,12 +9,14 @@ import adressverwaltung.main;
 import adressverwaltung.operators.InOut;
 import adressverwaltung.models.Person;
 import adressverwaltung.models.Ort;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.FocusTraversalPolicy;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -37,6 +39,7 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
     List<Person> searchResults;
     List<Ort> ortlist;
     Ort o;
+    HashMap<Object, Boolean> validations;
     
     /**
      * Creates new form AdressveraltunsForm
@@ -66,6 +69,15 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
         }else{
             cp = new Person();
         }
+        
+        validations = new HashMap<>();
+        validations.put(jName,false);
+        validations.put(jVorname,false);
+        validations.put(jStrasse,false);
+        validations.put(jPLZ,false);
+        validations.put(jTelNr,false);
+        validations.put(jHandy,false);
+        validations.put(jEmail,false);
     } 
 
     /**
@@ -105,6 +117,7 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
         jList1 = new javax.swing.JList<>();
         jButton8 = new javax.swing.JButton();
         jButton9 = new javax.swing.JButton();
+        lblErr = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -125,15 +138,39 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
 
         jLabel8.setText("Email:");
 
-        jName.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jNameActionPerformed(evt);
+        jName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jNameKeyReleased(evt);
             }
         });
 
-        jVorname.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jVornameActionPerformed(evt);
+        jVorname.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jVornameKeyReleased(evt);
+            }
+        });
+
+        jStrasse.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jStrasseKeyReleased(evt);
+            }
+        });
+
+        jTelNr.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTelNrKeyReleased(evt);
+            }
+        });
+
+        jHandy.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jHandyKeyReleased(evt);
+            }
+        });
+
+        jEmail.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jEmailKeyReleased(evt);
             }
         });
 
@@ -257,10 +294,10 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
             }
         });
         jList1.addInputMethodListener(new java.awt.event.InputMethodListener() {
-            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
-            }
             public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
                 jList1CaretPositionChanged(evt);
+            }
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
             }
         });
         jList1.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
@@ -283,6 +320,8 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
                 jButton9ActionPerformed(evt);
             }
         });
+
+        lblErr.setForeground(new java.awt.Color(255, 0, 0));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -321,6 +360,7 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
                                     .addComponent(jLabel6))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblErr)
                                     .addComponent(jHandy)
                                     .addComponent(jEmail)
                                     .addComponent(jTelNr))))
@@ -376,7 +416,9 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel8)
-                            .addComponent(jEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblErr)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -389,6 +431,7 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
            setPerson(search ? searchResults.get(current-1) : ioLayer.getPeople(1, current-1).get(0));
            setPlayerButtons();
        }
+        validateEntrys();
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
@@ -397,15 +440,8 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
            setPerson(search ? searchResults.get(current-1) : ioLayer.getPeople(1, current-1).get(0));
            setPlayerButtons();
        }
+       validateEntrys();
     }//GEN-LAST:event_jButton6ActionPerformed
-
-    private void jNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jNameActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jNameActionPerformed
-
-    private void jVornameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jVornameActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jVornameActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
@@ -452,18 +488,23 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(AdressveraltunsForm.class.getName()).log(Level.SEVERE, null, ex);
         }
+        validateEntrys();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         try {
-            castInputToCurrentPerson();
-            long id = ioLayer.savePerson(cp);
-            setPerson(ioLayer.getPerson(id));
-            count = search ? searchResults.size() : (int) ioLayer.countPeople();
-            setPlayerButtons();
+            if(!validations.containsValue(false))
+            {
+                castInputToCurrentPerson();
+                long id = ioLayer.savePerson(cp);
+                setPerson(ioLayer.getPerson(id));
+                count = search ? searchResults.size() : (int) ioLayer.countPeople();
+                setPlayerButtons();
+            }
         } catch (SQLException ex) {
             Logger.getLogger(AdressveraltunsForm.class.getName()).log(Level.SEVERE, null, ex);
         }
+        validateEntrys();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -485,6 +526,7 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
         current = count+1;
         setPlayerButtons();
         castInputToCurrentPerson();
+        validateEntrys();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -507,6 +549,7 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
         } catch (Exception ex) {
             
         }
+        validateEntrys();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
@@ -523,14 +566,17 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
                 Logger.getLogger(AdressveraltunsForm.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        validateEntrys();
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
        main.viewOrtverwlatung();
+       validateEntrys();
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
        main.viewConnectionSettings();
+       validateEntrys();
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jPLZActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPLZActionPerformed
@@ -563,6 +609,108 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
         setPerson(searchResults.get(jList1.getSelectedIndex()));
     }//GEN-LAST:event_jList1ValueChanged
 
+    private void jNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jNameKeyReleased
+        validateEntrys();
+    }//GEN-LAST:event_jNameKeyReleased
+    
+    private void jEmailKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jEmailKeyReleased
+        validateEntrys();
+    }//GEN-LAST:event_jEmailKeyReleased
+
+    private void jHandyKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jHandyKeyReleased
+        validateEntrys();
+    }//GEN-LAST:event_jHandyKeyReleased
+
+    private void jTelNrKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTelNrKeyReleased
+        validateEntrys();
+    }//GEN-LAST:event_jTelNrKeyReleased
+
+    private void jStrasseKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jStrasseKeyReleased
+        validateEntrys();
+    }//GEN-LAST:event_jStrasseKeyReleased
+
+    private void jVornameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jVornameKeyReleased
+        validateEntrys();
+    }//GEN-LAST:event_jVornameKeyReleased
+
+    private void validateEntrys()
+    {
+        if(jName.getText().matches(".+"))
+        {
+            jName.setForeground(Color.BLACK);
+            validations.put(jName, true);
+        }
+        else
+        {
+            jName.setForeground(Color.RED);
+            validations.put(jName, false);
+        }
+        
+        if(jEmail.getText().matches("^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$"))
+        {
+            jEmail.setForeground(Color.BLACK);
+            validations.put(jEmail, true);
+        }
+        else
+        {
+            jEmail.setForeground(Color.RED);
+            validations.put(jEmail, false);
+        }
+        
+        if(jHandy.getText().matches("\\d+"))
+        {
+            jHandy.setForeground(Color.BLACK);
+            validations.put(jHandy, true);
+        }
+        else
+        {
+            jHandy.setForeground(Color.RED);
+            validations.put(jHandy, false);
+        }
+        
+        if(jTelNr.getText().matches("\\d+"))
+        {
+            jTelNr.setForeground(Color.BLACK);
+            validations.put(jTelNr, true);
+        }
+        else
+        {
+            jTelNr.setForeground(Color.RED);
+            validations.put(jTelNr, false);
+        }
+        
+        if(jStrasse.getText().matches(".+\\s\\d+"))
+        {
+            jStrasse.setForeground(Color.BLACK);
+            validations.put(jStrasse, true);
+        }
+        else
+        {
+            jStrasse.setForeground(Color.RED);
+            validations.put(jStrasse, false);
+        }
+        
+        if(jVorname.getText().matches(".+"))
+        {
+            jVorname.setForeground(Color.BLACK);
+            validations.put(jVorname, true);
+        }
+        else
+        {
+            jVorname.setForeground(Color.RED);
+            validations.put(jVorname, false);
+        }
+        
+        if(validations.containsValue(false))
+        {
+            lblErr.setText("Bitte korrigieren sie ihre Eingaben.");
+        }
+        else
+        {
+            lblErr.setText("");
+        }
+    }
+    
     private void showCurrentPerson(){
         jName.setText(cp.getName());
         jVorname.setText(cp.getVorname());
@@ -660,6 +808,7 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
     public javax.swing.JTextField jStrasse;
     public javax.swing.JTextField jTelNr;
     public javax.swing.JTextField jVorname;
+    private javax.swing.JLabel lblErr;
     // End of variables declaration//GEN-END:variables
 
     private void selectOrt(String ort) {
