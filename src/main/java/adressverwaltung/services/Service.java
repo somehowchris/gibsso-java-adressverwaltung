@@ -62,6 +62,11 @@ public interface Service {
    * @return The id of the updated town
    */
   public Long updateTown(Town Town);
+
+  /**
+   * @param person The person which is going to be removed from your dataset
+   */
+  public void deletePerson(Person person);
   
   /**
    * @param Town The town which is going to be removed from your dataset
@@ -69,21 +74,11 @@ public interface Service {
   public void deleteTown(Town Town);
 
   /**
-   * @param person The person which is going to be removed from your dataset
-   */
-  public void deletePerson(Person person);
-
-  /**
    * @param amount The amount if people requested
    * @param offset The amount if people skipped 
    * @return A list of people found in the given range
    */
   public List<Person> getPeople(int amount, int offset);
-
-  /**
-   * @return A list with all the towns stored in your data set
-   */
-  public List<Town> getTown();
   
   /**
    * @param amount The amount if towns requested
@@ -93,13 +88,17 @@ public interface Service {
   public List<Town> getTown(int amount, int offset);
 
   /**
-   * @return The amount of towns stored in your data set
+   * @return A list with all the towns stored in your data set
    */
-  public Long countTown();
-  
+  public List<Town> getTown();
+
   /**
    * @return The amount of people stored in your data set
    */
   public Long countPeople();
   
+  /**
+   * @return The amount of towns stored in your data set
+   */
+  public Long countTown();
 }

@@ -116,6 +116,14 @@ public class InOut {
     public Person getPerson(Long id) {
         return connection.getPerson(id);
     }
+    
+    /**
+     * Counts all the pople in your data set
+     * @return Amount of people in data set
+     */
+    public long countPeople(){
+        return connection.countPeople();
+    }
 
     /**
      * Search for a Town
@@ -158,6 +166,16 @@ public class InOut {
     public List<Town> getTowns() {
         return connection.getTown();
     }
+    
+    /**
+     * Gets a specific range of towns
+     * @param amount Amount of towns to get
+     * @param offset Offset of wich to count on from
+     * @return Returns a list of towns
+     */
+    public List<Town> getTowns(int amount,int offset) {
+        return connection.getTown(amount, offset);
+    }
 
     /**
      * Get a single town
@@ -174,24 +192,6 @@ public class InOut {
      */
     public long countTowns(){
         return connection.countTown();
-    }
-    
-    /**
-     * Counts all the pople in your data set
-     * @return Amount of people in data set
-     */
-    public long countPeople(){
-        return connection.countPeople();
-    }
-    
-    /**
-     * Gets a specific range of towns
-     * @param amount Amount of towns to get
-     * @param offset Offset of wich to count on from
-     * @return Returns a list of towns
-     */
-    public List<Town> getTowns(int amount,int offset) {
-        return connection.getTown(amount, offset);
     }
     
     /**

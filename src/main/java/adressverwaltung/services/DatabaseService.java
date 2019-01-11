@@ -139,6 +139,17 @@ public class DatabaseService implements Service {
     * {@inheritDoc}
     */
     @Override
+    public void deletePerson(Person person) {
+        em.getTransaction().begin();
+        em.remove(person);
+        em.getTransaction().commit();
+    }
+    
+    /**
+    *
+    * {@inheritDoc}
+    */
+    @Override
     public void deleteTown(Town Town) throws Error{
         em.getTransaction().begin();
         String sql = "SELECT COUNT(p.pid) FROM Person p WHERE p.oid='"+Town.getTid()+"'";
@@ -161,10 +172,11 @@ public class DatabaseService implements Service {
     * {@inheritDoc}
     */
     @Override
-    public void deletePerson(Person person) {
-        em.getTransaction().begin();
-        em.remove(person);
-        em.getTransaction().commit();
+    public List<Person> getPeople(int amount, int offset) {
+        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p",Person.class);
+        query.setMaxResults(amount);
+        query.setFirstResult(offset);
+        return query.getResultList();
     }
     
     /**
@@ -172,8 +184,8 @@ public class DatabaseService implements Service {
     * {@inheritDoc}
     */
     @Override
-    public List<Person> getPeople(int amount, int offset) {
-        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p",Person.class);
+    public List<Town> getTown(int amount, int offset) {
+        TypedQuery<Town> query = em.createQuery("SELECT o FROM Town o",Town.class);
         query.setMaxResults(amount);
         query.setFirstResult(offset);
         return query.getResultList();
@@ -198,11 +210,10 @@ public class DatabaseService implements Service {
     * {@inheritDoc}
     */
     @Override
-    public List<Town> getTown(int amount, int offset) {
-        TypedQuery<Town> query = em.createQuery("SELECT o FROM Town o",Town.class);
-        query.setMaxResults(amount);
-        query.setFirstResult(offset);
-        return query.getResultList();
+    public Long countPeople() {
+        String sql = "SELECT COUNT(p.pid) FROM Person p";
+        Query q = em.createQuery(sql);
+        return (long)q.getSingleResult();
     }
     
     /**
@@ -215,16 +226,4 @@ public class DatabaseService implements Service {
         Query q = em.createQuery(sql);
         return (long)q.getSingleResult();
     }
-    
-    /**
-    *
-    * {@inheritDoc}
-    */
-    @Override
-    public Long countPeople() {
-        String sql = "SELECT COUNT(p.pid) FROM Person p";
-        Query q = em.createQuery(sql);
-        return (long)q.getSingleResult();
-    }
-
 }

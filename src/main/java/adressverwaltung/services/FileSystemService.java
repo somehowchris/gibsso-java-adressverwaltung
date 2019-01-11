@@ -226,6 +226,18 @@ public class FileSystemService implements Service {
      * {@inheritDoc}
      */
     @Override
+    public void deletePerson(Person person) {
+        File f = new File(fsdbdir + person.getId() + ".person");
+        if (f.exists()) {
+            f.delete();
+            redismapPeople.remove(person.getId());
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void deleteTown(Town town) {
         File f = new File(fsdbdir + town.getTid() + ".town");
         long references = getPeople(new Integer(countPeople() + ""), 0).stream().filter(el -> {
@@ -243,18 +255,6 @@ public class FileSystemService implements Service {
      * {@inheritDoc}
      */
     @Override
-    public void deletePerson(Person person) {
-        File f = new File(fsdbdir + person.getId() + ".person");
-        if (f.exists()) {
-            f.delete();
-            redismapPeople.remove(person.getId());
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public ArrayList<Person> getPeople(int amount, int offset) {
         String[] consideredFiles = searchInDir(".person");
         ArrayList<Person> townlist = new ArrayList<>();
@@ -263,6 +263,25 @@ public class FileSystemService implements Service {
                 if (consideredFiles.length > i && i >= 0) {
                     townlist.add(getPerson(new Long(consideredFiles[i].replace(".person", ""))));
 
+                }
+            }
+        } catch (NumberFormatException e) {
+        }
+        return townlist;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ArrayList<Town> getTown(int amount, int offset) {
+        String[] consideredFiles = searchInDir(".town");
+
+        ArrayList<Town> townlist = new ArrayList<>();
+        try {
+            for (int i = offset; i < offset + amount; i++) {
+                if (consideredFiles.length > i && i >= 0) {
+                    townlist.add(getTown(new Long(consideredFiles[i].replace(".town", ""))));
                 }
             }
         } catch (NumberFormatException e) {
@@ -295,19 +314,9 @@ public class FileSystemService implements Service {
      * {@inheritDoc}
      */
     @Override
-    public ArrayList<Town> getTown(int amount, int offset) {
-        String[] consideredFiles = searchInDir(".town");
-
-        ArrayList<Town> townlist = new ArrayList<>();
-        try {
-            for (int i = offset; i < offset + amount; i++) {
-                if (consideredFiles.length > i && i >= 0) {
-                    townlist.add(getTown(new Long(consideredFiles[i].replace(".town", ""))));
-                }
-            }
-        } catch (NumberFormatException e) {
-        }
-        return townlist;
+    public Long countPeople() {
+        Long total = new Long(searchInDir(".person").length);
+        return total;
     }
 
     /**
@@ -316,15 +325,6 @@ public class FileSystemService implements Service {
     @Override
     public Long countTown() {
         Long total = new Long(searchInDir(".town").length);
-        return total;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Long countPeople() {
-        Long total = new Long(searchInDir(".person").length);
         return total;
     }
 
