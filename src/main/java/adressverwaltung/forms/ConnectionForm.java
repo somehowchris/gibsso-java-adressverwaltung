@@ -8,6 +8,7 @@ package adressverwaltung.forms;
 import adressverwaltung.services.FileSystemService;
 import adressverwaltung.errors.CanNotConnectToDatabaseError;
 import adressverwaltung.main;
+import adressverwaltung.enums.SystemPropertyEnum;
 import adressverwaltung.utils.DotEnv;
 import adressverwaltung.utils.InOut;
 import adressverwaltung.utils.MySQLConnection;
@@ -24,6 +25,7 @@ import java.util.logging.Logger;
  */
 public class ConnectionForm extends javax.swing.JFrame {
     boolean tested = false;
+    String home = SystemPropertyEnum.USER_HOME.get();
 
     /**
      * Creates new form ConnectionForm
@@ -38,8 +40,6 @@ public class ConnectionForm extends javax.swing.JFrame {
         jSpinner1.setEnabled(false);
         jLabel7.setText("");
         setResizable(false);
-        String sep = System.getProperty("file.separator");
-        String home = System.getProperty("user.home");
 
         if (!new File(home).canRead())
             home = System.getProperty("user.dir");
@@ -47,11 +47,11 @@ public class ConnectionForm extends javax.swing.JFrame {
         HashMap<String, String> dotEnv = DotEnv.getDotEnv();
 
         if (!dotEnv.isEmpty() && dotEnv.containsKey("DATABASE_USE")) {
-            jTextField1.setText(dotEnv.get("DATABASE_HOST"));
-            jTextField2.setText(dotEnv.get("DATABASE_NAME"));
-            jTextField3.setText(dotEnv.get("DATABASE_USER"));
-            jTextField4.setText(dotEnv.get("DATABASE_PASSWORD"));
-            jSpinner1.setValue(new Integer(dotEnv.get("DATABASE_PORT")));
+            jTextField1.setText(dotEnv.containsKey("DATABASE_HOST") ? dotEnv.get("DATABASE_HOST") : "localhost");
+            jTextField2.setText(dotEnv.containsKey("DATABASE_NAME") ? dotEnv.get("DATABASE_NAME") : "adv");
+            jTextField3.setText(dotEnv.containsKey("DATABASE_USER") ? dotEnv.get("DATABASE_USER") : "root");
+            jTextField4.setText(dotEnv.containsKey("DATABASE_PASSWORD") ? dotEnv.get("DATABASE_PASSWORD") : "");
+            jSpinner1.setValue(new Integer(dotEnv.containsKey("DATABASE_PORT") ? dotEnv.get("DATABASE_PORT") : "3306"));
             if (dotEnv.get("DATABASE_USE").equals("true")) {
                 jTextField1.setEnabled(true);
                 jTextField2.setEnabled(true);
@@ -62,7 +62,8 @@ public class ConnectionForm extends javax.swing.JFrame {
                 System.out.println("Connecting database...");
 
                 try {
-                    MySQLConnection.verify(jTextField1.getText(), jTextField4.getText(), jTextField2.getText(),jSpinner1.getValue()+"", jTextField3.getText());
+                    MySQLConnection.verify(jTextField1.getText(), jTextField4.getText(), jTextField2.getText(),
+                            jSpinner1.getValue() + "", jTextField3.getText());
                 } catch (CanNotConnectToDatabaseError ex) {
                 }
                 jRadioButton2.setSelected(true);
@@ -310,7 +311,8 @@ public class ConnectionForm extends javax.swing.JFrame {
             }
         } else {
             try {
-                MySQLConnection.verify(jTextField1.getText(), jTextField4.getText(), jTextField2.getText(),jSpinner1.getValue()+"", jTextField3.getText());
+                MySQLConnection.verify(jTextField1.getText(), jTextField4.getText(), jTextField2.getText(),
+                        jSpinner1.getValue() + "", jTextField3.getText());
                 System.out.println("Database connected!");
                 jLabel7.setText("Database Connected");
                 tested = true;
@@ -346,12 +348,13 @@ public class ConnectionForm extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+                | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(ConnectionForm.class.getName()).log(java.util.logging.Level.SEVERE, null,
                     ex);
         }
         // </editor-fold>
-        
+
         // </editor-fold>
 
         /* Create and display the form */
