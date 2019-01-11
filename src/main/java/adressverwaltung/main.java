@@ -5,40 +5,50 @@
  */
 package adressverwaltung;
 
+import adressverwaltung.errors.CanNotConnectToDatabaseError;
 import adressverwaltung.forms.OrtForm;
 import adressverwaltung.forms.ConnectionForm;
 import adressverwaltung.forms.AdressveraltunsForm;
-import adressverwaltung.operators.DotEnv;
-import adressverwaltung.operators.InOut;
+import adressverwaltung.utils.DotEnv;
+import adressverwaltung.utils.InOut;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Main operator class
  * @author Christof Weickhardt, Nicola Temporal
  */
-// TODO setup & join flow
 public class main {
+    public static ConnectionForm cn;
     public static InOut io;
     public static AdressveraltunsForm af;
-    public static ConnectionForm cn;
     public static OrtForm of;
     
     /**
      * @param args the command line arguments
-     * @throws SQLException throws a exception if needed
      */
-    public static void main(String[] args) throws SQLException{
-        
-        io = new InOut(null);
-        af = new AdressveraltunsForm(io);
-        of = new OrtForm(io);
-        cn = new ConnectionForm();
-        if(DotEnv.getDotEnv().keySet().contains("DATABASE_USE")){
-            af.setVisible(true);
-        }else{
-            cn.setVisible(true);
+    public static void main(String[] args) {
+        try {
+            io = new InOut(null);
+            
+            cn = new ConnectionForm();
+            
+            af = new AdressveraltunsForm(io);
+            
+            of = new OrtForm(io);
+            if(DotEnv.getDotEnv().keySet().contains("DATABASE_USE")){
+                af.setVisible(true);
+            }else{
+                cn.setVisible(true);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (CanNotConnectToDatabaseError ex) {
+            viewConnectionSettings();
         }
+        
     }
     
     public static boolean setupConnection(HashMap<String,String> connection){
@@ -48,32 +58,35 @@ public class main {
             af = new AdressveraltunsForm(io);
             of = new OrtForm(io);
             return true;
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             return false;
         }
     }
     
-    public static void viewAdressverwaltung(){
+    public static void viewAdressverwaltung() throws SQLException, CanNotConnectToDatabaseError{
+        if(af == null)af = new AdressveraltunsForm(io);
         af.setVisible(true);
         af.requestFocus();
         
-        cn.setVisible(false);
-        of.setVisible(false);
+        if(cn != null)cn.setVisible(false);
+        if(of != null)of.setVisible(false);
     }
     
-    public static void viewOrtverwlatung(){
+    public static void viewOrtverwlatung() throws CanNotConnectToDatabaseError, SQLException{
+        if(of == null)of = new OrtForm(io);
         of.setVisible(true);
         of.requestFocus();
         
-        cn.setVisible(false);
-        af.setVisible(false);
+        if(cn != null)cn.setVisible(false);
+        if(af != null)af.setVisible(false);
     }
     
     public static void viewConnectionSettings(){
+        if(cn == null)cn = new ConnectionForm();
         cn.setVisible(true);
         cn.requestFocus();
         
-        of.setVisible(false);
-        af.setVisible(false);
+        if(of != null)of.setVisible(false);
+        if(of != null)af.setVisible(false);
     }
 }

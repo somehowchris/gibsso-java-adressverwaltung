@@ -23,7 +23,7 @@ import javax.persistence.Id;
 // - Testing & Deployment => Release 4
 /**
  *
- * @author chris
+ * @author Christof Weickhardt
  */
 @Entity
 public class Person implements Serializable {
@@ -32,11 +32,11 @@ public class Person implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long pid;
-    
+
     private String name;
     private String vorname;
     private String strasse;
-    private long oid= -1;
+    private long oid = -1;
     private String telefon;
     private String handy;
     private String email;
@@ -54,10 +54,7 @@ public class Person implements Serializable {
     public Person() {
     }
 
-    
-    
-    
-    public Person(String vorname,String name) {
+    public Person(String vorname, String name) {
         this.name = name;
         this.vorname = vorname;
     }
@@ -71,7 +68,6 @@ public class Person implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Person)) {
             return false;
         }
@@ -146,7 +142,7 @@ public class Person implements Serializable {
     public void setVorname(String vorname) {
         this.vorname = vorname;
     }
-    
+
     public Long getId() {
         return pid;
     }
@@ -154,8 +150,8 @@ public class Person implements Serializable {
     public void setId(Long pid) {
         this.pid = pid;
     }
-    
-    public void setAll(Person person){
+
+    public void setAll(Person person) {
         this.name = person.getName();
         this.vorname = person.getVorname();
         this.strasse = person.getStrasse();
@@ -164,5 +160,5 @@ public class Person implements Serializable {
         this.handy = person.getHandy();
         this.email = person.getEmail();
     }
-    
+
 }

@@ -3,49 +3,51 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package adressverwaltung.operators;
+package adressverwaltung.utils;
 
 import adressverwaltung.models.Person;
 
 import java.util.*;
 import java.io.File;
-import adressverwaltung.controller.Controller;
-import adressverwaltung.controller.DataBaseController;
-import adressverwaltung.controller.FileSystemController;
+import adressverwaltung.services.DatabaseService;
+import adressverwaltung.services.FileSystemService;
+import adressverwaltung.errors.CanNotConnectToDatabaseError;
 import adressverwaltung.models.Ort;
-import java.awt.Desktop;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import adressverwaltung.enums.DotEnvEnum;
+import adressverwaltung.enums.SystemPropertyEnum;
+import adressverwaltung.exports.Export;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import adressverwaltung.services.Service;
 
 /**
- * A middleware class to operate with the Controller interface
+ * A middleware class to operate with the Service interface
  * @author Nicola Temporal
  */
-// TODO document 
 public class InOut {
 
-    public Controller connection = null;
-    String sep = System.getProperty("file.separator");
-    String home = System.getProperty("user.home");
-    String workDir = System.getProperty("user.dir");   
-    
-    public InOut(HashMap<String, String> dotEnv) throws SQLException {
-        
-        if(!new File(home).canRead()) home = System.getProperty("user.dir");
+    public Service connection = null;
+    String home = SystemPropertyEnum.USER_HOME.get();
+    public InOut(HashMap<String, String> dotEnv) throws SQLException, CanNotConnectToDatabaseError {
         if(dotEnv == null) dotEnv = new HashMap<>();
         File dotEnvFile = new File(home);
         if (dotEnvFile.exists() && dotEnv.isEmpty() ? !(dotEnv = DotEnv.getDotEnv()).isEmpty() : true){
-            if(dotEnv.containsKey("DATABASE_USE")){
-                connection = dotEnv.get("DATABASE_USE").equals("true") ? new DataBaseController(dotEnv) : new FileSystemController(home, sep);
+            if(dotEnv.containsKey(DotEnvEnum.DB_USE.get()) && DotEnv.containsAllKeys(dotEnv)){
+                if(dotEnv.get(DotEnvEnum.DB_USE.get()).equals("true")){
+                    if(MySQLConnection.verify(dotEnv.get(DotEnvEnum.HOST.get()), dotEnv.get(DotEnvEnum.PASSWORD.get()), dotEnv.get(DotEnvEnum.TABLE_NAME.get()), dotEnv.get(DotEnvEnum.PORT.get()), dotEnv.get(DotEnvEnum.USER.get()))){
+                        connection = new DatabaseService(dotEnv);
+                    }else{
+                        throw new CanNotConnectToDatabaseError();
+                    }
+                }else if(dotEnv.get(DotEnvEnum.DB_USE.get()).equals("false")){
+                    connection = new FileSystemService(home, SystemPropertyEnum.FILE_SEPERATOR.get());
+                }else{
+                    throw new CanNotConnectToDatabaseError();
+                }
             }else{
-                connection = new FileSystemController(home, sep);
+                connection = new FileSystemService(home, SystemPropertyEnum.FILE_SEPERATOR.get());
             }
         }else{
-            connection = new FileSystemController(home, sep);
+            connection = new FileSystemService(home, SystemPropertyEnum.FILE_SEPERATOR.get());
         }
     }
     
@@ -109,70 +111,21 @@ public class InOut {
         return connection.getOrt(amount, offset);
     }
     
-    public void export() throws Exception{
-        // Create a Workbook
-        Workbook workbook = new XSSFWorkbook(); // new HSSFWorkbook() for generating `.xls` file
-
-        workbook = Excel.getDataSheetFromOrtList(connection.getOrt(), workbook);
-        workbook = Excel.getDataSheetFromPeopleList(connection.getPeople(new Integer(connection.countPeople()+""), 0), workbook);
-        
-        File f = new File(workDir+sep+"Export-"+getDate()+".xlsx");
-        if(f.exists())f.delete();
-        // Write the output to a file
-        FileOutputStream fileOut = new FileOutputStream(f);
-        workbook.write(fileOut);
-        fileOut.close();
-
-        // Closing the workbook
-        workbook.close();
-        
-        openDesktop(f.getParentFile());
+    public void exportAll() throws Exception{
+        Export export = new Export(connection);
+        export = export.configure();
+        if(export == null)return;
+        export.render();
+        export.write();
+        export.open();
     }
     
     public void searchExport(List<Person> people) throws Exception{
-        // Create a Workbook
-        Workbook workbook = new XSSFWorkbook(); // new HSSFWorkbook() for generating `.xls` file
-        
-        ArrayList<Ort> ortlist = new ArrayList<>();
-        
-        for(Person p : people){
-            if(containsOrt(ortlist,p.getOid())){
-                ortlist.add(connection.getOrt(p.getId()));
-            }
-        }
-        
-        workbook = Excel.getDataSheetFromPeopleList(people, workbook);
-        workbook = Excel.getDataSheetFromOrtList(ortlist, workbook);  
-        
-        File f = new File(workDir+sep+"SearchExport-"+getDate()+".xlsx");
-        if(f.exists())f.delete();
-        // Write the output to a file
-        FileOutputStream fileOut = new FileOutputStream(f);
-        workbook.write(fileOut);
-        fileOut.close();
-
-        // Closing the workbook
-        workbook.close();
-        openDesktop(f.getParentFile());
-    }
-    
-    private boolean containsOrt(ArrayList<Ort> ortlist, Long ort){
-        if(ort != null){
-            if (ortlist.stream().anyMatch((o) -> (Objects.equals(o.getOid(), ort)))) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    private void openDesktop(File dir) throws IOException{
-        Desktop desktop = Desktop.getDesktop();
-        desktop.open(dir);
-    }
-    
-    private String getDate(){
-        SimpleDateFormat formatter = new SimpleDateFormat("dd_MM_yyyy_HH_mm_ss");
-        Date date = new Date();
-        return formatter.format(date);
+        Export export = new Export(connection, people);
+        export = export.configure();
+        if(export == null)return;
+        export.render();
+        export.write();
+        export.open();
     }
 }

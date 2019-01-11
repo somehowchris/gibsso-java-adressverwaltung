@@ -3,17 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package adressverwaltung.controller;
+package adressverwaltung.services;
 
 import adressverwaltung.models.Ort;
 import adressverwaltung.models.Person;
 import java.util.List;
 
 /**
- * The interface of a Controller with all the needed function to operate with the IO
+ * The interface of a Service with all the needed function to operate with the IO
  * @author Christof Weickhardt
  */
-public interface Controller {
+public interface Service {
     
   /**
    * @param id A id of a person to get

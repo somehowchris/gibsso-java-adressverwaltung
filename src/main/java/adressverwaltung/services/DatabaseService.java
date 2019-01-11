@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package adressverwaltung.controller;
+package adressverwaltung.services;
 
 import adressverwaltung.models.Ort;
 import adressverwaltung.models.Person;
@@ -23,12 +23,12 @@ import javax.persistence.criteria.Root;
  * A Database controller using Hibernate to communicate with the database
  * @author Christof Weickhardt
  */
-public class DataBaseController implements Controller {
+public class DatabaseService implements Service {
     
     EntityManager em;
     EntityManagerFactory emf;
     
-    public DataBaseController(HashMap<String, String> connectionValues) {
+    public DatabaseService(HashMap<String, String> connectionValues) {
         Map properties = new HashMap();
         properties.put("javax.persistence.jdbc.driver", "com.mysql.jdbc.Driver");
         properties.put("javax.persistence.jdbc.url", "jdbc:mysql://"+connectionValues.get("DATABASE_HOST")+":"+connectionValues.get("DATABASE_PORT")+"/"+connectionValues.get("DATABASE_NAME")+"?zeroDateTimeBehavior=convertToNull");
@@ -38,7 +38,6 @@ public class DataBaseController implements Controller {
         try {
             emf = Persistence.createEntityManagerFactory("AdressverwaltungPU", properties);
         } catch (Exception e) {
-            e.printStackTrace();
         }
         em = (EntityManager) emf.createEntityManager();
     }

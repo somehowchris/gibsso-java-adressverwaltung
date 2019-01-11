@@ -31,3 +31,5 @@ hs_err_pid*
 SearchExport-06_01_2019_20_45_18.csv
 /target/
 *.xlsx
+/nbproject/
+.fsdb
