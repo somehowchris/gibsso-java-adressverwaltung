@@ -8,8 +8,8 @@ import javax.persistence.metamodel.StaticMetamodel;
 @StaticMetamodel(Ort.class)
 public class Ort_ { 
 
-    public static volatile SingularAttribute<Ort, String> name;
-    public static volatile SingularAttribute<Ort, Long> oid;
-    public static volatile SingularAttribute<Ort, Integer> plz;
+    public static volatile SingularAttribute<Town, String> name;
+    public static volatile SingularAttribute<Town, Long> oid;
+    public static volatile SingularAttribute<Town, Integer> plz;
 
 }

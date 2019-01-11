@@ -11,6 +11,9 @@ package adressverwaltung.errors;
  */
 public class CanNotConnectToDatabaseError extends Exception{
 
+    /**
+     * Constructor to create a custom CanNotConnectToDatabaseError exception
+     */
     public CanNotConnectToDatabaseError() {
         super("Could not connect to the database");
     }

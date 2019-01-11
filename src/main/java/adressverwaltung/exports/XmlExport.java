@@ -6,11 +6,10 @@
 package adressverwaltung.exports;
 
 import adressverwaltung.enums.PersonColumnEnum;
-import adressverwaltung.models.Ort;
+import adressverwaltung.models.Town;
 import adressverwaltung.models.Person;
 import java.io.File;
 import java.util.List;
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -30,24 +29,42 @@ import adressverwaltung.services.Service;
 
 /**
  *
- * @author chris
+ * @author Christof Weickhardt
  */
 public class XmlExport extends Export{
     
     DOMSource xmlSource;
     
+    /**
+     * Constructor to export a list of people
+     * @param connection Connection to get related data
+     * @param people People to export
+     */
     public XmlExport(Service connection, List<Person> people) {
         super(connection, people);
     }
     
+    /**
+     * Constructor to export all
+     * @param connection Connection to get all the data
+     */
     public XmlExport(Service connection) {
         super(connection);
     }
 
-    public XmlExport(Service connection, List<Person> people, List<Ort> towns) {
+    /**
+     * Constructor to export from given data set
+     * @param connection Connection to get needed files
+     * @param people People to export
+     * @param towns Towns to export
+     */
+    public XmlExport(Service connection, List<Person> people, List<Town> towns) {
         super(connection, people, towns);
     }
 
+    /**
+     * Custom xml render function
+     */
     @Override
     public void render() {
         try {
@@ -62,8 +79,8 @@ public class XmlExport extends Export{
 
             
             this.people.forEach((p) -> {
-                Ort o = null;
-                if(p.getOid() != null)o = this.connection.getOrt(p.getOid());
+                Town o = null;
+                if(p.getOid() != null)o = this.connection.getTown(p.getOid());
                 
                 // staff elements
                 Element person = doc.createElement("person");
@@ -76,17 +93,17 @@ public class XmlExport extends Export{
                 
                 // firstname elements
                 Element firstname = doc.createElement(PersonColumnEnum.FIRST_NAME.get().toLowerCase());
-                firstname.appendChild(doc.createTextNode(p.getName() == null ? "" : p.getName()));
+                firstname.appendChild(doc.createTextNode(p.getLastName() == null ? "" : p.getLastName()));
                 person.appendChild(firstname);
                 
                 // lastname elements
                 Element lastname = doc.createElement(PersonColumnEnum.LAST_NAME.get().toLowerCase());
-                lastname.appendChild(doc.createTextNode(p.getVorname() == null ? "" : p.getVorname()));
+                lastname.appendChild(doc.createTextNode(p.getFirstName() == null ? "" : p.getFirstName()));
                 person.appendChild(lastname);
                 
                 // street elements
                 Element street = doc.createElement(PersonColumnEnum.STREET.get().toLowerCase());
-                street.appendChild(doc.createTextNode(p.getStrasse() == null ? "" : p.getStrasse()));
+                street.appendChild(doc.createTextNode(p.getAddress() == null ? "" : p.getAddress()));
                 person.appendChild(street);
                 
                 // town elements
@@ -107,7 +124,7 @@ public class XmlExport extends Export{
                 
                 // phone elements
                 Element phone = doc.createElement(PersonColumnEnum.PHONE.get().toLowerCase());
-                phone.appendChild(doc.createTextNode(p.getTelefon() == null ? "" : p.getTelefon()));
+                phone.appendChild(doc.createTextNode(p.getPhone() == null ? "" : p.getPhone()));
                 person.appendChild(phone);
                 
                 // email elements
@@ -117,7 +134,7 @@ public class XmlExport extends Export{
                 
                 // mobile elements
                 Element mobile = doc.createElement(PersonColumnEnum.MOBILE.get().toLowerCase());
-                mobile.appendChild(doc.createTextNode(p.getHandy() == null ? "" : p.getHandy()));
+                mobile.appendChild(doc.createTextNode(p.getMobile() == null ? "" : p.getMobile()));
                 person.appendChild(mobile);
             });
             
@@ -129,6 +146,9 @@ public class XmlExport extends Export{
       }
     } 
 
+    /**
+     * Custom xml write function
+     */
     @Override
     public void write() {
        

@@ -6,7 +6,7 @@
 package adressverwaltung.exports;
 
 import adressverwaltung.enums.PersonColumnEnum;
-import adressverwaltung.models.Ort;
+import adressverwaltung.models.Town;
 import adressverwaltung.models.Person;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -23,24 +23,42 @@ import adressverwaltung.services.Service;
 
 /**
  *
- * @author chris
+ * @author Christof Weickhardt
  */
 public class JsonExport extends Export{
     
     String jsonData;
     
+    /**
+     * Constructor to export a list of people
+     * @param connection Connection to get related data
+     * @param people People to export
+     */
     public JsonExport(Service connection, List<Person> people) {
         super(connection, people);
     }
     
+    /**
+     * Constructor to export all
+     * @param connection Connection to get all the data
+     */
     public JsonExport(Service connection) {
         super(connection);
     }
 
-    public JsonExport(Service connection, List<Person> people, List<Ort> towns) {
+    /**
+     * Constructor to export from given data set
+     * @param connection Connection to get needed files
+     * @param people People to export
+     * @param towns Towns to export
+     */
+    public JsonExport(Service connection, List<Person> people, List<Town> towns) {
         super(connection, people, towns);
     }
 
+    /**
+     * Custom json render function
+     */
     @Override
     public void render() {
 
@@ -48,16 +66,16 @@ public class JsonExport extends Export{
         
         people.stream().map((p) -> {
             JSONObject obj = new JSONObject();
-            Ort o = new Ort();
-            if(p.getOid() != null)o = this.connection.getOrt(p.getOid());
+            Town o = new Town();
+            if(p.getOid() != null)o = this.connection.getTown(p.getOid());
             obj.put(PersonColumnEnum.ID.get(), p.getId());
-            obj.put(PersonColumnEnum.LAST_NAME.get(), p.getName() == null ? "" : p.getName());
-            obj.put(PersonColumnEnum.FIRST_NAME.get(), p.getVorname() == null ? "" : p.getVorname());
-            obj.put(PersonColumnEnum.STREET.get(), p.getStrasse() == null ? "" : p.getStrasse());
+            obj.put(PersonColumnEnum.LAST_NAME.get(), p.getLastName() == null ? "" : p.getLastName());
+            obj.put(PersonColumnEnum.FIRST_NAME.get(), p.getFirstName() == null ? "" : p.getFirstName());
+            obj.put(PersonColumnEnum.STREET.get(), p.getAddress() == null ? "" : p.getAddress());
             obj.put(PersonColumnEnum.TOWN_NAME.get(), o == null ? "" : o.getName() == null ? "" : o.getName());
             obj.put(PersonColumnEnum.TOWN_PLZ.get(), o == null ? "" : o.getPlz() > 0 ? "" : o.getPlz());
-            obj.put(PersonColumnEnum.PHONE.get(), p.getTelefon() == null ? "" : p.getTelefon());
-            obj.put(PersonColumnEnum.MOBILE.get(), p.getHandy() == null ? "" : p.getHandy());
+            obj.put(PersonColumnEnum.PHONE.get(), p.getPhone() == null ? "" : p.getPhone());
+            obj.put(PersonColumnEnum.MOBILE.get(), p.getMobile() == null ? "" : p.getMobile());
             obj.put(PersonColumnEnum.EMAIL.get(), p.getEmail() == null ? "" : p.getEmail());
             return obj;
         }).forEachOrdered((obj) -> {
@@ -70,6 +88,9 @@ public class JsonExport extends Export{
         jsonData = gson.toJson(json);
     }
     
+    /**
+     * Custom json write function
+     */
     @Override
     public void write() {
         try {

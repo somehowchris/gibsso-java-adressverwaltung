@@ -9,27 +9,45 @@ import java.util.ArrayList;
 
 /**
  *
- * @author chris
+ * @author Christof Weickhardt
  */
-public enum OrtColumnEnum {
-    ID("ID"), NAME("Name"), PLZ("Plz");
+public enum TownColumnEnum {
+
+    /**
+     * Column key of id
+     */
+    ID("ID"),
+
+    /**
+     * Column key of name
+     */
+    NAME("Name"),
+
+    /** 
+     * Column key of plz
+     */
+    PLZ("Plz");
     
     String value;
-    OrtColumnEnum(String values){
+    TownColumnEnum(String values){
         this.value = values;
     }
 
+    /**
+     * Get the value of the enum
+     * @return Key as String
+     */
     public String get() {
         return value;
     } 
     
     /**
-     *
-     * @return
+     * Get alls values of the enum type
+     * @return String array of all values
      */
     public static String[] getValues(){
         ArrayList<String> values = new ArrayList<>();
-        for(OrtColumnEnum enumType : OrtColumnEnum.values()){
+        for(TownColumnEnum enumType : TownColumnEnum.values()){
             values.add(enumType.get());
         }
         return values.stream().toArray(String[]::new);

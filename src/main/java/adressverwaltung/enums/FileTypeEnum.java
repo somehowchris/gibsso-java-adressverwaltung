@@ -9,10 +9,29 @@ import java.util.ArrayList;
 
 /**
  *
- * @author chris
+ * @author Christof Weickhardt
  */
 public enum FileTypeEnum {
-    CSV("CSV",".csv"), XML("XML",".xml"), XLSX("Excel",".xlsx"), JSON("Json",".json");
+
+    /**
+     * CSV file type
+     */
+    CSV("CSV",".csv"),
+
+    /**
+     * XML file type
+     */
+    XML("XML",".xml"),
+
+    /**
+     * Excel file type
+     */
+    XLSX("Excel",".xlsx"),
+
+    /**
+     * Json file type
+     */
+    JSON("Json",".json");
 
     String description;
     String ext;
@@ -21,21 +40,34 @@ public enum FileTypeEnum {
         this.ext = ext;
     }
 
+    /**
+     * Get the value of the enum
+     * @return Key as String
+     */
     public String get() {
         return description;
     }
     
+    /**
+     * Get the extension of the selected file type
+     * @return Extension as String
+     */
     public String getExtension(){
         return ext;
     }
     
+    /**
+     * Get the description of the selected file type
+     * @deprecated 
+     * @return Description as String
+     */
     public String getDescription(){
         return description;
     }
     
     /**
-     *
-     * @return
+     * Get alls values of the enum type
+     * @return String array of all values
      */
     public static String[] getExtensions(){
         ArrayList<String> values = new ArrayList<>();

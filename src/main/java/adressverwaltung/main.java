@@ -6,9 +6,9 @@
 package adressverwaltung;
 
 import adressverwaltung.errors.CanNotConnectToDatabaseError;
-import adressverwaltung.forms.OrtForm;
+import adressverwaltung.forms.TownForm;
 import adressverwaltung.forms.ConnectionForm;
-import adressverwaltung.forms.AdressveraltunsForm;
+import adressverwaltung.forms.AddressForm;
 import adressverwaltung.utils.DotEnv;
 import adressverwaltung.utils.InOut;
 import java.sql.SQLException;
@@ -21,10 +21,26 @@ import java.util.logging.Logger;
  * @author Christof Weickhardt, Nicola Temporal
  */
 public class main {
+
+    /**
+     * Static available connection form
+     */
     public static ConnectionForm cn;
+
+    /**
+     * Static available io
+     */
     public static InOut io;
-    public static AdressveraltunsForm af;
-    public static OrtForm of;
+
+    /**
+     * Static available adress form
+     */
+    public static AddressForm af;
+
+    /**
+     * Static available town form
+     */
+    public static TownForm tf;
     
     /**
      * @param args the command line arguments
@@ -35,9 +51,9 @@ public class main {
             
             cn = new ConnectionForm();
             
-            af = new AdressveraltunsForm(io);
+            af = new AddressForm(io);
             
-            of = new OrtForm(io);
+            tf = new TownForm(io);
             if(DotEnv.getDotEnv().keySet().contains("DATABASE_USE")){
                 af.setVisible(true);
             }else{
@@ -51,42 +67,60 @@ public class main {
         
     }
     
+    /**
+     * Function to setup a new Connection
+     * @param connection Key value pair list of connection information
+     * @return Returns a boolean true if the connection is successfully established
+     */
     public static boolean setupConnection(HashMap<String,String> connection){
         try {
             io = new InOut(connection);
             cn.setVisible(false);
-            af = new AdressveraltunsForm(io);
-            of = new OrtForm(io);
+            af = new AddressForm(io);
+            tf = new TownForm(io);
             return true;
-        } catch (Exception ex) {
+        } catch (CanNotConnectToDatabaseError | SQLException ex) {
             return false;
         }
     }
     
-    public static void viewAdressverwaltung() throws SQLException, CanNotConnectToDatabaseError{
-        if(af == null)af = new AdressveraltunsForm(io);
+    /**
+     * Function to distplay the adress form
+     * @throws SQLException If not able to get informations from the database
+     * @throws CanNotConnectToDatabaseError If not able to connect to the database
+     */
+    public static void viewAdressForm() throws SQLException, CanNotConnectToDatabaseError{
+        if(af == null)af = new AddressForm(io);
         af.setVisible(true);
         af.requestFocus();
         
         if(cn != null)cn.setVisible(false);
-        if(of != null)of.setVisible(false);
+        if(tf != null)tf.setVisible(false);
     }
     
-    public static void viewOrtverwlatung() throws CanNotConnectToDatabaseError, SQLException{
-        if(of == null)of = new OrtForm(io);
-        of.setVisible(true);
-        of.requestFocus();
+    /**
+     * Function to display the town form
+     * @throws CanNotConnectToDatabaseError If not able to connect to the database
+     * @throws SQLException If not able to get informations from the database
+     */
+    public static void viewTownForm() throws CanNotConnectToDatabaseError, SQLException{
+        if(tf == null)tf = new TownForm(io);
+        tf.setVisible(true);
+        tf.requestFocus();
         
         if(cn != null)cn.setVisible(false);
         if(af != null)af.setVisible(false);
     }
     
+    /**
+     * Function to view the connection settings
+     */
     public static void viewConnectionSettings(){
         if(cn == null)cn = new ConnectionForm();
         cn.setVisible(true);
         cn.requestFocus();
         
-        if(of != null)of.setVisible(false);
-        if(of != null)af.setVisible(false);
+        if(tf != null)tf.setVisible(false);
+        if(tf != null)af.setVisible(false);
     }
 }

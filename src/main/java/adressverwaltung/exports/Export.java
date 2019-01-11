@@ -6,10 +6,10 @@
 package adressverwaltung.exports;
 
 import adressverwaltung.enums.FileTypeEnum;
-import adressverwaltung.enums.OrtColumnEnum;
+import adressverwaltung.enums.TownColumnEnum;
 import adressverwaltung.enums.PersonColumnEnum;
 import adressverwaltung.enums.SystemPropertyEnum;
-import adressverwaltung.models.Ort;
+import adressverwaltung.models.Town;
 import adressverwaltung.models.Person;
 import adressverwaltung.utils.FileTypeFilter;
 import java.awt.Desktop;
@@ -25,35 +25,55 @@ import org.apache.commons.io.FilenameUtils;
 import adressverwaltung.services.Service;
 
 /**
- *
+ * Basic functions for an export
  * @author Christof Weickhardt
  */
 public class Export {
     
     Service connection;
-    ArrayList<Person> people;
-    ArrayList<Ort> towns;
+    List<Person> people;
+    List<Town> towns;
     String[] personColumns = PersonColumnEnum.getValues();
-    String[] ortColumns = OrtColumnEnum.getValues();
+    String[] townColumns = TownColumnEnum.getValues();
     String path;
+
+    /**
+     * Constructor to export a list of people
+     * @param connection Connection to get related data
+     * @param people People to export
+     */
     public Export(Service connection, List<Person> people){
         this.connection = connection;
-        this.people = (ArrayList<Person>) people;
+        this.people = people;
         this.towns = getTowns();
     }
     
-    public Export(Service connection, List<Person> people, List<Ort> towns){
+    /**
+     * Constructor to export from given data set
+     * @param connection Connection to get needed files
+     * @param people People to export
+     * @param towns Towns to export
+     */
+    public Export(Service connection, List<Person> people, List<Town> towns){
         this.connection = connection;
-        this.people = (ArrayList<Person>) people;
-        this.towns = (ArrayList<Ort>) towns;
+        this.people = people;
+        this.towns = towns;
     }
     
+    /**
+     * Constructor to export all
+     * @param connection Connection to get all the data
+     */
     public Export(Service connection){
         this.connection = connection;
-        this.towns = (ArrayList<Ort>) this.connection.getOrt();
-        this.people = (ArrayList<Person>) this.connection.getPeople(new Integer(this.connection.countPeople()+""), 0);
+        this.towns = this.connection.getTown();
+        this.people = this.connection.getPeople(new Integer(this.connection.countPeople()+""), 0);
     }
     
+    /**
+     * Configuration to export a file with a chosen name and export type
+     * @return
+     */
     public Export configure(){
         JFileChooser chooser = new JFileChooser();
         chooser.setCurrentDirectory(new File(SystemPropertyEnum.USER_DIR.get()));
@@ -92,10 +112,19 @@ public class Export {
         }
     }
     
+    /**
+     * Custom render function
+     */
     public void render(){}
     
+    /**
+     * Custom write function
+     */
     public void write(){}
     
+    /**
+     * Methode to open the direcotry of the file exported
+     */
     public void open(){
         try {
             openDirectoryOfFile(new File(path));
@@ -104,32 +133,52 @@ public class Export {
         }
     }
     
+    /**
+     * Opens the parent folder of a given file
+     * @param dir File to open
+     */
     private void openDirectoryOfFile(File dir) throws IOException{
         Desktop desktop = Desktop.getDesktop();
         desktop.open(dir.getParentFile());
     }
     
-    private boolean containsOrt(ArrayList<Ort> ortlist, Long ort){
-        if(ort != null){
-            if (ortlist.stream().anyMatch((o) -> (Objects.equals(o.getOid(), ort)))) {
+    /**
+     * Checks if town already has been loaded
+     * @param towns list of towns to check from
+     * @param town ID of the town to check
+     */
+    private boolean containsTown(ArrayList<Town> towns, Long town){
+        if(town != null){
+            if (towns.stream().anyMatch((o) -> (Objects.equals(o.getTid(), town)))) {
                 return true;
             }
         }
         return false;
     }
     
-    private ArrayList<Ort> getTowns(){
-        ArrayList<Ort> ortlist = new ArrayList<>();
-        people.stream().filter((p) -> (containsOrt(ortlist,p.getOid()))).forEachOrdered((p) -> {
-            ortlist.add(connection.getOrt(p.getId()));
+    /**
+     * Getter of the related town
+     */
+    private ArrayList<Town> getTowns(){
+        ArrayList<Town> towns = new ArrayList<>();
+        people.stream().filter((p) -> (containsTown(towns,p.getOid()))).forEachOrdered((p) -> {
+            towns.add(connection.getTown(p.getId()));
         });
-        return ortlist;
+        return towns;
     }
     
+    /**
+     * Setter of the path to export to
+     * @param path
+     */
     public void setPath(String path){
         this.path = path;
     }
     
+    /**
+     * Creates a new Export object by a file type filter
+     * @param filter FileTypeFilter to create from
+     */
     private Export createExportConfiguration(FileTypeFilter filter){
         Export e = null;
         switch(filter.getFileType()){
@@ -150,6 +199,10 @@ public class Export {
         return e;
     }
 
+    /**
+     * Getter of the path to export to
+     * @return Path of file
+     */
     public String getPath() {
         return path;
     }

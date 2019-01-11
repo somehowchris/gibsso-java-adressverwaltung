@@ -6,7 +6,7 @@
 package adressverwaltung.exports;
 
 import adressverwaltung.models.Person;
-import adressverwaltung.models.Ort;
+import adressverwaltung.models.Town;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -17,24 +17,42 @@ import adressverwaltung.services.Service;
 
 /**
  *
- * @author chris
+ * @author Christof Weickhardt
  */
 public class CsvExport extends Export{
     
     String csvData;
     
+    /**
+     * Constructor to export a list of people
+     * @param connection Connection to get related data
+     * @param people People to export
+     */
     public CsvExport(Service connection, List<Person> people) {
         super(connection, people);
     }
     
+    /**
+     * Constructor to export all
+     * @param connection Connection to get all the data
+     */
     public CsvExport(Service connection){
         super(connection);
     } 
-
-    public CsvExport(Service connection, List<Person> people, List<Ort> twons) {
-        super(connection, people, twons);
+    
+    /**
+     * Constructor to export from given data set
+     * @param connection Connection to get needed files
+     * @param people People to export
+     * @param towns Towns to export
+     */
+    public CsvExport(Service connection, List<Person> people, List<Town> towns) {
+        super(connection, people, towns);
     }
     
+    /**
+     * Custom csv render function
+     */
     @Override
     public void render(){
         ArrayList<String> data = new ArrayList<>();
@@ -43,16 +61,16 @@ public class CsvExport extends Export{
         sb.append("\n");
         this.people.forEach((p) -> {
             String line = "";
-            Ort o = new Ort();
-            if(p.getOid() != null)o = this.connection.getOrt(p.getOid());
+            Town o = new Town();
+            if(p.getOid() != null)o = this.connection.getTown(p.getOid());
             line+=p.getId()+";";
-            line+=(p.getName() == null ? "" : p.getName())+";";
-            line+=(p.getVorname() == null ? "" : p.getVorname())+";";
-            line+=(p.getStrasse() == null ? "" : p.getStrasse());
+            line+=(p.getLastName() == null ? "" : p.getLastName())+";";
+            line+=(p.getFirstName() == null ? "" : p.getFirstName())+";";
+            line+=(p.getAddress() == null ? "" : p.getAddress());
             line+=(o == null ? "" : o.getName() == null ? "" : o.getName())+";";
             line+=(o == null ? "" : o.getPlz() > 0 ? "" : o.getPlz())+";";
-            line+=(p.getTelefon() == null ? "" : p.getTelefon())+";";
-            line+=(p.getHandy() == null ? "" : p.getHandy())+";";
+            line+=(p.getPhone() == null ? "" : p.getPhone())+";";
+            line+=(p.getMobile() == null ? "" : p.getMobile())+";";
             line+=(p.getEmail() == null ? "" : p.getEmail());
             data.add(line);
         });
@@ -62,6 +80,9 @@ public class CsvExport extends Export{
         csvData = sb.toString()+csvData;
     }
 
+    /**
+     * Custom csv write function
+     */
     @Override
     public void write() {
         try {

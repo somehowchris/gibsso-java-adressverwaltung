@@ -7,11 +7,14 @@ package adressverwaltung.errors;
 
 /**
  *
- * @author chris
+ * @author Christof Weickhardt
  */
-public class OrtNotFoundError extends Exception{
+public class TownNotFoundError extends Exception{
 
-    public OrtNotFoundError() {
+    /**
+     * Constructor to create a custom OrtNotFoundError exception
+     */
+    public TownNotFoundError() {
         super("Could not find the requested ort");
     }
     

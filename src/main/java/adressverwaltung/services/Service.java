@@ -5,7 +5,7 @@
  */
 package adressverwaltung.services;
 
-import adressverwaltung.models.Ort;
+import adressverwaltung.models.Town;
 import adressverwaltung.models.Person;
 import java.util.List;
 
@@ -25,7 +25,7 @@ public interface Service {
    * @param id A id of a town to get
    * @return The requested town
    */
-  public Ort getOrt(Long id);
+  public Town getTown(Long id);
   
   /**
    * @param person A person to search for in your data set
@@ -34,10 +34,10 @@ public interface Service {
   public List<Person> searchPerson(Person person);
 
    /**
-   * @param ort A town to search for in your data set
+   * @param Town A town to search for in your data set
    * @return A list of towns found by searching in your data set
    */
-  public List<Ort> searchOrt(Ort ort);
+  public List<Town> searchTown(Town Town);
   
   /**
    * @param person The person which is going to be inserted into your dataset
@@ -46,10 +46,10 @@ public interface Service {
   public Long insertPerson(Person person);
   
   /**
-   * @param ort The town which is going to be inserted into your dataset
+   * @param Town The town which is going to be inserted into your dataset
    * @return The id of the inerted town
    */
-  public Long insertOrt(Ort ort);
+  public Long insertTown(Town Town);
   
   /**
    * @param person The person which is going to be updated in your dataset
@@ -58,15 +58,15 @@ public interface Service {
   public Long updatePerson(Person person);
   
   /**
-   * @param ort The town which is going to be updated in your dataset
+   * @param Town The town which is going to be updated in your dataset
    * @return The id of the updated town
    */
-  public Long updateOrt(Ort ort);
+  public Long updateTown(Town Town);
   
   /**
-   * @param ort The town which is going to be removed from your dataset
+   * @param Town The town which is going to be removed from your dataset
    */
-  public void deleteOrt(Ort ort);
+  public void deleteTown(Town Town);
 
   /**
    * @param person The person which is going to be removed from your dataset
@@ -83,19 +83,19 @@ public interface Service {
   /**
    * @return A list with all the towns stored in your data set
    */
-  public List<Ort> getOrt();
+  public List<Town> getTown();
   
   /**
    * @param amount The amount if towns requested
    * @param offset The amount if towns skipped 
    * @return A list of tows found in the given range
    */
-  public List<Ort> getOrt(int amount, int offset);
+  public List<Town> getTown(int amount, int offset);
 
   /**
    * @return The amount of towns stored in your data set
    */
-  public Long countOrt();
+  public Long countTown();
   
   /**
    * @return The amount of people stored in your data set

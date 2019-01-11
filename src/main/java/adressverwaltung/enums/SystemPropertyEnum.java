@@ -9,24 +9,56 @@ import java.util.ArrayList;
 
 /**
  *
- * @author chris
+ * @author Christof Weickhardt
  */
 public enum SystemPropertyEnum {
     
-    USER_HOME (System.getProperty("user.home")), USER_DIR (System.getProperty("user.dir")), FILE_SEPERATOR (System.getProperty("file.separator")), JAVA_HOME (System.getProperty("java.home")), USER_NAME(System.getProperty("user.name")), LINE_SEPERATOR(System.getProperty("line.separator"));
+    /**
+     * System property user home 
+     */
+    USER_HOME (System.getProperty("user.home")),
+
+    /**
+     * System property  working directory
+     */
+    USER_DIR (System.getProperty("user.dir")),
+
+    /**
+     * System property  file separator
+     */
+    FILE_SEPERATOR (System.getProperty("file.separator")),
+
+    /**
+     * System property java home
+     */
+    JAVA_HOME (System.getProperty("java.home")),
+
+    /**
+     * System property user name
+     */
+    USER_NAME(System.getProperty("user.name")),
+
+    /**
+     * System property line separator
+     */
+    LINE_SEPERATOR(System.getProperty("line.separator"));
     
     String value;
     SystemPropertyEnum(String values){
         this.value = values;
     }
 
+    /**
+     * Get the value of the enum
+     * @return Key as String
+     */
     public String get() {
         return value;
     }
     
     /**
-     *
-     * @return
+     * Get alls values of the enum type
+     * @return String array of all values
      */
     public static String[] getValues(){
         ArrayList<String> values = new ArrayList<>();

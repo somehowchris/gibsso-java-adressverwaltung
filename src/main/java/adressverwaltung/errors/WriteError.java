@@ -7,10 +7,13 @@ package adressverwaltung.errors;
 
 /**
  *
- * @author chris
+ * @author Christof Weickhardt
  */
 public class WriteError extends Exception{
 
+    /**
+     * Constructor to create a custom WriteError exception
+     */
     public WriteError() {
         super("Could not write changes to the database. Please check your connection and table setup.");
     }

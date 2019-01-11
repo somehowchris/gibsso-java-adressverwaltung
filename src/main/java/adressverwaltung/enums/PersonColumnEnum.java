@@ -9,23 +9,71 @@ import java.util.ArrayList;
 
 /**
  *
- * @author chris
+ * @author Christof Weickhardt
  */
 public enum PersonColumnEnum {
-    ID("ID"), LAST_NAME("Name"), FIRST_NAME("Vorname"), STREET("Strasse"),TOWN_NAME("Ort_Name"), TOWN_PLZ("Ort_Plz"),PHONE("Telefon"),MOBILE("Handy"),EMAIL("Email");
+
+    /**
+     * Column key of id
+     */
+    ID("ID"),
+
+    /**
+     * Column key of name
+     */
+    LAST_NAME("Name"),
+
+    /**
+     * Column key of vorname
+     */
+    FIRST_NAME("Vorname"),
+
+    /**
+     * Column key of street
+     */
+    STREET("Strasse"),
+
+    /**
+     * Column key of twon name
+     */
+    TOWN_NAME("Ort_Name"),
+
+    /**
+     * Column key of town plz
+     */
+    TOWN_PLZ("Ort_Plz"),
+
+    /**
+     * Column key of phone
+     */
+    PHONE("Telefon"),
+
+    /**
+     * Column key of mobile
+     */
+    MOBILE("Handy"),
+
+    /**
+     * Column key of email
+     */
+    EMAIL("Email");
     
     String value;
     PersonColumnEnum(String values){
         this.value = values;
     }
 
+    /**
+     * Get the value of the enum
+     * @return Key as String
+     */
     public String get() {
         return value;
     } 
     
     /**
-     *
-     * @return
+     * Get alls values of the enum type
+     * @return String array of all values
      */
     public static String[] getValues(){
         ArrayList<String> values = new ArrayList<>();

@@ -9,10 +9,9 @@ import adressverwaltung.errors.CanNotConnectToDatabaseError;
 import adressverwaltung.main;
 import adressverwaltung.utils.InOut;
 import adressverwaltung.models.Person;
-import adressverwaltung.models.Ort;
+import adressverwaltung.models.Town;
+import adressverwaltung.utils.CustomFocusTraversalPolicy;
 import java.awt.Component;
-import java.awt.Container;
-import java.awt.FocusTraversalPolicy;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -25,10 +24,10 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author chris
+ * @author Christof Weickhardt
  */
 // TODO input checks
-public class AdressveraltunsForm extends javax.swing.JFrame {
+public class AddressForm extends javax.swing.JFrame {
 
     InOut ioLayer;
     Person cp;
@@ -36,25 +35,23 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
     int current = 1;
     boolean search = false;
     List<Person> searchResults;
-    List<Ort> ortlist;
-    Ort o;
-    long ortid;
+    List<Town> towns;
+    Town t;
+    long townid;
     
 
     /**
      * Creates new form AdressveraltunsForm
      * 
-     * @param io
+     * @param io IO connection to get data from
      * @throws SQLException throws a exception if needed
-     * @throws              adressverwaltung.errors.CanNotConnectToDatabaseError
+     * @throws  CanNotConnectToDatabaseError            adressverwaltung.errors.
      */
-    public AdressveraltunsForm(InOut io) throws SQLException, CanNotConnectToDatabaseError {
+    public AddressForm(InOut io) throws SQLException, CanNotConnectToDatabaseError {
         initComponents();
         this.setTitle("Adressverwaltung");
-        if (io != null)
-            ioLayer = io;
-        if (io == null)
-            ioLayer = new InOut(null);
+        if (io != null)ioLayer = io;
+        if (io == null)ioLayer = new InOut(null);
 
         ArrayList<Component> comp = new ArrayList<>();
         comp.add(this.jName);
@@ -69,7 +66,7 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
         setResizable(false);
 
         loadTowns();
-        this.setFocusTraversalPolicy(new FtpFormPerson(comp));
+        this.setFocusTraversalPolicy(new CustomFocusTraversalPolicy(comp));
         count = search ? searchResults.size() : (int) ioLayer.countPeople();
         setPlayerButtons();
         if (count > 0) {
@@ -483,11 +480,11 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
                     cp = new Person();
                 }
 
-                ortlist = ioLayer.getPlaces();
+                towns = ioLayer.getTowns();
                 if (new Long(cp.getOid() + "") != -1) {
-                    o = ioLayer.getOrt(cp.getOid());
-                    if (o != null)
-                        selectOrt(o.getName() + " " + o.getPlz());
+                    t = ioLayer.getTown(cp.getOid());
+                    if (t != null)
+                        selectTown(t.getName() + " " + t.getPlz());
                 }
                 DefaultListModel dlm = new DefaultListModel();
                 dlm.addElement("Search to get a list of results");
@@ -509,7 +506,7 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
 
                     DefaultListModel dlm = new DefaultListModel();
                     searchResults.forEach((p) -> {
-                        dlm.addElement(p.getVorname() + " " + p.getName());
+                        dlm.addElement(p.getFirstName() + " " + p.getLastName());
                     });
                     jList1.setModel(dlm);
                 } else {
@@ -518,7 +515,7 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(AdressveraltunsForm.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AddressForm.class.getName()).log(Level.SEVERE, null, ex);
         }
     }// GEN-LAST:event_jButton2ActionPerformed
 
@@ -530,18 +527,18 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
             count = search ? searchResults.size() : (int) ioLayer.countPeople();
             setPlayerButtons();
         } catch (SQLException ex) {
-            Logger.getLogger(AdressveraltunsForm.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AddressForm.class.getName()).log(Level.SEVERE, null, ex);
         }
     }// GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton1ActionPerformed
         jButton2.setText("Search");
         count = search ? searchResults.size() : (int) ioLayer.countPeople();
-        ortlist = ioLayer.getPlaces();
+        towns = ioLayer.getTowns();
         if (new Long(cp.getOid() + "") != -1) {
-            o = ioLayer.getOrt(cp.getOid());
-            if (o != null)
-                selectOrt(o.getName() + " " + o.getPlz());
+            t = ioLayer.getTown(cp.getOid());
+            if (t != null)
+                selectTown(t.getName() + " " + t.getPlz());
         }
         DefaultListModel dlm = new DefaultListModel();
         dlm.addElement("Search to get a list of results");
@@ -583,26 +580,24 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton7ActionPerformed
         if (search) {
             try {
-                ioLayer.searchExport(searchResults);
+                ioLayer.exportFromSearch(searchResults);
             } catch (Exception ex) {
-                Logger.getLogger(AdressveraltunsForm.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AddressForm.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
             try {
                 ioLayer.exportAll();
             } catch (Exception ex) {
-                Logger.getLogger(AdressveraltunsForm.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AddressForm.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }// GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton9ActionPerformed
         try {
-            main.viewOrtverwlatung();
-        } catch (CanNotConnectToDatabaseError ex) {
-            Logger.getLogger(AdressveraltunsForm.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(AdressveraltunsForm.class.getName()).log(Level.SEVERE, null, ex);
+            main.viewTownForm();
+        } catch (CanNotConnectToDatabaseError | SQLException ex) {
+            Logger.getLogger(AddressForm.class.getName()).log(Level.SEVERE, null, ex);
         }
     }// GEN-LAST:event_jButton9ActionPerformed
 
@@ -611,16 +606,16 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
     }// GEN-LAST:event_jButton8ActionPerformed
 
     private void jPLZActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jPLZActionPerformed
-        if (ortlist != null) {
-            if (ortlist.stream().filter(el -> (el.getPlz() + " " + el.getName()).equals(jPLZ.getSelectedItem())).count() == 1) {
-                Optional<Ort> ort = ortlist.stream().filter(el -> (el.getPlz() + " " + el.getName()).equals(jPLZ.getSelectedItem())).findFirst();
-                cp.setOid(new Integer("" + ort.get().getOid()));
-                o = ort.get();
-                ortid = o.getOid();
+        if (towns != null) {
+            if (towns.stream().filter(el -> (el.getPlz() + " " + el.getName()).equals(jPLZ.getSelectedItem())).count() == 1) {
+                Optional<Town> ort = towns.stream().filter(el -> (el.getPlz() + " " + el.getName()).equals(jPLZ.getSelectedItem())).findFirst();
+                cp.setOid(new Integer("" + ort.get().getTid()));
+                t = ort.get();
+                townid = t.getTid();
             } else {
                 if (cp != null)cp.setOid(-1);
-                o = null;
-                ortid = -1L;
+                t = null;
+                townid = -1L;
             }
         }
     }// GEN-LAST:event_jPLZActionPerformed
@@ -648,37 +643,46 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
         }
     }// GEN-LAST:event_jList1ValueChanged
 
+    /**
+     * Function to display the current selected person
+     */
     private void showCurrentPerson() {
-        jName.setText(cp.getName());
-        jVorname.setText(cp.getVorname());
-        jStrasse.setText(cp.getStrasse());
-        jHandy.setText(cp.getTelefon());
-        jTelNr.setText(cp.getHandy());
+        jName.setText(cp.getLastName());
+        jVorname.setText(cp.getFirstName());
+        jStrasse.setText(cp.getAddress());
+        jHandy.setText(cp.getPhone());
+        jTelNr.setText(cp.getMobile());
         jEmail.setText(cp.getEmail());
     }
 
+    /**
+     * Function to load and represent all the towns
+     */
     private void loadTowns() {
         jPLZ.removeAllItems();
         jPLZ.addItem("Please select a town");
-        ortlist = ioLayer.getPlaces();
-        ortlist.sort(Comparator.naturalOrder());
+        towns = ioLayer.getTowns();
+        towns.sort(Comparator.naturalOrder());
         ArrayList<String> duplicateFilterList = new ArrayList<>();
         jPLZ.removeAllItems();
         jPLZ.addItem("Please select a town");
-        ortlist.forEach((ort) -> {
+        towns.forEach((ort) -> {
             if (duplicateFilterList.contains(ort.getPlz() + " " + ort.getName()) == false) {
                 jPLZ.addItem(ort.getPlz() + " " + ort.getName());
                 duplicateFilterList.add(ort.getPlz() + " " + ort.getName());
             }
         });
-        if (o == null) {
+        if (t == null) {
             if (cp != null)cp = new Person();
-            selectOrt("Please select a town");
+            selectTown("Please select a town");
         } else {
-            selectOrt(o.getPlz() + " " + o.getName());
+            selectTown(t.getPlz() + " " + t.getName());
         }
     }
-
+    
+    /**
+     * Function to clear all the inputs
+     */
     private void clearInputs() {
         jName.setText("");
         jVorname.setText("");
@@ -689,16 +693,22 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
 
     }
 
+    /**
+     * Function to cast all the inputs to a person object
+     */
     private void castInputToCurrentPerson() {
         if (cp == null)cp = new Person();
-        cp.setName(jName.getText());
-        cp.setVorname(jVorname.getText());
-        cp.setStrasse(jStrasse.getText());
-        cp.setTelefon(jHandy.getText());
-        cp.setHandy(jTelNr.getText());
+        cp.setLastName(jName.getText());
+        cp.setFirstName(jVorname.getText());
+        cp.setAddress(jStrasse.getText());
+        cp.setPhone(jHandy.getText());
+        cp.setMobile(jTelNr.getText());
         cp.setEmail(jEmail.getText());
     }
 
+    /**
+     * Function to set the play buttons
+     */
     private void setPlayerButtons() {
         if (current == 0)
             current = 1;
@@ -707,19 +717,22 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
         jButton6.setEnabled(current < count);
     }
 
+    /**
+     * Function to display a new selected person
+     */
     private void setPerson(Person p) {
         cp = p;
         showCurrentPerson();
         if (new Long(cp.getOid() + "") > -1) {
-            o = ioLayer.getOrt(cp.getOid());
-            if (o != null) {
-                selectOrt(o.getPlz() + " " + o.getName());
+            t = ioLayer.getTown(cp.getOid());
+            if (t != null) {
+                selectTown(t.getPlz() + " " + t.getName());
             } else {
                 p.setOid(-1);
-                selectOrt("Please select a town");
+                selectTown("Please select a town");
             }
         } else {
-            selectOrt("Please select a town");
+            selectTown("Please select a town");
         }
 
     }
@@ -755,48 +768,22 @@ public class AdressveraltunsForm extends javax.swing.JFrame {
     public javax.swing.JTextField jVorname;
     // End of variables declaration//GEN-END:variables
 
-    private void selectOrt(String ort) {
-        jPLZ.setSelectedItem(ort);
+    /**
+     * Function to select a Town
+     */
+    private void selectTown(String town) {
+        jPLZ.setSelectedItem(town);
     }
 
-    public void updateOrt(long id) {
-        Ort o = ioLayer.getOrt(ortid);
+    /**
+     * Function to update the town list
+     * @param id ID of the updated town
+     */
+    public void updateTown(long id) {
+        Town t = ioLayer.getTown(townid);
         loadTowns();
-        if(o != null){
-            selectOrt(o.getPlz()+" "+o.getName());
+        if(t != null){
+            selectTown(t.getPlz()+" "+t.getName());
         }
-    }
-}
-class FtpFormPerson extends FocusTraversalPolicy {
-    ArrayList<Component> order;
-
-    public FtpFormPerson(ArrayList<Component> order) {
-        this.order = new ArrayList<Component>(order.size());
-        this.order.addAll(order);
-    }
-
-    public Component getComponentAfter(Container focusCycleRoot, Component aComponent) {
-        int idx = (order.indexOf(aComponent) + 1) % order.size();
-        return order.get(idx);
-    }
-
-    public Component getComponentBefore(Container focusCycleRoot, Component aComponent) {
-        int idx = order.indexOf(aComponent) - 1;
-        if (idx < 0) {
-            idx = order.size() - 1;
-        }
-        return order.get(idx);
-    }
-
-    public Component getDefaultComponent(Container focusCycleRoot) {
-        return order.get(0);
-    }
-
-    public Component getLastComponent(Container focusCycleRoot) {
-        return order.get(order.size() - 1);
-    }
-
-    public Component getFirstComponent(Container focusCycleRoot) {
-        return order.get(0);
     }
 }

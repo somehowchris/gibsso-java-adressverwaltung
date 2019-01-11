@@ -5,6 +5,7 @@
  */
 package adressverwaltung.utils;
 
+import adressverwaltung.enums.DotEnvEnum;
 import adressverwaltung.enums.SystemPropertyEnum;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -22,10 +23,25 @@ import java.util.List;
  * @author Christof Weickhardt
  */
 public class DotEnv {
-    static String sep = SystemPropertyEnum.FILE_SEPERATOR.get();
-    static String dir = SystemPropertyEnum.USER_HOME.get();
-    static List<String> keys = Arrays.asList("DATABASE_USER", "DATABASE_PASSWORD", "DATABASE_HOST", "DATABASE_PORT", "DATABASE_NAME","DATABASE_USE");
+    
     /**
+     * Local variable to save the file seperator of the current platform running on
+     */
+    static String sep = SystemPropertyEnum.FILE_SEPERATOR.get();
+    
+    /**
+     * Local variable to save the home of the current user running this application
+     */
+    static String dir = SystemPropertyEnum.USER_HOME.get();
+    
+    /**
+     * Loacl list of keys to look out for
+     * @see DotEnvEnum
+     */
+    static List<String> keys = Arrays.asList(DotEnvEnum.getValues());
+    
+    /**
+     * Public function to get the values needed from a .env file of the users root if this exists
      * @return A list of key and values paires found in the .env file
      * @see BufferedReader
      * @see HashMap
@@ -47,14 +63,14 @@ public class DotEnv {
         return values;
     }
     
-    
+    /**
+     * Function to check on all needed values to a database
+     * @param dotEnv A key values pair list to be validated
+     * @return The result of the key check
+     */
     public static boolean containsAllKeys(HashMap<String,String> dotEnv){
-        if (!keys.stream().noneMatch((key) -> (!dotEnv.containsKey(key)))) {
-            return false;
-        }
-        return true;
+        return keys.stream().noneMatch((key) -> (!dotEnv.containsKey(key)));
     }
-    
     
     /**
      * A function to store data which the user put
@@ -82,9 +98,7 @@ public class DotEnv {
             }
         }
         
-        for(String key : dotEnv.keySet()){
-            data+= key+"="+dotEnv.get(key)+System.getProperty("line.separator");
-        }   
+        data = dotEnv.keySet().stream().map((key) -> key+"="+dotEnv.get(key)+System.getProperty("line.separator")).reduce(data, String::concat);   
         
         BufferedWriter br = null;
         FileWriter fr = null;
@@ -94,15 +108,12 @@ public class DotEnv {
             br = new BufferedWriter(fr);
             br.append(data);
         } catch (IOException e) {
-            e.printStackTrace();
         }finally{
             try {
                 br.close();
                 fr.close();
             } catch (IOException e) {
-                e.printStackTrace();
             }
         }
     }
-    
 }

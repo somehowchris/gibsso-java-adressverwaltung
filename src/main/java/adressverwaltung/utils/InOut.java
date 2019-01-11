@@ -12,7 +12,7 @@ import java.io.File;
 import adressverwaltung.services.DatabaseService;
 import adressverwaltung.services.FileSystemService;
 import adressverwaltung.errors.CanNotConnectToDatabaseError;
-import adressverwaltung.models.Ort;
+import adressverwaltung.models.Town;
 import adressverwaltung.enums.DotEnvEnum;
 import adressverwaltung.enums.SystemPropertyEnum;
 import adressverwaltung.exports.Export;
@@ -24,9 +24,22 @@ import adressverwaltung.services.Service;
  * @author Nicola Temporal
  */
 public class InOut {
-
+    /**
+     * Service connection which will be used to get data out of databases and the file sytem
+     */
     public Service connection = null;
+    
+    /**
+     * Local home of the user data
+     */
     String home = SystemPropertyEnum.USER_HOME.get();
+
+    /**
+     * Prepares the connnection.&nbsp;Checks on all the variables to get the best connection
+     * @param dotEnv List of preset values to get the chosen connection type
+     * @throws SQLException If connected to the database without the needed permissions
+     * @throws CanNotConnectToDatabaseError If all the values lead to a database which can not be accessed via the given inputs
+     */
     public InOut(HashMap<String, String> dotEnv) throws SQLException, CanNotConnectToDatabaseError {
         if(dotEnv == null) dotEnv = new HashMap<>();
         File dotEnvFile = new File(home);
@@ -51,10 +64,23 @@ public class InOut {
         }
     }
     
+    /**
+     * Search for a Person in your data set
+     * @param vorname First name of the person to search
+     * @param name Last name of the person to search
+     * @return Returns a list of people which 
+     * @throws SQLException If not able to read data from database
+     */
     public List<Person> searchPerson(String vorname, String name) throws SQLException {
         return connection.searchPerson(new Person(vorname, name));
     }
 
+    /**
+     * Save a person.&nbsp; no matterr if creating or updating
+     * @param p Person to save
+     * @return Return the id of the person
+     * @throws SQLException If not able to write changes
+     */
     public long savePerson(Person p) throws SQLException {
         if (p.getId() != null){
             return connection.updatePerson(p);
@@ -63,54 +89,115 @@ public class InOut {
         }
     }
 
+    /**
+     * Delete a Person
+     * @param p Person to delete
+     * @throws SQLException If not able to write changes
+     */
     public void deletePerson(Person p) throws SQLException {
         connection.deletePerson(p);
     }
 
+    /**
+     * Get a list of people
+     * @param amount Amount of people to be returned 
+     * @param offset Offset of which to count people
+     * @return Returns a list of people
+     */
     public List<Person> getPeople(int amount,int offset) {
         return connection.getPeople(amount, offset);
     }
 
+    /**
+     * Get a signle person
+     * @param id ID of the person
+     * @return Return the requested person if it exists
+     */
     public Person getPerson(Long id) {
         return connection.getPerson(id);
     }
 
-    public List<Ort> searchOrt(int plz, String name) throws SQLException {
-        return connection.searchOrt(new Ort(plz, name));
+    /**
+     * Search for a Town
+     * @param plz PLZ of the town to search
+     * @param name Name of the town to search
+     * @return Returns a list of towns
+     * @throws SQLException If not able to access the database
+     */
+    public List<Town> searchTown(int plz, String name) throws SQLException {
+        return connection.searchTown(new Town(plz, name));
     }
 
-    public long saveOrt(Ort p) throws SQLException {
-        if (p.getOid() != null){
-            return connection.updateOrt(p);
+    /**
+     * Save a town.&nbsp; No matter if updating or creating
+     * @param o Town to save
+     * @return Returns the id of the town
+     * @throws SQLException If not able to write changes
+     */
+    public long saveTown(Town o) throws SQLException {
+        if (o.getTid() != null){
+            return connection.updateTown(o);
         }else{
-            return connection.insertOrt(p);
+            return connection.insertTown(o);
         }
     }
 
-    public void deleteOrt(Ort p) throws Error {
-        connection.deleteOrt(p);
+    /**
+     *  Delete a town
+     * @param o Town to delete
+     * @throws SQLException if not able to write changes
+     */
+    public void deleteTown(Town o) throws SQLException {
+        connection.deleteTown(o);
     }
 
-    public List<Ort> getPlaces() {
-        return connection.getOrt();
+    /**
+     * Get all towns
+     * @return Returns a list of towns
+     */
+    public List<Town> getTowns() {
+        return connection.getTown();
     }
 
-    public Ort getOrt(Long id) {
-        return connection.getOrt(id);
+    /**
+     * Get a single town
+     * @param id ID of town to get
+     * @return Returns to requested town
+     */
+    public Town getTown(Long id) {
+        return connection.getTown(id);
     }
     
-    public long countOrt(){
-        return connection.countOrt();
+    /**
+     * Counts all the towns in your data set
+     * @return Amount of towns in data set
+     */
+    public long countTowns(){
+        return connection.countTown();
     }
     
+    /**
+     * Counts all the pople in your data set
+     * @return Amount of people in data set
+     */
     public long countPeople(){
         return connection.countPeople();
     }
     
-    public List<Ort> getPlaces(int amount,int offset) {
-        return connection.getOrt(amount, offset);
+    /**
+     * Gets a specific range of towns
+     * @param amount Amount of towns to get
+     * @param offset Offset of wich to count on from
+     * @return Returns a list of towns
+     */
+    public List<Town> getTowns(int amount,int offset) {
+        return connection.getTown(amount, offset);
     }
     
+    /**
+     * Creates export of all the people and if possible towns
+     * @throws Exception If not possible to write the export to the chosen location
+     */
     public void exportAll() throws Exception{
         Export export = new Export(connection);
         export = export.configure();
@@ -120,7 +207,12 @@ public class InOut {
         export.open();
     }
     
-    public void searchExport(List<Person> people) throws Exception{
+    /**
+     * Creates an export from the search results
+     * @param people List of people
+     * @throws Exception If not possible to write the export to the chosen location
+     */
+    public void exportFromSearch(List<Person> people) throws Exception{
         Export export = new Export(connection, people);
         export = export.configure();
         if(export == null)return;

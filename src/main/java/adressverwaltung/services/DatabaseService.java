@@ -5,19 +5,20 @@
  */
 package adressverwaltung.services;
 
-import adressverwaltung.models.Ort;
 import adressverwaltung.models.Person;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
+import adressverwaltung.models.Town;
+import java.util.List;
+import javax.persistence.TypedQuery;
 
 /**
  * A Database controller using Hibernate to communicate with the database
@@ -28,6 +29,10 @@ public class DatabaseService implements Service {
     EntityManager em;
     EntityManagerFactory emf;
     
+    /**
+     *
+     * @param connectionValues
+     */
     public DatabaseService(HashMap<String, String> connectionValues) {
         Map properties = new HashMap();
         properties.put("javax.persistence.jdbc.driver", "com.mysql.jdbc.Driver");
@@ -35,6 +40,7 @@ public class DatabaseService implements Service {
         properties.put("javax.persistence.jdbc.user", connectionValues.get("DATABASE_USER"));
         properties.put("javax.persistence.jdbc.password", connectionValues.get("DATABASE_PASSWORD"));
         properties.put("javax.persistence.schema-generation.database.action", "create");
+        System.out.println(properties.get("javax.persistence.jdbc.url"));
         try {
             emf = Persistence.createEntityManagerFactory("AdressverwaltungPU", properties);
         } catch (Exception e) {
@@ -56,8 +62,8 @@ public class DatabaseService implements Service {
     * {@inheritDoc}
     */
     @Override
-    public Ort getOrt(Long id) {
-        return em.find(Ort.class, id);
+    public Town getTown(Long id) {
+        return em.find(Town.class, id);
     }
     
     /**
@@ -66,7 +72,7 @@ public class DatabaseService implements Service {
     */
     @Override
     public List<Person> searchPerson(Person person) {
-        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p WHERE p.name LIKE '%"+person.getName()+"%' AND p.vorname LIKE '%"+person.getVorname()+"%'",Person.class);
+        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p WHERE p.name LIKE '%"+person.getLastName()+"%' AND p.vorname LIKE '%"+person.getFirstName()+"%'",Person.class);
         return query.getResultList();
     }
     
@@ -75,8 +81,8 @@ public class DatabaseService implements Service {
     * {@inheritDoc}
     */
     @Override
-    public List<Ort> searchOrt(Ort ort) {
-        TypedQuery<Ort> query = em.createQuery("SELECT o FROM Ort o WHERE o.plz LIKE '%"+ort.getPlz()+"%' AND o.name LIKE '%"+ort.getName()+"%'",Ort.class);
+    public List<Town> searchTown(Town Town) {
+        TypedQuery<Town> query = em.createQuery("SELECT o FROM Town o WHERE o.plz LIKE '%"+Town.getPlz()+"%' AND o.name LIKE '%"+Town.getName()+"%'",Town.class);
         return query.getResultList();
     }
     
@@ -97,11 +103,11 @@ public class DatabaseService implements Service {
     * {@inheritDoc}
     */
     @Override
-    public Long insertOrt(Ort ort) {
+    public Long insertTown(Town Town) {
       em.getTransaction().begin();
-      em.persist(ort);
+      em.persist(Town);
       em.getTransaction().commit();
-      return ort.getOid();
+      return Town.getTid();
     }
     
     /**
@@ -121,11 +127,11 @@ public class DatabaseService implements Service {
     * {@inheritDoc}
     */
     @Override
-    public Long updateOrt(Ort ort) {
+    public Long updateTown(Town Town) {
         em.getTransaction().begin();
-        em.merge(ort);
+        em.merge(Town);
         em.getTransaction().commit();
-        return ort.getOid();
+        return Town.getTid();
     }
     
     /**
@@ -133,19 +139,19 @@ public class DatabaseService implements Service {
     * {@inheritDoc}
     */
     @Override
-    public void deleteOrt(Ort ort) throws Error{
+    public void deleteTown(Town Town) throws Error{
         em.getTransaction().begin();
-        String sql = "SELECT COUNT(p.pid) FROM Person p WHERE p.oid='"+ort.getOid()+"'";
+        String sql = "SELECT COUNT(p.pid) FROM Person p WHERE p.oid='"+Town.getTid()+"'";
         Query q = em.createQuery(sql);
         long count =  (long)q.getSingleResult();
         em.getTransaction().commit();
         
         if(count == 0){
             em.getTransaction().begin();
-            em.remove(ort);
+            em.remove(Town);
             em.getTransaction().commit();
         }else{
-            throw new Error("References on this place still exist "+ort.getOid());
+            throw new Error("References on this place still exist "+Town.getTid());
         }
         
     }
@@ -178,12 +184,12 @@ public class DatabaseService implements Service {
     * {@inheritDoc}
     */
     @Override
-    public List<Ort> getOrt() {
+    public List<Town> getTown() {
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Ort> cq = cb.createQuery(Ort.class);
-        Root<Ort> rootEntry = cq.from(Ort.class);
-        CriteriaQuery<Ort> all = cq.select(rootEntry);
-        TypedQuery<Ort> allQuery = em.createQuery(all);
+        CriteriaQuery<Town> cq = cb.createQuery(Town.class);
+        Root<Town> rootEntry = cq.from(Town.class);
+        CriteriaQuery<Town> all = cq.select(rootEntry);
+        TypedQuery<Town> allQuery = em.createQuery(all);
         return allQuery.getResultList();
     }
     
@@ -192,8 +198,8 @@ public class DatabaseService implements Service {
     * {@inheritDoc}
     */
     @Override
-    public List<Ort> getOrt(int amount, int offset) {
-        TypedQuery<Ort> query = em.createQuery("SELECT o FROM Ort o",Ort.class);
+    public List<Town> getTown(int amount, int offset) {
+        TypedQuery<Town> query = em.createQuery("SELECT o FROM Town o",Town.class);
         query.setMaxResults(amount);
         query.setFirstResult(offset);
         return query.getResultList();
@@ -204,8 +210,8 @@ public class DatabaseService implements Service {
     * {@inheritDoc}
     */
     @Override
-    public Long countOrt() {
-        String sql = "SELECT COUNT(o.plz) FROM Ort o";
+    public Long countTown() {
+        String sql = "SELECT COUNT(o.plz) FROM Town o";
         Query q = em.createQuery(sql);
         return (long)q.getSingleResult();
     }

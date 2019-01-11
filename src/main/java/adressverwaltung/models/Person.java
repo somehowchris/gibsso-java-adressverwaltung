@@ -27,38 +27,92 @@ import javax.persistence.Id;
  */
 @Entity
 public class Person implements Serializable {
-
+    
+    /**
+     * Serial verrsion of uid for primary key
+     */
     private static final long serialVersionUID = 1L;
+    
+    /**
+     * Primary key of the person object
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long pid;
-
-    private String name;
-    private String vorname;
-    private String strasse;
-    private long oid = -1;
-    private String telefon;
-    private String handy;
+    
+    /**
+     * Last name of the person
+     */
+    private String lastName;
+    
+    /**
+     * First name of the person
+     */
+    private String firstName;
+    
+    /**
+     * Adress of the person
+     */
+    private String address;
+    
+    /**
+     * Town primary key
+     */
+    private long tid = -1;
+    
+    /**
+     * Phone nr of the person
+     */
+    private String phone;
+    
+    /**
+     * Mobile nrr of the person
+     */
+    private String mobile;
+    
+    /**
+     * Email of the person
+     */
     private String email;
-
-    public Person(String name, String vorname, String strasse, long oid, String telefon, String handy, String email) {
-        this.name = name;
-        this.vorname = vorname;
-        this.strasse = strasse;
-        this.oid = oid;
-        this.telefon = telefon;
-        this.handy = handy;
+    
+    /**
+     * Constructor to populate a person object
+     * @param lastName Last name of the person
+     * @param firstName First name of the person
+     * @param street Street of the person
+     * @param tid Town primary key
+     * @param phone Phone nr of the person
+     * @param mobile Mobile nr of the person
+     * @param email Email of the person
+     */
+    public Person(String lastName, String firstName, String street, long tid, String phone, String mobile, String email) {
+        this.lastName = lastName;
+        this.firstName = firstName;
+        this.address = street;
+        this.tid = tid;
+        this.phone = phone;
+        this.mobile = mobile;
         this.email = email;
     }
 
-    public Person() {
+    /**
+     * Constructor to create a empty person object
+     */
+    public Person() {}
+    
+    /**
+     * Constructor to create a person with first and last anme
+     * @param firstName First name of the person
+     * @param lastName Last name of the person
+     */
+    public Person(String firstName, String lastName) {
+        this.lastName = lastName;
+        this.firstName = firstName;
     }
-
-    public Person(String vorname, String name) {
-        this.name = name;
-        this.vorname = vorname;
-    }
-
+    
+    /**
+     * Needed function to create a hash out of the primary key
+     */
     @Override
     public int hashCode() {
         int hash = 0;
@@ -66,6 +120,10 @@ public class Person implements Serializable {
         return hash;
     }
 
+    /**
+     * Function to check if two objects are the same
+     * @param object
+     */
     @Override
     public boolean equals(Object object) {
         if (!(object instanceof Person)) {
@@ -78,86 +136,154 @@ public class Person implements Serializable {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "adressverwaltung.models.Person[ id=" + pid + " ]";
-    }
-
+    /**
+     * Getter of the email
+     * @return Returns the mail as a String
+     */
     public String getEmail() {
         return email;
     }
 
-    public String getHandy() {
-        return handy;
+    /**
+     * Getter of the mobile nr
+     * @return Returns the mobile as a String
+     */
+    public String getMobile() {
+        return mobile;
     }
 
-    public String getName() {
-        return name;
+    /**
+     * Getter of the last name
+     * @return Returns the last anme
+     */
+    public String getLastName() {
+        return lastName;
     }
 
+    /**
+     * Getter of the town primary key
+     * @return Returns the id of the town
+     */
     public Long getOid() {
-        return oid;
+        return tid;
     }
 
-    public String getStrasse() {
-        return strasse;
+    /**
+     * Getter of the adress
+     * @return Returns the adress as a String
+     */
+    public String getAddress() {
+        return address;
     }
 
-    public String getTelefon() {
-        return telefon;
+    /**
+     * Getter of the phone nr
+     * @return Returns the phone as a String
+     */
+    public String getPhone() {
+        return phone;
     }
 
-    public String getVorname() {
-        return vorname;
+    /**
+     * Getter of the first name
+     * @return Returns the first anme
+     */
+    public String getFirstName() {
+        return firstName;
     }
 
+    /**
+     * Getter of the email
+     * @param email Returns the email as a String
+     */
     public void setEmail(String email) {
         this.email = email;
     }
-
-    public void setHandy(String handy) {
-        this.handy = handy;
+    
+    /**
+     * Setter of the mobile nr
+     * @param mobile Mobile nr to set to
+     */
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    /**
+     * Setter of the last name
+     * @param lastName Last name to set to
+     */
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
+    /**
+     * Setter of the town Primary key
+     * @param oid Primary key of the town to set to
+     */
     public void setOid(int oid) {
-        this.oid = oid;
+        this.tid = oid;
     }
 
+    /**
+     * Setter of the person primary key
+     * @param pid Primary key of the person to set to
+     */
     public void setPid(Long pid) {
         this.pid = pid;
     }
 
-    public void setStrasse(String strasse) {
-        this.strasse = strasse;
+    /**
+     * Setter of the adress
+     * @param address Adress to set to
+     */ 
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public void setTelefon(String telefon) {
-        this.telefon = telefon;
+    /**
+     * Setter of the phone nr
+     * @param phone Phone nr to set to
+     */
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public void setVorname(String vorname) {
-        this.vorname = vorname;
+    /**
+     * Setter of the first name
+     * @param firstName First name to set to
+     */
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
+    /**
+     * Getter of the person primary key
+     * @return Returns the person ID
+     */
     public Long getId() {
         return pid;
     }
 
+    /**
+     * Setter of the person primary key
+     * @param pid Primary key to set to
+     */
     public void setId(Long pid) {
         this.pid = pid;
     }
 
+    /**
+     * Setter to replace the current person object
+     * @param person Person object to set to
+     * @deprecated 
+     */
     public void setAll(Person person) {
-        this.name = person.getName();
-        this.vorname = person.getVorname();
-        this.strasse = person.getStrasse();
-        this.oid = person.getOid();
-        this.telefon = person.getTelefon();
-        this.handy = person.getHandy();
+        this.lastName = person.getLastName();
+        this.firstName = person.getFirstName();
+        this.address = person.getAddress();
+        this.tid = person.getOid();
+        this.phone = person.getPhone();
+        this.mobile = person.getMobile();
         this.email = person.getEmail();
     }
 

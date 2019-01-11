@@ -9,12 +9,15 @@ import adressverwaltung.services.FileSystemService;
 import adressverwaltung.errors.CanNotConnectToDatabaseError;
 import adressverwaltung.main;
 import adressverwaltung.enums.SystemPropertyEnum;
+import adressverwaltung.utils.CustomFocusTraversalPolicy;
 import adressverwaltung.utils.DotEnv;
 import adressverwaltung.utils.InOut;
 import adressverwaltung.utils.MySQLConnection;
+import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,6 +36,18 @@ public class ConnectionForm extends javax.swing.JFrame {
     public ConnectionForm() {
         this.setTitle("Connection");
         initComponents();
+        ArrayList<Component> list = new ArrayList<>();
+        list.add(jRadioButton1);
+        list.add(jRadioButton2);
+        list.add(jTextField1);
+        list.add(jTextField2);
+        list.add(jTextField3);
+        list.add(jTextField4);
+        list.add(jSpinner1);
+        list.add(jButton1);
+        list.add(jButton2);
+        setFocusTraversalPolicy(new CustomFocusTraversalPolicy(list));
+        
         jTextField1.setEnabled(false);
         jTextField2.setEnabled(false);
         jTextField3.setEnabled(false);
@@ -293,7 +308,7 @@ public class ConnectionForm extends javax.swing.JFrame {
             }
             DotEnv.setDotEnv(connectionMap);
             main.setupConnection(null);
-            main.viewAdressverwaltung();
+            main.viewAdressForm();
         } catch (IOException | SQLException | CanNotConnectToDatabaseError ex) {
             Logger.getLogger(ConnectionForm.class.getName()).log(Level.SEVERE, null, ex);
         }
