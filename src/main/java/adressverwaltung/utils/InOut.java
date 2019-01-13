@@ -15,9 +15,13 @@ import adressverwaltung.errors.CanNotConnectToDatabaseError;
 import adressverwaltung.models.Town;
 import adressverwaltung.enums.DotEnvEnum;
 import adressverwaltung.enums.SystemPropertyEnum;
+import adressverwaltung.errors.DatabaseSelfHealingError;
+import adressverwaltung.errors.WrongSchemaError;
 import adressverwaltung.exports.Export;
 import java.sql.SQLException;
 import adressverwaltung.services.Service;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A middleware class to operate with the Service interface
@@ -46,8 +50,9 @@ public class InOut {
      * permissions
      * @throws CanNotConnectToDatabaseError If all the values lead to a database
      * which can not be accessed via the given inputs
+     * @throws adressverwaltung.errors.DatabaseSelfHealingError if not possible to reconnect to healed database
      */
-    public InOut(HashMap<String, String> dotEnv) throws SQLException, CanNotConnectToDatabaseError {
+    public InOut(HashMap<String, String> dotEnv) throws SQLException, CanNotConnectToDatabaseError, DatabaseSelfHealingError {
         if (dotEnv == null) {
             dotEnv = new HashMap<>();
         }
@@ -56,11 +61,16 @@ public class InOut {
             if (dotEnv.containsKey(DotEnvEnum.DB_USE.get()) && DotEnv.containsAllKeys(dotEnv)) {
                 switch (dotEnv.get(DotEnvEnum.DB_USE.get())) {
                     case "true":
-                        if (new MySQLConnection(dotEnv.get(DotEnvEnum.HOST.get()), dotEnv.get(DotEnvEnum.PASSWORD.get()), dotEnv.get(DotEnvEnum.TABLE_NAME.get()), dotEnv.get(DotEnvEnum.PORT.get()), dotEnv.get(DotEnvEnum.USER.get()), false, "mysql").verify()) {
-                            connection = new DatabaseService(dotEnv);
-                            break;
+                        try {
+                            MySQLConnection con = new MySQLConnection(dotEnv.get(DotEnvEnum.HOST.get()), dotEnv.get(DotEnvEnum.PASSWORD.get()), dotEnv.get(DotEnvEnum.TABLE_NAME.get()), dotEnv.get(DotEnvEnum.PORT.get()), dotEnv.get(DotEnvEnum.USER.get()), true, "mysql");
+                            if(con.verify()){
+                                connection = new DatabaseService(dotEnv);
+                                break;
+                            }
+                            throw new CanNotConnectToDatabaseError();
+                        } catch (WrongSchemaError ex) {
+
                         }
-                        throw new CanNotConnectToDatabaseError();
                     case "false":
                         connection = new FileSystemService(home, SystemPropertyEnum.FILE_SEPERATOR.get());
                         break;

@@ -9,6 +9,7 @@ import TestingHelpers.UIUtils;
 import adressverwaltung.enums.DotEnvEnum;
 import adressverwaltung.enums.SystemPropertyEnum;
 import adressverwaltung.errors.CanNotConnectToDatabaseError;
+import adressverwaltung.errors.DatabaseSelfHealingError;
 import adressverwaltung.forms.ConnectionForm;
 import adressverwaltung.utils.InOut;
 import ch.vorburger.exec.ManagedProcessException;
@@ -19,6 +20,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
@@ -76,6 +79,8 @@ public class ConnectionFormTest {
             io = new InOut(fakeKeys);
         } catch (ManagedProcessException | SQLException | CanNotConnectToDatabaseError ex) {
             throw new Error("Could not create database on port " + db.getConfiguration().getPort());
+        } catch (DatabaseSelfHealingError ex) {
+            Logger.getLogger(ConnectionFormTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         File f;
         if ((f = new File(SystemPropertyEnum.USER_HOME + "" + SystemPropertyEnum.FILE_SEPERATOR + ".env")).exists()) {
@@ -102,7 +107,7 @@ public class ConnectionFormTest {
 
         assertNotNull(fs);
 
-        fs.setSelected(true);
+        fs.doClick();
 
         JButton clear = (JButton) UIUtils.getChildNamed(cf, "clearOrtest");
 
@@ -122,7 +127,7 @@ public class ConnectionFormTest {
 
         assertNotNull(mysql);
 
-        mysql.setSelected(true);
+        mysql.doClick();
 
         JTextField host = (JTextField) UIUtils.getChildNamed(cf, "Host");
         JTextField table = (JTextField) UIUtils.getChildNamed(cf, "Table");
@@ -167,7 +172,7 @@ public class ConnectionFormTest {
 
         assertNotNull(mysql);
 
-        mysql.setSelected(true);
+        mysql.doClick();
 
         JTextField host = (JTextField) UIUtils.getChildNamed(cf, "Host");
         JTextField table = (JTextField) UIUtils.getChildNamed(cf, "Table");

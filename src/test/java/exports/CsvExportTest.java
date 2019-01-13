@@ -8,6 +8,7 @@ package exports;
 import adressverwaltung.enums.DotEnvEnum;
 import adressverwaltung.enums.SystemPropertyEnum;
 import adressverwaltung.errors.CanNotConnectToDatabaseError;
+import adressverwaltung.errors.DatabaseSelfHealingError;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -23,6 +24,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -72,6 +75,8 @@ public class CsvExportTest {
             io = new InOut(fakeKeys);
         } catch (ManagedProcessException | SQLException | CanNotConnectToDatabaseError ex) {
             throw new Error("Could not create database on port 3308");
+        } catch (DatabaseSelfHealingError ex) {
+            Logger.getLogger(CsvExportTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         Faker faker = new Faker();
 

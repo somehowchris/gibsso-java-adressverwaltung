@@ -6,6 +6,7 @@
 package adressverwaltung.forms;
 
 import adressverwaltung.errors.CanNotConnectToDatabaseError;
+import adressverwaltung.errors.DatabaseSelfHealingError;
 import adressverwaltung.main;
 import adressverwaltung.models.Town;
 import adressverwaltung.utils.CustomFocusTraversalPolicy;
@@ -53,7 +54,11 @@ public class TownForm extends javax.swing.JFrame {
             ioLayer = io;
         }
         if (io == null) {
-            ioLayer = new InOut(null);
+            try {
+                ioLayer = new InOut(null);
+            } catch (DatabaseSelfHealingError ex) {
+               throw new CanNotConnectToDatabaseError();
+            }
         }
         if (io != null) {
             count = io.countTowns();

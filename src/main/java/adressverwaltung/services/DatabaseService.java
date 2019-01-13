@@ -5,6 +5,9 @@
  */
 package adressverwaltung.services;
 
+import adressverwaltung.enums.DotEnvEnum;
+import adressverwaltung.errors.CanNotConnectToDatabaseError;
+import adressverwaltung.errors.WrongSchemaError;
 import adressverwaltung.models.Person;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +20,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import adressverwaltung.models.Town;
+import adressverwaltung.utils.MySQLConnection;
 import java.util.Arrays;
 import java.util.List;
 import javax.persistence.TypedQuery;
@@ -35,18 +39,30 @@ public class DatabaseService implements Service {
      *
      * @param connectionValues
      */
-    public DatabaseService(HashMap<String, String> connectionValues) {
+    public DatabaseService(HashMap<String, String> connectionValues) throws WrongSchemaError, CanNotConnectToDatabaseError {
         Map properties = new HashMap();
         properties.put("javax.persistence.jdbc.driver", "com.mysql.jdbc.Driver");
         properties.put("javax.persistence.jdbc.url", "jdbc:mysql://" + connectionValues.get("DATABASE_HOST") + ":" + connectionValues.get("DATABASE_PORT") + "/" + connectionValues.get("DATABASE_NAME") + "?zeroDateTimeBehavior=convertToNull");
         properties.put("javax.persistence.jdbc.user", connectionValues.get("DATABASE_USER"));
         properties.put("javax.persistence.jdbc.password", connectionValues.get("DATABASE_PASSWORD"));
-        properties.put("javax.persistence.schema-generation.database.action", "update");
         try {
             emf = Persistence.createEntityManagerFactory("AdressverwaltungPU", properties);
         } catch (Exception e) {
         }
-        em = (EntityManager) emf.createEntityManager();
+        try{
+            em = (EntityManager) emf.createEntityManager();
+            Person p = new Person("test", "test");
+            long pid = insertPerson(p);
+            deletePerson(p);
+            Town t = new Town(999, "test");
+            long tid = insertTown(t);
+            deleteTown(t);
+        }catch(Exception e){
+            MySQLConnection con = new MySQLConnection(connectionValues.get(DotEnvEnum.HOST.get()), connectionValues.get(DotEnvEnum.PASSWORD.get()), connectionValues.get(DotEnvEnum.TABLE_NAME.get()), connectionValues.get(DotEnvEnum.PORT.get()), connectionValues.get(DotEnvEnum.USER.get()), true, "mysql");
+            con.dropDatabase();
+            con.createDatabase();
+            throw new WrongSchemaError();
+        }
     }
 
     /**

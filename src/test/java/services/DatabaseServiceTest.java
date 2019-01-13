@@ -6,6 +6,8 @@
 package services;
 
 import adressverwaltung.enums.DotEnvEnum;
+import adressverwaltung.errors.CanNotConnectToDatabaseError;
+import adressverwaltung.errors.WrongSchemaError;
 import adressverwaltung.models.Person;
 import adressverwaltung.models.Town;
 import adressverwaltung.services.DatabaseService;
@@ -16,6 +18,8 @@ import java.net.ServerSocket;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -67,6 +71,10 @@ public class DatabaseServiceTest {
             dbService = new DatabaseService(fakeKeys);
         } catch (ManagedProcessException ex) {
             throw new Error("Could not create database on port 3308");
+        } catch (WrongSchemaError ex) {
+            Logger.getLogger(DatabaseServiceTest.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (CanNotConnectToDatabaseError ex) {
+            Logger.getLogger(DatabaseServiceTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

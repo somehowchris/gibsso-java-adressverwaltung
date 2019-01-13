@@ -110,8 +110,6 @@ public class AddressFormTest {
         } catch (SQLException | CanNotConnectToDatabaseError ex) {
             throw new Error("Could not connect to database");
         }
-        af.setVisible(true);
-
     }
 
     @After

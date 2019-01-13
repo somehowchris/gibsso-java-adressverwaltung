@@ -6,6 +6,7 @@
 package adressverwaltung.forms;
 
 import adressverwaltung.errors.CanNotConnectToDatabaseError;
+import adressverwaltung.errors.DatabaseSelfHealingError;
 import adressverwaltung.main;
 import adressverwaltung.utils.InOut;
 import adressverwaltung.models.Person;
@@ -61,7 +62,11 @@ public class AddressForm extends javax.swing.JFrame {
             ioLayer = io;
         }
         if (io == null) {
-            ioLayer = new InOut(null);
+            try {
+                ioLayer = new InOut(null);
+            } catch (DatabaseSelfHealingError ex) {
+                throw new CanNotConnectToDatabaseError();
+            }
         }
 
         ArrayList<Component> comp = new ArrayList<>();

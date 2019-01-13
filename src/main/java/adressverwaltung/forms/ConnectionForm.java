@@ -9,6 +9,7 @@ import adressverwaltung.services.FileSystemService;
 import adressverwaltung.errors.CanNotConnectToDatabaseError;
 import adressverwaltung.main;
 import adressverwaltung.enums.SystemPropertyEnum;
+import adressverwaltung.errors.DatabaseSelfHealingError;
 import adressverwaltung.utils.CustomFocusTraversalPolicy;
 import adressverwaltung.utils.DotEnv;
 import adressverwaltung.utils.InOut;
@@ -81,6 +82,7 @@ public class ConnectionForm extends javax.swing.JFrame {
                 try {
                     new MySQLConnection(jTextField1.getText(), jTextField4.getText(), jTextField2.getText(), jSpinner1.getValue() + "", jTextField3.getText(), false, "mysql").verify();
                 } catch (CanNotConnectToDatabaseError ex) {
+                    jButton2.setEnabled(false);
                 }
                 jRadioButton2.setSelected(true);
                 jRadioButton1.setSelected(false);
@@ -351,9 +353,7 @@ public class ConnectionForm extends javax.swing.JFrame {
             try {
                 InOut io = new InOut(fakeKeys);
                 ((FileSystemService) io.connection).clean();
-            } catch (SQLException | CanNotConnectToDatabaseError ex) {
-                Logger.getLogger(ConnectionForm.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            } catch (SQLException | CanNotConnectToDatabaseError | DatabaseSelfHealingError ex) {}
         } else {
             try {
                 new MySQLConnection(jTextField1.getText(), jTextField4.getText(), jTextField2.getText(), jSpinner1.getValue() + "", jTextField3.getText(), false, "mysql").verify();

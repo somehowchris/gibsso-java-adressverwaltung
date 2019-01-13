@@ -108,7 +108,6 @@ public class TownFormTest {
         } catch (SQLException | CanNotConnectToDatabaseError ex) {
             throw new Error("Could not connect to database");
         }
-        tf.setVisible(true);
 
     }
 

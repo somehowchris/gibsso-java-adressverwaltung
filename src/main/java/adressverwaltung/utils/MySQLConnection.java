@@ -10,6 +10,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Helper class to connect to a database
@@ -68,9 +70,10 @@ public class MySQLConnection {
      * adressverwaltung.errors.CanNotConnectToDatabaseError
      */
     public boolean createDatabase() throws CanNotConnectToDatabaseError {
-        String url = "jdbc:" + dialect + "://" + host + ":" + port + "/" + name;
+        String url = "jdbc:" + dialect + "://" + host + ":" + port + "/";
         System.out.println("Connecting database...");
         try {
+            Class.forName("com.mysql.jdbc.Driver");
             Connection connection = DriverManager.getConnection(url, username, password);
             try (Statement st = connection.createStatement()) {
                 if (force) {
@@ -80,8 +83,9 @@ public class MySQLConnection {
             }
             System.out.println("Created database!");
             return true;
-        } catch (SQLException e) {
-            throw new CanNotConnectToDatabaseError();
+        } catch (SQLException | ClassNotFoundException e) {
+            
+           throw new CanNotConnectToDatabaseError();
         }
     }
 
@@ -90,17 +94,20 @@ public class MySQLConnection {
      * @return @throws adressverwaltung.errors.CanNotConnectToDatabaseError
      */
     public boolean dropDatabase() throws CanNotConnectToDatabaseError {
-        String url = "jdbc:" + dialect + "://" + host + ":" + port + "/" + name;
+        String url = "jdbc:" + dialect + "://" + host + ":" + port + "/";
         System.out.println("Connecting database...");
         try {
+            Class.forName("com.mysql.jdbc.Driver");
             Connection connection = DriverManager.getConnection(url, username, password);
             try (Statement st = connection.createStatement()) {
-                st.executeUpdate("DROP DATABASE IF EXISTS" + name);
+                st.executeUpdate("DROP DATABASE IF EXISTS " + name);
             }
             System.out.println("Droped database!");
             return true;
         } catch (SQLException e) {
             throw new CanNotConnectToDatabaseError();
+        } catch (ClassNotFoundException ex) {
+           throw new CanNotConnectToDatabaseError();
         }
     }
 }

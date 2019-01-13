@@ -6,6 +6,7 @@
 package adressverwaltung;
 
 import adressverwaltung.errors.CanNotConnectToDatabaseError;
+import adressverwaltung.errors.DatabaseSelfHealingError;
 import adressverwaltung.forms.TownForm;
 import adressverwaltung.forms.ConnectionForm;
 import adressverwaltung.forms.AddressForm;
@@ -64,6 +65,8 @@ public class main {
             Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
         } catch (CanNotConnectToDatabaseError ex) {
             viewConnectionSettings();
+        } catch (DatabaseSelfHealingError ex) {
+            main(null);
         }
 
     }
@@ -84,6 +87,9 @@ public class main {
             return true;
         } catch (CanNotConnectToDatabaseError | SQLException ex) {
             return false;
+        } catch (DatabaseSelfHealingError ex) {
+            setupConnection(connection);
+            return true;
         }
     }
 
