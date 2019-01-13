@@ -50,17 +50,31 @@ public class AddressFormTest {
     long p1id;
     long p2id;
 
+    /**
+     * Empty Constructor
+     */
     public AddressFormTest() {
+
     }
 
+    /**
+     * Setup class
+     */
     @BeforeClass
     public static void setUpClass() {
     }
 
+    /**
+     * Tear down class
+     */
     @AfterClass
     public static void tearDownClass() {
     }
 
+    /**
+     * Setup before test
+     * @throws SQLException
+     */
     @Before
     public void setUp() throws Exception {
         int port = 3006;
@@ -112,6 +126,9 @@ public class AddressFormTest {
         }
     }
 
+    /**
+     * Tear down after test
+     */
     @After
     public void tearDown() {
         File f;
@@ -123,6 +140,10 @@ public class AddressFormTest {
         }
     }
 
+    /**
+     * Creating new Town
+     * @throws Exception
+     */
     @Test
     public void createNew() throws Exception {
         Town t = new Town(4800, "Zofingen");
@@ -182,6 +203,10 @@ public class AddressFormTest {
         assertEquals(io.countPeople(), 3);
     }
 
+    /**
+     * Testing update function in ui
+     * @throws Exception
+     */
     @Test
     public void update() throws Exception {
         JTextField lastname = (JTextField) UIUtils.getChildNamed(af, "name");
@@ -218,6 +243,9 @@ public class AddressFormTest {
 
     }
 
+    /**
+     * Testing delet button in ui
+     */
     @Test
     public void delete() {
         JButton delete = (JButton) UIUtils.getChildNamed(af, "delete");
@@ -229,6 +257,9 @@ public class AddressFormTest {
         assertEquals(1, io.countPeople());
     }
 
+    /**
+     * Navigating through the ui
+     */
     @Test
     public void navigate() {
         JButton next = (JButton) UIUtils.getChildNamed(af, "next");
@@ -249,6 +280,10 @@ public class AddressFormTest {
         assertEquals("1/2", state.getText());
     }
 
+    /**
+     * Updaing towns without loosing ui inputs
+     * @throws Exception
+     */
     @Test
     public void editTownWithoutLoosingInputs() throws Exception {
         JTextField firstname = (JTextField) UIUtils.getChildNamed(af, "firstname");
@@ -284,6 +319,9 @@ public class AddressFormTest {
 
     }
 
+    /**
+     * Checking input falidation
+     */
     @Test
     public void validationCheck() {
         JTextField lastname = (JTextField) UIUtils.getChildNamed(af, "name");
@@ -322,6 +360,10 @@ public class AddressFormTest {
         assertEquals(save.isEnabled(), false);
     }
 
+    /**
+     * Testing search ui
+     * @throws Exception
+     */
     @Test
     public void search() throws Exception {
         JTextField lastname = (JTextField) UIUtils.getChildNamed(af, "name");

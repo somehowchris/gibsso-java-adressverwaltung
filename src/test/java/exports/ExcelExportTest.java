@@ -40,18 +40,31 @@ public class ExcelExportTest {
     InOut io;
     String path;
 
+    /**
+     * Empty Constructor
+     */
     public ExcelExportTest() {
 
     }
 
+    /**
+     * Setup class
+     */
     @BeforeClass
     public static void setUpClass() {
     }
 
+    /**
+     * Tear down class
+     */
     @AfterClass
     public static void tearDownClass() {
     }
 
+    /**
+     * Setup before test
+     * @throws SQLException
+     */
     @Before
     public void setUp() throws SQLException {
         int port = 3006;
@@ -85,6 +98,9 @@ public class ExcelExportTest {
         }
     }
 
+    /**
+     * Tear down after test
+     */
     @After
     public void tearDown() {
         try {
@@ -94,6 +110,9 @@ public class ExcelExportTest {
         }
     }
 
+    /**
+     * Testing excel exports
+     */
     @Test
     public void createExcelExport() {
         path = SystemPropertyEnum.USER_DIR.get() + SystemPropertyEnum.FILE_SEPERATOR.get() + "test.xlsx";

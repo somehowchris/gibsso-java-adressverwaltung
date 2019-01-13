@@ -37,20 +37,33 @@ public class DatabaseServiceTest {
     DB db;
     DatabaseService dbService;
 
+    /**
+     * Empty Constructor
+     */
     public DatabaseServiceTest() {
+
     }
 
+    /**
+     * Setup class
+     */
     @BeforeClass
     public static void setUpClass() {
-
     }
 
+    /**
+     * Tear down class
+     */
     @AfterClass
     public static void tearDownClass() {
     }
 
+    /**
+     * Setup before test
+     * @throws java.lang.Exception
+     */
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         int port = 3006;
         try (ServerSocket socket = new ServerSocket(0)) {
             port = socket.getLocalPort();
@@ -70,14 +83,15 @@ public class DatabaseServiceTest {
             fakeKeys.put(DotEnvEnum.PORT.get(), db.getConfiguration().getPort() + "");
             dbService = new DatabaseService(fakeKeys);
         } catch (ManagedProcessException ex) {
-            throw new Error("Could not create database on port 3308");
-        } catch (WrongSchemaError ex) {
-            Logger.getLogger(DatabaseServiceTest.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (CanNotConnectToDatabaseError ex) {
+            throw new Exception("Could not create database on port 3308");
+        } catch (WrongSchemaError | CanNotConnectToDatabaseError ex) {
             Logger.getLogger(DatabaseServiceTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
+    /**
+     * Teadown after tests
+     */
     @After
     public void tearDown() {
         try {
@@ -86,6 +100,10 @@ public class DatabaseServiceTest {
         }
     }
 
+    /**
+     * Deleting Person
+     * @throws Exception
+     */
     @Test
     public void deletePerson() throws Exception {
         Person p = new Person("Larray", "Hausmann");
@@ -101,6 +119,10 @@ public class DatabaseServiceTest {
         assertEquals(count, (long) dbService.countPeople());
     }
 
+    /**
+     * Creating Person
+     * @throws Exception
+     */
     @Test
     public void createPerson() throws Exception {
         Person p = new Person("Meier", "Hein");
@@ -113,6 +135,10 @@ public class DatabaseServiceTest {
         assertEquals(result, p);
     }
 
+    /**
+     * Deleting Town
+     * @throws Exception
+     */
     @Test
     public void deleteTown() throws Exception {
         Town t = new Town(4800, "Zofingen");
@@ -129,6 +155,10 @@ public class DatabaseServiceTest {
         assertEquals(count, (long) dbService.countTown());
     }
 
+    /**
+     * Creating Town
+     * @throws Exception
+     */
     @Test
     public void createTown() throws Exception {
         Town t = new Town(3212, "Gurmels");
@@ -141,6 +171,10 @@ public class DatabaseServiceTest {
         assertEquals(result, t);
     }
 
+    /**
+     * Updating Person
+     * @throws Exception
+     */
     @Test
     public void updatePerson() throws Exception {
         Person p = new Person("Meier", "Hein");
@@ -158,6 +192,10 @@ public class DatabaseServiceTest {
         assertEquals(result, p);
     }
 
+    /**
+     * Updating Town
+     * @throws Exception
+     */
     @Test
     public void updateTown() throws Exception {
         Town t = new Town(3212, "Gurmels");
@@ -174,7 +212,11 @@ public class DatabaseServiceTest {
 
         assertEquals(result, t);
     }
-
+    
+    /**
+     * Searching Person
+     * @throws Exception
+     */
     @Test
     public void searchPerson() throws Exception {
         if (dbService.countPeople() > 0) {
@@ -204,6 +246,10 @@ public class DatabaseServiceTest {
         assertEquals(search.size(), 0);
     }
 
+    /**
+     * Searching Town
+     * @throws Exception
+     */
     @Test
     public void searchTown() throws Exception {
         if (dbService.countTown() > 0) {
@@ -229,6 +275,10 @@ public class DatabaseServiceTest {
         assertEquals(searchTown.size(), 1);
     }
 
+    /**
+     * Counting Towns
+     * @throws Exception
+     */
     @Test
     public void countTown() throws Exception {
         long init = dbService.countTown();
@@ -252,6 +302,10 @@ public class DatabaseServiceTest {
         assertEquals((long) dbService.countTown(), init + added - removed);
     }
 
+    /**
+     * Counting People
+     * @throws Exception
+     */
     @Test
     public void countPerson() throws Exception {
         long init = dbService.countPeople();

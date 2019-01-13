@@ -26,17 +26,31 @@ public class MySQLConnectionTest {
 
     DB db;
 
+    /**
+     * Empty Constructor
+     */
     public MySQLConnectionTest() {
+
     }
 
+    /**
+     * Setup class
+     */
     @BeforeClass
     public static void setUpClass() {
     }
 
+    /**
+     * Tear down class
+     */
     @AfterClass
     public static void tearDownClass() {
     }
 
+    /**
+     * Setup before test
+     * @throws SQLException
+     */
     @Before
     public void setUp() throws SQLException {
         try {
@@ -47,6 +61,9 @@ public class MySQLConnectionTest {
         }
     }
 
+    /**
+     * Tear down after test
+     */
     @After
     public void tearDown() {
         try {
@@ -55,6 +72,10 @@ public class MySQLConnectionTest {
         }
     }
 
+    /**
+     * Checking on database availability
+     * @throws SQLException
+     */
     @Test
     public void verifyConnection() throws SQLException {
         try {

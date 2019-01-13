@@ -20,8 +20,6 @@ import adressverwaltung.errors.WrongSchemaError;
 import adressverwaltung.exports.Export;
 import java.sql.SQLException;
 import adressverwaltung.services.Service;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * A middleware class to operate with the Service interface

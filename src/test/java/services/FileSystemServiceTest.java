@@ -33,17 +33,30 @@ public class FileSystemServiceTest {
     static int count = 0;
     String path = "";
 
+    /**
+     * Empty Constructor
+     */
     public FileSystemServiceTest() {
+
     }
 
+    /**
+     * Setup class
+     */
     @BeforeClass
     public static void setUpClass() {
     }
 
+    /**
+     * Tear down class
+     */
     @AfterClass
     public static void tearDownClass() {
     }
 
+    /**
+     * Setup before test
+     */
     @Before
     public void setUp() {
         try {
@@ -60,6 +73,9 @@ public class FileSystemServiceTest {
         }
     }
 
+    /**
+     * Tear down after test
+     */
     @After
     public void tearDown() {
         try {
@@ -69,6 +85,10 @@ public class FileSystemServiceTest {
         }
     }
 
+    /**
+     * Deleting person
+     * @throws Exception
+     */
     @Test
     public void deletePerson() throws Exception {
         Person p = new Person("Larray", "Hausmann");
@@ -84,6 +104,10 @@ public class FileSystemServiceTest {
         assertEquals(count, (long) dbService.countPeople());
     }
 
+    /**
+     * Creating new Person
+     * @throws Exception
+     */
     @Test
     public void createPerson() throws Exception {
         Person p = new Person("Meier", "Hein");
@@ -96,6 +120,10 @@ public class FileSystemServiceTest {
         assertEquals(result, p);
     }
 
+    /**
+     * Deleting town
+     * @throws Exception
+     */
     @Test
     public void deleteTown() throws Exception {
         Town t = new Town(4800, "Zofingen");
@@ -112,6 +140,10 @@ public class FileSystemServiceTest {
         assertEquals(count, (long) dbService.countTown());
     }
 
+    /**
+     * Creating town
+     * @throws Exception
+     */
     @Test
     public void createTown() throws Exception {
         Town t = new Town(3212, "Gurmels");
@@ -124,6 +156,10 @@ public class FileSystemServiceTest {
         assertEquals(result, t);
     }
 
+    /**
+     * Updating Person
+     * @throws Exception
+     */
     @Test
     public void updatePerson() throws Exception {
         Person p = new Person("Meier", "Hein");
@@ -141,6 +177,10 @@ public class FileSystemServiceTest {
         assertEquals(result, p);
     }
 
+    /**
+     * Updating Town
+     * @throws Exception
+     */
     @Test
     public void updateTown() throws Exception {
         Town t = new Town(3212, "Gurmels");
@@ -158,6 +198,10 @@ public class FileSystemServiceTest {
         assertEquals(result, t);
     }
 
+    /**
+     * Searching for Person
+     * @throws Exception
+     */
     @Test
     public void searchPerson() throws Exception {
         if (dbService.countPeople() > 0) {
@@ -187,6 +231,10 @@ public class FileSystemServiceTest {
         assertEquals(search.size(), 0);
     }
 
+    /**
+     * Searching for Town
+     * @throws Exception
+     */
     @Test
     public void searchTown() throws Exception {
         if (dbService.countTown() > 0) {
@@ -212,6 +260,10 @@ public class FileSystemServiceTest {
         assertEquals(searchTown.size(), 1);
     }
 
+    /**
+     * Counting Towns
+     * @throws Exception
+     */
     @Test
     public void countTown() throws Exception {
         long init = dbService.countTown();
@@ -235,6 +287,10 @@ public class FileSystemServiceTest {
         assertEquals((long) dbService.countTown(), init + added - removed);
     }
 
+    /**
+     * Counting People
+     * @throws Exception
+     */
     @Test
     public void countPerson() throws Exception {
         long init = dbService.countPeople();

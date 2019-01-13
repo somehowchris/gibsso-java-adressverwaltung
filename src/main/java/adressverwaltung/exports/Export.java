@@ -77,7 +77,7 @@ public class Export {
     /**
      * Configuration to export a file with a chosen name and export type
      *
-     * @return
+     * @return Returns a configured Export
      */
     public Export configure() {
         JFileChooser chooser = new JFileChooser();
@@ -183,7 +183,7 @@ public class Export {
     /**
      * Setter of the path to export to
      *
-     * @param path
+     * @param path Path to export to
      */
     public void setPath(String path) {
         this.path = path;

@@ -46,19 +46,33 @@ public class ConnectionFormTest {
     DB db;
     Faker faker;
 
+    /**
+     * Empty Constructor
+     */
     public ConnectionFormTest() {
+
     }
 
+    /**
+     * Setup class
+     */
     @BeforeClass
     public static void setUpClass() {
     }
 
+    /**
+     * Tear down class
+     */
     @AfterClass
     public static void tearDownClass() {
     }
 
+    /**
+     * Setup before test
+     * @throws SQLException
+     */
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         int port = 3006;
         try (ServerSocket socket = new ServerSocket(0)) {
             port = socket.getLocalPort();
@@ -78,7 +92,7 @@ public class ConnectionFormTest {
             fakeKeys.put(DotEnvEnum.PORT.get(), db.getConfiguration().getPort() + "");
             io = new InOut(fakeKeys);
         } catch (ManagedProcessException | SQLException | CanNotConnectToDatabaseError ex) {
-            throw new Error("Could not create database on port " + db.getConfiguration().getPort());
+            throw new Exception("Could not create database on port " + db.getConfiguration().getPort());
         } catch (DatabaseSelfHealingError ex) {
             Logger.getLogger(ConnectionFormTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -90,6 +104,9 @@ public class ConnectionFormTest {
         faker = new Faker();
     }
 
+    /**
+     * Tear down after test
+     */
     @After
     public void tearDown() {
         File f;
@@ -101,6 +118,9 @@ public class ConnectionFormTest {
         }
     }
 
+    /**
+     * Checking on fsdb feature
+     */
     @Test
     public void fsdb() {
         JRadioButton fs = (JRadioButton) UIUtils.getChildNamed(cf, "fs");
@@ -121,6 +141,9 @@ public class ConnectionFormTest {
 
     }
 
+    /**
+     * Checking mysql db availability
+     */
     @Test
     public void mysqlDb() {
         JRadioButton mysql = (JRadioButton) UIUtils.getChildNamed(cf, "mysql");
@@ -166,6 +189,9 @@ public class ConnectionFormTest {
         assertEquals(status.getText(), "Database Connected");
     }
 
+    /**
+     * Checking if valid input will stop further actions
+     */
     @Test
     public void invalidMysqlDb() {
         JRadioButton mysql = (JRadioButton) UIUtils.getChildNamed(cf, "mysql");

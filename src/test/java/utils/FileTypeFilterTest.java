@@ -25,17 +25,30 @@ public class FileTypeFilterTest {
 
     HashMap<FileTypeFilter, FileTypeEnum> fileTypes;
 
+    /**
+     * Empty Constructor
+     */
     public FileTypeFilterTest() {
+
     }
 
+    /**
+     * Setup class
+     */
     @BeforeClass
     public static void setUpClass() {
     }
 
+    /**
+     * Tear down class
+     */
     @AfterClass
     public static void tearDownClass() {
     }
 
+    /**
+     * Setup before test
+     */
     @Before
     public void setUp() {
         fileTypes = new HashMap<>();
@@ -44,15 +57,16 @@ public class FileTypeFilterTest {
         }
     }
 
+    /**
+     * Tear down after test
+     */
     @After
     public void tearDown() {
     }
 
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
+    /**
+     * Checking on descriptions
+     */
     @Test
     public void descriptionExists() {
         fileTypes.keySet().forEach((key) -> {
@@ -60,6 +74,9 @@ public class FileTypeFilterTest {
         });
     }
 
+    /**
+     * Checking on extensions
+     */
     @Test
     public void extensionsCorrect() {
         fileTypes.entrySet().forEach((entry) -> {
@@ -67,6 +84,9 @@ public class FileTypeFilterTest {
         });
     }
 
+    /**
+     * CHecking on File Type returns
+     */
     @Test
     public void returnsCorrectFileType() {
         fileTypes.entrySet().forEach((entry) -> {
@@ -74,6 +94,9 @@ public class FileTypeFilterTest {
         });
     }
 
+    /**
+     * Checking on file type acceptnions
+     */
     @Test
     public void acceptsFileTypes() {
         fileTypes.entrySet().forEach((entry) -> {
@@ -82,6 +105,9 @@ public class FileTypeFilterTest {
         });
     }
 
+    /**
+     * Checking on file type rejections
+     */
     @Test
     public void rejectsWrongFileTypes() {
         fileTypes.entrySet().forEach((entry) -> {

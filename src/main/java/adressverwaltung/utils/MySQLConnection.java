@@ -10,8 +10,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Helper class to connect to a database
@@ -34,7 +32,8 @@ public class MySQLConnection {
      * @param port Port of the database
      * @param username Username to access the database
      * @param password Password to access the database
-     * @param force Dialect of the service to use
+     * @param force Use the force to create and delete
+     * @param dialect  Dialect of the service to use
      */
     public MySQLConnection(String host, String password, String name, String port, String username, boolean force, String dialect) {
         this.host = host;
@@ -66,8 +65,9 @@ public class MySQLConnection {
     }
 
     /**
-     * @deprecated @return @throws
-     * adressverwaltung.errors.CanNotConnectToDatabaseError
+     * @deprecated
+     * @return Boolean if the Database has been created
+     * @throws adressverwaltung.errors.CanNotConnectToDatabaseError If not able to connect to database
      */
     public boolean createDatabase() throws CanNotConnectToDatabaseError {
         String url = "jdbc:" + dialect + "://" + host + ":" + port + "/";
@@ -91,7 +91,8 @@ public class MySQLConnection {
 
     /**
      *
-     * @return @throws adressverwaltung.errors.CanNotConnectToDatabaseError
+     * @return Boolean if the database has been dropped
+     * @throws adressverwaltung.errors.CanNotConnectToDatabaseError If not able to connect to the database
      */
     public boolean dropDatabase() throws CanNotConnectToDatabaseError {
         String url = "jdbc:" + dialect + "://" + host + ":" + port + "/";

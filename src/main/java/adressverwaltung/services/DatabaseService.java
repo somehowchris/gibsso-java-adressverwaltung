@@ -37,7 +37,9 @@ public class DatabaseService implements Service {
 
     /**
      *
-     * @param connectionValues
+     * @param connectionValues Connection Values to use
+     * @throws adressverwaltung.errors.WrongSchemaError If database schmea is corrupted
+     * @throws adressverwaltung.errors.CanNotConnectToDatabaseError If not able to connect to database
      */
     public DatabaseService(HashMap<String, String> connectionValues) throws WrongSchemaError, CanNotConnectToDatabaseError {
         Map properties = new HashMap();

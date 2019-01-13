@@ -47,17 +47,31 @@ public class TownFormTest {
     Town t1;
     Town t2;
 
+    /**
+     * Empty Constructor
+     */
     public TownFormTest() {
+
     }
 
+    /**
+     * Setup class
+     */
     @BeforeClass
     public static void setUpClass() {
     }
 
+    /**
+     * Tear down class
+     */
     @AfterClass
     public static void tearDownClass() {
     }
 
+    /**
+     * Setup before test
+     * @throws SQLException
+     */
     @Before
     public void setUp() throws Exception {
         int port = 3006;
@@ -111,6 +125,9 @@ public class TownFormTest {
 
     }
 
+    /**
+     * Tear down after test
+     */
     @After
     public void tearDown() {
         File f;
@@ -160,6 +177,9 @@ public class TownFormTest {
         assertEquals(io.countTowns(), 3);
     }
 
+    /**
+     * Creating duplicated Town
+     */
     @Test
     public void createDuplicate() {
         JButton newOne = (JButton) UIUtils.getChildNamed(tf, "new");
@@ -185,6 +205,10 @@ public class TownFormTest {
         assertEquals(io.countTowns(), 2);
     }
 
+    /**
+     *
+     * @throws Exception
+     */
     @Test
     public void delete() throws Exception {
         try {
@@ -202,6 +226,9 @@ public class TownFormTest {
         assertEquals(io.countTowns(), 1);
     }
 
+    /**
+     * Naviagting through ui
+     */
     @Test
     public void navigate() {
         JButton previous = (JButton) UIUtils.getChildNamed(tf, "previous");
@@ -221,6 +248,9 @@ public class TownFormTest {
         assertEquals(state.getText(), "1/2");
     }
 
+    /**
+     * Try to delete town with reference
+     */
     @Test
     public void deleteWithReference() {
         JButton delete = (JButton) UIUtils.getChildNamed(tf, "delete");
@@ -232,6 +262,10 @@ public class TownFormTest {
         assertEquals(io.countTowns(), 2);
     }
 
+    /**
+     *
+     * @throws Exception
+     */
     @Test
     public void update() throws Exception {
         JButton delete = (JButton) UIUtils.getChildNamed(tf, "delete");
@@ -271,6 +305,9 @@ public class TownFormTest {
         assertEquals(t, result);
     }
 
+    /**
+     * Checking on input validation
+     */
     @Test
     public void validationCheck() {
         JTextField plz = (JTextField) UIUtils.getChildNamed(tf, "plz");

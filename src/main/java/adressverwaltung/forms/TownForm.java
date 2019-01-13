@@ -30,7 +30,6 @@ import javax.swing.event.DocumentListener;
  *
  * @author Christof Weickhardt
  */
-// TODO input checks
 public class TownForm extends javax.swing.JFrame {
 
     InOut ioLayer;

@@ -34,7 +34,6 @@ import org.apache.commons.validator.routines.EmailValidator;
  *
  * @author Christof Weickhardt
  */
-// TODO input checks
 public class AddressForm extends javax.swing.JFrame {
 
     InOut ioLayer;
@@ -911,6 +910,9 @@ public class AddressForm extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Validating Entries
+     */
     public void validateEntrys() {
         if (jName.getText().trim().isEmpty()) {
             validations.put("Name", false);

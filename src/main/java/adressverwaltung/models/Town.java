@@ -87,8 +87,7 @@ public class Town implements Serializable, Comparable<Town> {
 
     /**
      * Function to check if two objects are the same
-     *
-     * @param object
+     * @param object Object to check to
      */
     @Override
     public boolean equals(Object object) {

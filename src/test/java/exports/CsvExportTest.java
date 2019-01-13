@@ -31,8 +31,8 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
- *
- * @author chris
+ * Test class forr exporting csvs
+ * @author Christof Weickhardt
  */
 public class CsvExportTest {
 
@@ -41,18 +41,31 @@ public class CsvExportTest {
     InOut io;
     String path;
 
+    /**
+     * Empty Constructor
+     */
     public CsvExportTest() {
 
     }
 
+    /**
+     * Setup class
+     */
     @BeforeClass
     public static void setUpClass() {
     }
 
+    /**
+     * Tear down class
+     */
     @AfterClass
     public static void tearDownClass() {
     }
 
+    /**
+     * Setup before test
+     * @throws SQLException
+     */
     @Before
     public void setUp() throws SQLException {
         int port = 3006;
@@ -86,6 +99,9 @@ public class CsvExportTest {
         }
     }
 
+    /**
+     * Tear down after test
+     */
     @After
     public void tearDown() {
         try {
@@ -95,6 +111,9 @@ public class CsvExportTest {
         }
     }
 
+    /**
+     * Testing csv exports
+     */
     @Test
     public void createCsvExport() {
         path = SystemPropertyEnum.USER_DIR.get() + SystemPropertyEnum.FILE_SEPERATOR.get() + "test.csv";

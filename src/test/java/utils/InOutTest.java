@@ -30,17 +30,31 @@ public class InOutTest {
 
     InOut io;
 
+    /**
+     * Empty Constructor
+     */
     public InOutTest() {
+
     }
 
+    /**
+     * Setup class
+     */
     @BeforeClass
     public static void setUpClass() {
     }
 
+    /**
+     * Tear down class
+     */
     @AfterClass
     public static void tearDownClass() {
     }
 
+    /**
+     * Setup before test
+     * @throws SQLException
+     */
     @Before
     public void setUp() throws Exception {
         try {
@@ -52,10 +66,17 @@ public class InOutTest {
         }
     }
 
+    /**
+     * Tear down after test
+     */
     @After
     public void tearDown() {
     }
 
+    /**
+     * Deleting Person
+     * @throws Exception
+     */
     @Test
     public void deletePerson() throws Exception {
         Person p = new Person("Larray", "Hausmann");
@@ -75,6 +96,10 @@ public class InOutTest {
         assertEquals(count, io.countPeople());
     }
 
+    /**
+     * Deleting Town
+     * @throws Exception
+     */
     @Test
     public void deleteTown() throws Exception {
         Town t = new Town(4800, "Zofingen");
@@ -95,6 +120,10 @@ public class InOutTest {
         assertEquals(count, io.countTowns());
     }
 
+    /**
+     * Creating Person
+     * @throws Exception
+     */
     @Test
     public void createPerson() throws Exception {
         Person p = new Person("Meier", "Hein");
@@ -111,6 +140,10 @@ public class InOutTest {
         assertEquals(result, p);
     }
 
+    /**
+     * Creating Towns
+     * @throws Exception
+     */
     @Test
     public void createTown() throws Exception {
         Town t = new Town(3212, "Gurmels");
@@ -127,6 +160,10 @@ public class InOutTest {
         assertEquals(result, t);
     }
 
+    /**
+     * Updating Person
+     * @throws Exception
+     */
     @Test
     public void updatePerson() throws Exception {
         Person p = new Person("Meier", "Hein");
@@ -148,6 +185,10 @@ public class InOutTest {
         assertEquals(result, p);
     }
 
+    /**
+     * Updating Town
+     * @throws Exception
+     */
     @Test
     public void updateTown() throws Exception {
         Town t = new Town(3212, "Gurmels");
@@ -169,6 +210,10 @@ public class InOutTest {
         assertEquals(result, t);
     }
 
+    /**
+     * Searching Person
+     * @throws Exception
+     */
     @Test
     public void searchPerson() throws Exception {
         if (io.countPeople() > 0) {
@@ -202,6 +247,10 @@ public class InOutTest {
         assertEquals(search.size(), 0);
     }
 
+    /**
+     * Searching Town
+     * @throws Exception
+     */
     @Test
     public void searchTown() throws Exception {
         if (io.countTowns() > 0) {
@@ -231,6 +280,10 @@ public class InOutTest {
         assertEquals(searchTown.size(), 1);
     }
 
+    /**
+     * Counting Towns
+     * @throws Exception
+     */
     @Test
     public void countTown() throws Exception {
         long init = io.countTowns();
@@ -262,6 +315,10 @@ public class InOutTest {
         assertEquals(io.countTowns(), init + added - removed);
     }
 
+    /**
+     * Counting People
+     * @throws Exception
+     */
     @Test
     public void countPerson() throws Exception {
         long init = io.countPeople();

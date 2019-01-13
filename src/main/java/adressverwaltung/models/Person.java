@@ -11,16 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-// Titles - Init 3 Iterr => 1 Release
-// - dotEnv & Configs
-// - Controllers FS
-// - IO => Release 2
-// - Controllers DB
-// - AdressForm
-// - OrtForm = Release 3
-// - Exports
-// - Build config
-// - Testing & Deployment => Release 4
 /**
  *
  * @author Christof Weickhardt
@@ -125,8 +115,7 @@ public class Person implements Serializable {
 
     /**
      * Function to check if two objects are the same
-     *
-     * @param object
+     * @param object Object to check to
      */
     @Override
     public boolean equals(Object object) {

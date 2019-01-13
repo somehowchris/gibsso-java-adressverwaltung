@@ -22,7 +22,7 @@ public class CustomFocusTraversalPolicy extends FocusTraversalPolicy {
 
     /**
      *
-     * @param order
+     * @param order Order of components
      */
     public CustomFocusTraversalPolicy(ArrayList<Component> order) {
         this.order = new ArrayList<>(order.size());

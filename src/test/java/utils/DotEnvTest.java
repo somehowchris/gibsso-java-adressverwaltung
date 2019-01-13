@@ -27,19 +27,30 @@ public class DotEnvTest {
 
     DotEnv dotEnv;
 
+    /**
+     * Empty Constructor
+     */
     public DotEnvTest() {
+
     }
 
+    /**
+     * Setup class
+     */
     @BeforeClass
     public static void setUpClass() {
-
     }
 
+    /**
+     * Tear down class
+     */
     @AfterClass
     public static void tearDownClass() {
-
     }
 
+    /**
+     * Setup before test
+     */
     @Before
     public void setUp() {
         File f;
@@ -48,6 +59,9 @@ public class DotEnvTest {
         }
     }
 
+    /**
+     * Tear down after tests
+     */
     @After
     public void tearDown() {
         File f;
@@ -59,6 +73,11 @@ public class DotEnvTest {
         }
     }
 
+    /**
+     * Checking on operations with .evn
+     * @throws IOException
+     * @throws Exception
+     */
     @Test
     public void operateWithDotEnv() throws IOException, Exception {
         HashMap<String, String> test = new HashMap<>();
