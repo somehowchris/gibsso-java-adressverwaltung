@@ -42,23 +42,28 @@ public class TownForm extends javax.swing.JFrame {
 
     /**
      * Creates new form TownForm
-     * 
+     *
      * @param io adsf
      * @throws adressverwaltung.errors.CanNotConnectToDatabaseError adf
      * @throws java.sql.SQLException asdf
      */
     public TownForm(InOut io) throws CanNotConnectToDatabaseError, SQLException {
         initComponents();
-        if (io != null)
+        if (io != null) {
             ioLayer = io;
-        if (io == null)
+        }
+        if (io == null) {
             ioLayer = new InOut(null);
-        if (io != null)
+        }
+        if (io != null) {
             count = io.countTowns();
-        if (count == 0)
+        }
+        if (count == 0) {
             town = new Town();
-        if (count > 0)
+        }
+        if (count > 0) {
             town = ioLayer.getTowns(1, 0).get(0);
+        }
         setCurrentTown(town);
         setResizable(false);
 
@@ -66,26 +71,28 @@ public class TownForm extends javax.swing.JFrame {
         list.add(jTextField1);
         list.add(jTextField2);
         setFocusTraversalPolicy(new CustomFocusTraversalPolicy(list));
-        
+
         validators.put("PLZ", false);
         validators.put("Name", false);
-        
-        ((JTextField)jTextField1).getDocument().addDocumentListener(new DocumentListener() {
+
+        ((JTextField) jTextField1).getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void changedUpdate(DocumentEvent e) {
-              warn();
+                warn();
             }
+
             @Override
             public void removeUpdate(DocumentEvent e) {
-              warn();
+                warn();
             }
+
             @Override
             public void insertUpdate(DocumentEvent e) {
-              warn();
+                warn();
             }
 
             public void warn() {
-                if(jTextField1.getText().trim().isEmpty()){
+                if (jTextField1.getText().trim().isEmpty()) {
                     validators.put("Name", false);
                     return;
                 }
@@ -93,49 +100,52 @@ public class TownForm extends javax.swing.JFrame {
                 validateInput();
             }
         });
-        
-        ((JTextField)jTextField2).getDocument().addDocumentListener(new DocumentListener() {
+
+        ((JTextField) jTextField2).getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void changedUpdate(DocumentEvent e) {
-              warn();
+                warn();
             }
+
             @Override
             public void removeUpdate(DocumentEvent e) {
-              warn();
+                warn();
             }
+
             @Override
             public void insertUpdate(DocumentEvent e) {
-              warn();
+                warn();
             }
 
             public void warn() {
-                try{
-                    if(jTextField2.getText().trim().isEmpty()){
+                try {
+                    if (jTextField2.getText().trim().isEmpty()) {
                         validators.put("PLZ", false);
                         jTextField2.setForeground(Color.red);
-                    }else if(new Integer(jTextField2.getText().trim()) > 0 && new Integer(jTextField2.getText().trim()) < 10000){
+                    } else if (new Integer(jTextField2.getText().trim()) > 0 && new Integer(jTextField2.getText().trim()) < 10000) {
                         validators.put("PLZ", true);
                         jTextField2.setForeground(Color.black);
                         validateInput();
-                    }else{
+                    } else {
                         validators.put("PLZ", false);
                         jTextField2.setForeground(Color.red);
                     }
                     validateInput();
-                }catch(Exception e){
+                } catch (Exception e) {
                     System.err.println("hey");
                     validators.put("PLZ", false);
                     jTextField2.setForeground(Color.red);
                     validateInput();
                 }
-                
+
             }
         });
     }
+
     private void validateInput() {
-        if(validators.values().stream().filter(el -> el == true).count() == validators.size()){
+        if (validators.values().stream().filter(el -> el == true).count() == validators.size()) {
             jButton3.setEnabled(true);
-        }else{
+        } else {
             jButton3.setEnabled(false);
         }
     }
@@ -183,6 +193,7 @@ public class TownForm extends javax.swing.JFrame {
         });
 
         jButton4.setText("Löschen");
+        jButton4.setName("delete"); // NOI18N
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
@@ -190,6 +201,7 @@ public class TownForm extends javax.swing.JFrame {
         });
 
         jButton3.setText("Speichern");
+        jButton3.setName("saveTown"); // NOI18N
         jButton3.setPreferredSize(new java.awt.Dimension(80, 29));
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -198,6 +210,7 @@ public class TownForm extends javax.swing.JFrame {
         });
 
         jButton2.setText("Suchen");
+        jButton2.setName("search"); // NOI18N
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -205,6 +218,7 @@ public class TownForm extends javax.swing.JFrame {
         });
 
         jButton1.setText("Neu");
+        jButton1.setName("newTown"); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -212,12 +226,14 @@ public class TownForm extends javax.swing.JFrame {
         });
 
         jLabel9.setText("1/x");
+        jLabel9.setName("state"); // NOI18N
 
         jLabel1.setFont(new java.awt.Font("Lucida Grande", 0, 36)); // NOI18N
         jLabel1.setText("Ortsverwaltung");
 
         jLabel2.setText("Name");
 
+        jTextField1.setName("townName"); // NOI18N
         jTextField1.addInputMethodListener(new java.awt.event.InputMethodListener() {
             public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
             }
@@ -246,6 +262,8 @@ public class TownForm extends javax.swing.JFrame {
                 jButton7ActionPerformed(evt);
             }
         });
+
+        jTextField2.setName("townPLZ"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -331,7 +349,7 @@ public class TownForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTextField1CaretPositionChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_jTextField1CaretPositionChanged
-       
+
     }//GEN-LAST:event_jTextField1CaretPositionChanged
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -358,10 +376,12 @@ public class TownForm extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton4ActionPerformed
         try {
-            if (town.getTid() != null)
+            if (town.getTid() != null) {
                 ioLayer.deleteTown(town);
-            if (search && searchResults.contains(town))
+            }
+            if (search && searchResults.contains(town)) {
                 searchResults.remove(town);
+            }
             town = null;
             count = search ? searchResults.size() : (int) ioLayer.countTowns();
             if (count > 0) {
@@ -372,8 +392,9 @@ public class TownForm extends javax.swing.JFrame {
                 setPlayerButtons();
             } else {
                 town = new Town();
-                if (count == 0)
+                if (count == 0) {
                     search = false;
+                }
                 clearInputs();
                 current = 1;
                 setPlayerButtons();
@@ -393,11 +414,11 @@ public class TownForm extends javax.swing.JFrame {
             List<Town> searchCheck = ioLayer.searchTown(getCurrentTown().getPlz(), getCurrentTown().getName());
             if (searchCheck.stream()
                     .filter(el -> el.getName().equalsIgnoreCase(getCurrentTown().getName())
-                            && el.getPlz() == getCurrentTown().getPlz())
+                    && el.getPlz() == getCurrentTown().getPlz())
                     .count() == 1 && getCurrentTown().getTid() != null) {
                 Optional<Town> found = searchCheck.stream()
                         .filter(el -> el.getName().equalsIgnoreCase(getCurrentTown().getName())
-                                && el.getPlz() == getCurrentTown().getPlz())
+                        && el.getPlz() == getCurrentTown().getPlz())
                         .findFirst();
                 if (!(Objects.equals(found.get().getTid(), getCurrentTown().getTid()))) {
                     JOptionPane.showMessageDialog(null, "That town already exists", "Town exists",
@@ -438,10 +459,12 @@ public class TownForm extends javax.swing.JFrame {
                 jButton2.setText("Exit Search");
             } else {
                 count = ioLayer.countTowns();
-                if (count == 0)
+                if (count == 0) {
                     town = new Town();
-                if (count > 0)
+                }
+                if (count > 0) {
                     town = ioLayer.getTowns(1, 0).get(0);
+                }
                 setCurrentTown(town);
                 jButton2.setText("Search");
             }
@@ -489,7 +512,7 @@ public class TownForm extends javax.swing.JFrame {
 
     /**
      * Function to set the Current town
-     * 
+     *
      * @param town The current town
      */
     private void setCurrentTown(Town town) {
@@ -502,7 +525,7 @@ public class TownForm extends javax.swing.JFrame {
      * Function to display the current town
      */
     private void showCurrentTown() {
-        jTextField2.setText(town != null ? town.getPlz()+"" : "0");
+        jTextField2.setText(town != null ? town.getPlz() + "" : "0");
         jTextField1.setText(town != null ? town.getName() : "");
     }
 
@@ -525,7 +548,7 @@ public class TownForm extends javax.swing.JFrame {
     }
 
     private void clearInputs() {
-        jTextField2.setText(1000+"");
+        jTextField2.setText(1000 + "");
         jTextField1.setText("");
     }
 }

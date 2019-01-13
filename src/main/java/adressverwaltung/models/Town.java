@@ -16,13 +16,13 @@ import javax.persistence.Id;
  * @author Chirstof Weickhardt
  */
 @Entity
-public class Town implements Serializable, Comparable<Town>{
+public class Town implements Serializable, Comparable<Town> {
 
     /**
      * Serial verrsion of uid for primary key
      */
     private static final long serialVersionUID = 1L;
-    
+
     /**
      * Primary key of the town object
      */
@@ -34,7 +34,7 @@ public class Town implements Serializable, Comparable<Town>{
      * Name of the town
      */
     private String name;
-    
+
     /**
      * PLZ of the town
      */
@@ -42,10 +42,11 @@ public class Town implements Serializable, Comparable<Town>{
 
     /**
      * Constructor to create a town with name and plz
+     *
      * @param plz PLZ of the town
      * @param name Name of the town
      */
-    public Town(int plz, String name){
+    public Town(int plz, String name) {
         this.plz = plz;
         this.name = name;
     }
@@ -53,11 +54,12 @@ public class Town implements Serializable, Comparable<Town>{
     /**
      * Constructor to create a empty town
      */
-    public Town() {}
-    
-    
+    public Town() {
+    }
+
     /**
      * Getter of the primary key
+     *
      * @return ID of the town
      */
     public Long getTid() {
@@ -66,13 +68,13 @@ public class Town implements Serializable, Comparable<Town>{
 
     /**
      * Setter of the primary key
+     *
      * @param tid ID of the town
      */
     public void setTid(Long tid) {
         this.tid = tid;
     }
 
-    
     /**
      * Needed function to create a hash out of the primary key
      */
@@ -85,6 +87,7 @@ public class Town implements Serializable, Comparable<Town>{
 
     /**
      * Function to check if two objects are the same
+     *
      * @param object
      */
     @Override
@@ -99,14 +102,16 @@ public class Town implements Serializable, Comparable<Town>{
 
     /**
      * Getter of the plz
+     *
      * @return Returns the plz of the town
      */
     public int getPlz() {
         return plz;
     }
-    
+
     /**
      * Setter of the name of the town
+     *
      * @param name Name to be set
      */
     public void setName(String name) {
@@ -115,6 +120,7 @@ public class Town implements Serializable, Comparable<Town>{
 
     /**
      * Setter of the plz of the town
+     *
      * @param plz PLZ of the town
      */
     public void setPlz(int plz) {
@@ -123,6 +129,7 @@ public class Town implements Serializable, Comparable<Town>{
 
     /**
      * Getter of the name of the town
+     *
      * @return Returns the name of the town
      */
     public String getName() {
@@ -131,21 +138,22 @@ public class Town implements Serializable, Comparable<Town>{
 
     /**
      * Sets all properties of a given town to the current one
+     *
      * @param town Town to be set
      */
-    public void setAll(Town town){
+    public void setAll(Town town) {
         this.name = town.name;
         this.plz = town.plz;
     }
 
-    
     /**
      * Comparable function of two towns
+     *
      * @param t Town to compare to
      */
     @Override
     public int compareTo(Town t) {
         return this.plz == t.getPlz() ? t.name.compareToIgnoreCase(t.getName()) : this.plz - t.getPlz();
     }
-    
+
 }

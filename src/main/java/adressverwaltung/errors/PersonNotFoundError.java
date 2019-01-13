@@ -9,7 +9,7 @@ package adressverwaltung.errors;
  *
  * @author Christof Weickhardt
  */
-public class PersonNotFoundError extends Exception{
+public class PersonNotFoundError extends Exception {
 
     /**
      * Constructor to create a custom PersonNotFoundError exception
@@ -17,5 +17,5 @@ public class PersonNotFoundError extends Exception{
     public PersonNotFoundError() {
         super("Cloud not find the requested person");
     }
-    
+
 }

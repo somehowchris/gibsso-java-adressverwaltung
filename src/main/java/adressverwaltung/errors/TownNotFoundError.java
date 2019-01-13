@@ -9,7 +9,7 @@ package adressverwaltung.errors;
  *
  * @author Christof Weickhardt
  */
-public class TownNotFoundError extends Exception{
+public class TownNotFoundError extends Exception {
 
     /**
      * Constructor to create a custom OrtNotFoundError exception
@@ -17,5 +17,5 @@ public class TownNotFoundError extends Exception{
     public TownNotFoundError() {
         super("Could not find the requested ort");
     }
-    
+
 }

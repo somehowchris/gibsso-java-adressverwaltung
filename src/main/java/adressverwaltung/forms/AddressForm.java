@@ -46,20 +46,23 @@ public class AddressForm extends javax.swing.JFrame {
     Town t;
     long townid;
     HashMap<String, Boolean> validations;
-    
 
     /**
      * Creates new form AdressveraltunsForm
-     * 
+     *
      * @param io IO connection to get data from
      * @throws SQLException throws a exception if needed
-     * @throws  CanNotConnectToDatabaseError            adressverwaltung.errors.
+     * @throws CanNotConnectToDatabaseError adressverwaltung.errors.
      */
     public AddressForm(InOut io) throws SQLException, CanNotConnectToDatabaseError {
         initComponents();
         this.setTitle("Adressverwaltung");
-        if (io != null)ioLayer = io;
-        if (io == null)ioLayer = new InOut(null);
+        if (io != null) {
+            ioLayer = io;
+        }
+        if (io == null) {
+            ioLayer = new InOut(null);
+        }
 
         ArrayList<Component> comp = new ArrayList<>();
         comp.add(this.jName);
@@ -69,7 +72,6 @@ public class AddressForm extends javax.swing.JFrame {
         comp.add(this.jTelNr);
         comp.add(this.jHandy);
         comp.add(this.jEmail);
-        
 
         setResizable(false);
 
@@ -81,16 +83,17 @@ public class AddressForm extends javax.swing.JFrame {
             setPerson(ioLayer.getPeople(1, 0).get(0));
         } else {
             cp = new Person();
+            jButton1.doClick();
         }
-        
+
         validations = new HashMap<>();
-        validations.put("Name",false);
-        validations.put("Vorname",false);
-        validations.put("Street",false);
-        validations.put("PLZ",false);
-        validations.put("Phone",false);
-        validations.put("Mobile",false);
-        validations.put("Email",false);
+        validations.put("Name", false);
+        validations.put("Vorname", false);
+        validations.put("Street", false);
+        validations.put("PLZ", false);
+        validations.put("Phone", false);
+        validations.put("Mobile", false);
+        validations.put("Email", false);
 
         validateEntrys();
     }
@@ -153,6 +156,7 @@ public class AddressForm extends javax.swing.JFrame {
 
         jLabel8.setText("Email:");
 
+        jName.setName("name"); // NOI18N
         jName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jNameActionPerformed(evt);
@@ -164,6 +168,7 @@ public class AddressForm extends javax.swing.JFrame {
             }
         });
 
+        jVorname.setName("firstname"); // NOI18N
         jVorname.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jVornameActionPerformed(evt);
@@ -175,6 +180,7 @@ public class AddressForm extends javax.swing.JFrame {
             }
         });
 
+        jStrasse.setName("street"); // NOI18N
         jStrasse.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jStrasseActionPerformed(evt);
@@ -186,6 +192,7 @@ public class AddressForm extends javax.swing.JFrame {
             }
         });
 
+        jTelNr.setName("phone"); // NOI18N
         jTelNr.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTelNrActionPerformed(evt);
@@ -202,6 +209,7 @@ public class AddressForm extends javax.swing.JFrame {
             }
         });
 
+        jHandy.setName("mobile"); // NOI18N
         jHandy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jHandyActionPerformed(evt);
@@ -213,6 +221,7 @@ public class AddressForm extends javax.swing.JFrame {
             }
         });
 
+        jEmail.setName("email"); // NOI18N
         jEmail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jEmailActionPerformed(evt);
@@ -225,6 +234,7 @@ public class AddressForm extends javax.swing.JFrame {
         });
 
         jButton5.setText("<<");
+        jButton5.setName("previous"); // NOI18N
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
@@ -232,6 +242,7 @@ public class AddressForm extends javax.swing.JFrame {
         });
 
         jButton6.setText(">>");
+        jButton6.setName("next"); // NOI18N
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton6ActionPerformed(evt);
@@ -239,6 +250,7 @@ public class AddressForm extends javax.swing.JFrame {
         });
 
         jButton4.setText("Löschen");
+        jButton4.setName("delete"); // NOI18N
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
@@ -246,6 +258,7 @@ public class AddressForm extends javax.swing.JFrame {
         });
 
         jButton3.setText("Speichern");
+        jButton3.setName("save"); // NOI18N
         jButton3.setPreferredSize(new java.awt.Dimension(80, 29));
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -254,6 +267,7 @@ public class AddressForm extends javax.swing.JFrame {
         });
 
         jButton2.setText("Suchen");
+        jButton2.setName("search"); // NOI18N
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -261,6 +275,7 @@ public class AddressForm extends javax.swing.JFrame {
         });
 
         jButton1.setText("Neu");
+        jButton1.setName("newOne"); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -268,6 +283,7 @@ public class AddressForm extends javax.swing.JFrame {
         });
 
         jButton7.setText("Export");
+        jButton7.setName("export"); // NOI18N
         jButton7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton7ActionPerformed(evt);
@@ -320,6 +336,7 @@ public class AddressForm extends javax.swing.JFrame {
         );
 
         jPLZ.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jPLZ.setName("plz"); // NOI18N
         jPLZ.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jPLZItemStateChanged(evt);
@@ -337,12 +354,14 @@ public class AddressForm extends javax.swing.JFrame {
         });
 
         jLabel9.setText("1/x");
+        jLabel9.setName("controll"); // NOI18N
 
         jList1.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Search to get a list of results" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        jList1.setName("list"); // NOI18N
         jList1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jList1MouseClicked(evt);
@@ -508,7 +527,7 @@ public class AddressForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jStrasseKeyReleased
 
     private void jTelNrKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTelNrKeyReleased
-       validateEntrys();
+        validateEntrys();
     }//GEN-LAST:event_jTelNrKeyReleased
 
     private void jHandyKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jHandyKeyReleased
@@ -521,10 +540,11 @@ public class AddressForm extends javax.swing.JFrame {
 
     private void jPLZItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jPLZItemStateChanged
         if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if(validations != null)validateEntrys();
+            if (validations != null) {
+                validateEntrys();
+            }
         }
     }//GEN-LAST:event_jPLZItemStateChanged
-    
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton5ActionPerformed
         if (count >= current || current == count + 1) {
@@ -567,8 +587,9 @@ public class AddressForm extends javax.swing.JFrame {
                 towns = ioLayer.getTowns();
                 if (new Long(cp.getOid() + "") != -1) {
                     t = ioLayer.getTown(cp.getOid());
-                    if (t != null)
+                    if (t != null) {
                         selectTown(t.getName() + " " + t.getPlz());
+                    }
                 }
                 DefaultListModel dlm = new DefaultListModel();
                 dlm.addElement("Search to get a list of results");
@@ -619,10 +640,13 @@ public class AddressForm extends javax.swing.JFrame {
         jButton2.setText("Search");
         count = search ? searchResults.size() : (int) ioLayer.countPeople();
         towns = ioLayer.getTowns();
-        if(cp != null)if (new Long(cp.getOid() + "") != -1) {
-            t = ioLayer.getTown(cp.getOid());
-            if (t != null)
-                selectTown(t.getName() + " " + t.getPlz());
+        if (cp != null) {
+            if (new Long(cp.getOid() + "") != -1) {
+                t = ioLayer.getTown(cp.getOid());
+                if (t != null) {
+                    selectTown(t.getName() + " " + t.getPlz());
+                }
+            }
         }
         DefaultListModel dlm = new DefaultListModel();
         dlm.addElement("Search to get a list of results");
@@ -639,10 +663,12 @@ public class AddressForm extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton4ActionPerformed
         try {
-            if (cp.getId() != null)
+            if (cp.getId() != null) {
                 ioLayer.deletePerson(cp);
-            if (search)
+            }
+            if (search) {
                 searchResults.remove(cp);
+            }
             cp = null;
             count = search ? searchResults.size() : (int) ioLayer.countPeople();
             if (count > 0) {
@@ -697,7 +723,9 @@ public class AddressForm extends javax.swing.JFrame {
                 t = ort.get();
                 townid = t.getTid();
             } else {
-                if (cp != null)cp.setOid(-1);
+                if (cp != null) {
+                    cp.setOid(-1);
+                }
                 t = null;
                 townid = -1L;
             }
@@ -721,8 +749,9 @@ public class AddressForm extends javax.swing.JFrame {
             jList1.getSelectedIndex();
             current = jList1.getSelectedIndex() + 1;
             setPlayerButtons();
-            if (searchResults.size() <= jList1.getSelectedIndex())
+            if (searchResults.size() <= jList1.getSelectedIndex()) {
                 setPerson(searchResults.get(jList1.getSelectedIndex()));
+            }
         } catch (NullPointerException e) {
         }
     }// GEN-LAST:event_jList1ValueChanged
@@ -742,7 +771,7 @@ public class AddressForm extends javax.swing.JFrame {
     /**
      * Function to load and represent all the towns
      */
-    private void loadTowns() {
+    public void loadTowns() {
         jPLZ.removeAllItems();
         jPLZ.addItem("Please select a town");
         towns = ioLayer.getTowns();
@@ -757,13 +786,15 @@ public class AddressForm extends javax.swing.JFrame {
             }
         });
         if (t == null) {
-            if (cp != null)cp = new Person();
+            if (cp != null) {
+                cp = new Person();
+            }
             selectTown("Please select a town");
         } else {
             selectTown(t.getPlz() + " " + t.getName());
         }
     }
-    
+
     /**
      * Function to clear all the inputs
      */
@@ -781,7 +812,9 @@ public class AddressForm extends javax.swing.JFrame {
      * Function to cast all the inputs to a person object
      */
     private void castInputToCurrentPerson() {
-        if (cp == null)cp = new Person();
+        if (cp == null) {
+            cp = new Person();
+        }
         cp.setLastName(jName.getText());
         cp.setFirstName(jVorname.getText());
         cp.setAddress(jStrasse.getText());
@@ -794,8 +827,9 @@ public class AddressForm extends javax.swing.JFrame {
      * Function to set the play buttons
      */
     private void setPlayerButtons() {
-        if (current == 0)
+        if (current == 0) {
             current = 1;
+        }
         jLabel9.setText(current > count ? "New Item" : current + "/" + count);
         jButton5.setEnabled(current != 1);
         jButton6.setEnabled(current < count);
@@ -861,92 +895,93 @@ public class AddressForm extends javax.swing.JFrame {
 
     /**
      * Function to update the town list
+     *
      * @param id ID of the updated town
      */
     public void updateTown(long id) {
         Town t = ioLayer.getTown(townid);
         loadTowns();
-        if(t != null){
-            selectTown(t.getPlz()+" "+t.getName());
+        if (t != null) {
+            selectTown(t.getPlz() + " " + t.getName());
         }
     }
-    
-    public void validateEntrys(){
-        if(jName.getText().trim().isEmpty()){
+
+    public void validateEntrys() {
+        if (jName.getText().trim().isEmpty()) {
             validations.put("Name", false);
             jName.setForeground(Color.red);
-        }else{
+        } else {
             validations.put("Name", true);
             jName.setForeground(Color.black);
         }
-        
-        if(jVorname.getText().trim().isEmpty()){
+
+        if (jVorname.getText().trim().isEmpty()) {
             validations.put("Vorname", false);
             jVorname.setForeground(Color.red);
-        }else{
+        } else {
             validations.put("Vorname", true);
             jVorname.setForeground(Color.black);
         }
-        
-        if(jStrasse.getText().trim().isEmpty()){
+
+        if (jStrasse.getText().trim().isEmpty()) {
             validations.put("Street", false);
             jStrasse.setForeground(Color.red);
-        }else{
+        } else {
             validations.put("Street", true);
             jStrasse.setForeground(Color.black);
         }
-        
+
         EmailValidator validator = EmailValidator.getInstance();
         if (validator.isValid(jEmail.getText())) {
             validations.put("Email", true);
             jEmail.setForeground(Color.black);
         } else {
-           validations.put("Email", false);
-           jEmail.setForeground(Color.red);
+            validations.put("Email", false);
+            jEmail.setForeground(Color.red);
         }
-        
+
         PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-        
+
         try {
             PhoneNumber phone = phoneUtil.parse(jHandy.getText(), "CH");
-            if(phoneUtil.getNumberType(phone) == PhoneNumberUtil.PhoneNumberType.MOBILE){
+            if (phoneUtil.getNumberType(phone) == PhoneNumberUtil.PhoneNumberType.MOBILE) {
                 jHandy.setForeground(Color.black);
-                validations.put("Mobile",true);
-            }else{
-                validations.put("Mobile",false);
+                validations.put("Mobile", true);
+            } else {
+                validations.put("Mobile", false);
                 jHandy.setForeground(Color.red);
             }
-            
+
         } catch (NumberParseException ex) {
-           validations.put("Mobile",false);
-           jHandy.setForeground(Color.red);
+            validations.put("Mobile", false);
+            jHandy.setForeground(Color.red);
         }
-        
+
         try {
             PhoneNumber phone = phoneUtil.parse(jTelNr.getText(), "CH");
-            if(phoneUtil.getNumberType(phone) == PhoneNumberUtil.PhoneNumberType.FIXED_LINE){
-                validations.put("Phone",true);
+            if (phoneUtil.getNumberType(phone) == PhoneNumberUtil.PhoneNumberType.FIXED_LINE) {
+                validations.put("Phone", true);
                 jTelNr.setForeground(Color.black);
-            }else{
-                validations.put("Phone",false);
+            } else {
+                validations.put("Phone", false);
                 jTelNr.setForeground(Color.red);
             }
         } catch (NumberParseException ex) {
-           validations.put("Phone",false);
-           jTelNr.setForeground(Color.red);
+            validations.put("Phone", false);
+            jTelNr.setForeground(Color.red);
         }
-        
-        if(jPLZ.getSelectedIndex() > 0){
-            validations.put("PLZ",true);
+
+        if (jPLZ.getSelectedIndex() > 0) {
+            validations.put("PLZ", true);
             jPLZ.setForeground(Color.black);
-        }else{
-           validations.put("PLZ",false);
-           jPLZ.setForeground(Color.red);
+        } else {
+            validations.put("PLZ", false);
+            jPLZ.setForeground(Color.red);
         }
-        
-        if(validations.values().stream().filter(el -> el == true).count() == validations.size()){
+
+        if (validations.values().stream().filter(el -> el == true).count() == validations.size()) {
             jButton3.setEnabled(true);
-        }else{
+        } else {
             jButton3.setEnabled(false);
         }
     }

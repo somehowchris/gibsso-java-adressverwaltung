@@ -11,10 +11,13 @@ import java.awt.FocusTraversalPolicy;
 import java.util.ArrayList;
 
 /**
- * A helper class to define the tab order by the order of components given to the constructor
+ * A helper class to define the tab order by the order of components given to
+ * the constructor
+ *
  * @author Christof Weickhardt
  */
-public class CustomFocusTraversalPolicy extends FocusTraversalPolicy{
+public class CustomFocusTraversalPolicy extends FocusTraversalPolicy {
+
     ArrayList<Component> order;
 
     /**

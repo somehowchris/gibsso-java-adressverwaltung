@@ -5,41 +5,64 @@
  */
 package utils;
 
+import adressverwaltung.errors.CanNotConnectToDatabaseError;
+import adressverwaltung.utils.MySQLConnection;
+import ch.vorburger.exec.ManagedProcessException;
+import ch.vorburger.mariadb4j.DB;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
- * @author chris
+ * @author Christof Weickhardt
  */
 public class MySQLConnectionTest {
-    
+
+    DB db;
+
     public MySQLConnectionTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
+    public void setUp() throws SQLException {
+        try {
+            db = DB.newEmbeddedDB(3308);
+            db.start();
+        } catch (ManagedProcessException ex) {
+            throw new Error("Could not create database on port 3308");
+        }
     }
 
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
+    @After
+    public void tearDown() {
+        try {
+            db.stop();
+        } catch (ManagedProcessException ex) {
+        }
+    }
+
+    @Test
+    public void verifyConnection() throws SQLException {
+        try {
+            MySQLConnection mysql = new MySQLConnection("localhost", "root", "test", "3308", "", true, "mysql");
+            mysql.verify();
+        } catch (CanNotConnectToDatabaseError ex) {
+            Logger.getLogger(MySQLConnectionTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
 }

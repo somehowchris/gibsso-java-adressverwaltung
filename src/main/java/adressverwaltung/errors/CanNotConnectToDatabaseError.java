@@ -9,7 +9,7 @@ package adressverwaltung.errors;
  *
  * @author Christof Weickhardt
  */
-public class CanNotConnectToDatabaseError extends Exception{
+public class CanNotConnectToDatabaseError extends Exception {
 
     /**
      * Constructor to create a custom CanNotConnectToDatabaseError exception
@@ -17,5 +17,5 @@ public class CanNotConnectToDatabaseError extends Exception{
     public CanNotConnectToDatabaseError() {
         super("Could not connect to the database");
     }
-    
+
 }

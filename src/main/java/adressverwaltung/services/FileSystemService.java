@@ -20,8 +20,8 @@ import java.util.HashMap;
 
 /**
  * A File System Service managing the data set in a .fsdb folder of the users
- home
- * 
+ * home
+ *
  * @author Christof Weickhardt
  */
 public class FileSystemService implements Service {
@@ -33,13 +33,18 @@ public class FileSystemService implements Service {
 
     /**
      * Constructor to open a FileSystemService
+     *
      * @param dir Directory of the data set
      * @param sep Platform depending seperator of uris
      */
     public FileSystemService(String dir, String sep) {
-        if (!new File(dir + sep + ".fsdb" + sep).exists())
-            new File(dir + sep + ".fsdb" + sep).mkdir();
-        fsdbdir = dir + sep + ".fsdb" + sep;
+        if (dir.split("")[dir.split("").length - 1] == null ? sep != null : !dir.split("")[dir.split("").length - 1].equals(sep)) {
+            dir += sep;
+        }
+        if (!new File(dir + ".fsdb" + sep).exists()) {
+            new File(dir + ".fsdb" + sep).mkdir();
+        }
+        fsdbdir = dir + ".fsdb" + sep;
     }
 
     /**
@@ -47,8 +52,9 @@ public class FileSystemService implements Service {
      */
     @Override
     public Person getPerson(Long id) {
-        if (redismapPeople.containsKey(id))
+        if (redismapPeople.containsKey(id)) {
             return redismapPeople.get(id);
+        }
         File f = new File(fsdbdir + id + ".person");
         if (f.exists()) {
             BufferedReader reader;
@@ -59,29 +65,29 @@ public class FileSystemService implements Service {
                 Person p = new Person();
                 while ((line = reader.readLine()) != null) {
                     switch (i) {
-                    case 0:
-                        p.setPid(new Long(line));
-                        break;
-                    case 1:
-                        p.setLastName(line);
-                        break;
-                    case 2:
-                        p.setFirstName(line);
-                        break;
-                    case 3:
-                        p.setAddress(line);
-                        break;
-                    case 4:
-                        p.setOid(new Integer(line));
-                    case 5:
-                        p.setPhone(line);
-                        break;
-                    case 6:
-                        p.setMobile(line);
-                        break;
-                    case 7:
-                        p.setEmail(line);
-                        break;
+                        case 0:
+                            p.setPid(new Long(line));
+                            break;
+                        case 1:
+                            p.setLastName(line);
+                            break;
+                        case 2:
+                            p.setFirstName(line);
+                            break;
+                        case 3:
+                            p.setAddress(line);
+                            break;
+                        case 4:
+                            p.setOid(new Integer(line));
+                        case 5:
+                            p.setPhone(line);
+                            break;
+                        case 6:
+                            p.setMobile(line);
+                            break;
+                        case 7:
+                            p.setEmail(line);
+                            break;
                     }
                     i++;
                 }
@@ -99,8 +105,9 @@ public class FileSystemService implements Service {
      */
     @Override
     public Town getTown(Long id) {
-        if (redismapTown.containsKey(id))
+        if (redismapTown.containsKey(id)) {
             return redismapTown.get(id);
+        }
         File f = new File(fsdbdir + id + ".town");
         if (f.exists()) {
             BufferedReader reader;
@@ -111,15 +118,15 @@ public class FileSystemService implements Service {
                 Town o = new Town();
                 while ((line = reader.readLine()) != null) {
                     switch (i) {
-                    case 0:
-                        o.setTid(new Long(line));
-                        break;
-                    case 1:
-                        o.setName(line);
-                        break;
-                    case 2:
-                        o.setPlz(new Integer(line));
-                        break;
+                        case 0:
+                            o.setTid(new Long(line));
+                            break;
+                        case 1:
+                            o.setName(line);
+                            break;
+                        case 2:
+                            o.setPlz(new Integer(line));
+                            break;
                     }
                     i++;
                 }
@@ -141,8 +148,9 @@ public class FileSystemService implements Service {
         ArrayList<Person> people = new ArrayList<>();
         for (String file : files) {
             Person p = getPerson(new Long(file.replace(".person", "")));
-            if (p.getLastName().contains(person.getLastName()) && p.getFirstName().contains(person.getFirstName()))
+            if (p.getLastName().toLowerCase().contains(person.getLastName().toLowerCase()) && p.getFirstName().toLowerCase().contains(person.getFirstName().toLowerCase())) {
                 people.add(p);
+            }
         }
         return people;
     }
@@ -156,8 +164,10 @@ public class FileSystemService implements Service {
         ArrayList<Town> townlist = new ArrayList<>();
         for (String file : files) {
             Town o = getTown(new Long(file.replace(".town", "")));
-            if (town.getName().toLowerCase().contains(town.getName().toLowerCase()))
+            System.out.println();
+            if (o.getName().toLowerCase().contains(town.getName().toLowerCase())) {
                 townlist.add(o);
+            }
         }
         return townlist;
     }
@@ -168,8 +178,9 @@ public class FileSystemService implements Service {
     @Override
     public Long insertPerson(Person person) {
         Long id = 0L;
-        if (getPeople(1, new Integer(countPeople() + "") - 2).size() > 0)
+        if (getPeople(1, new Integer(countPeople() + "") - 2).size() > 0) {
             id = getPeople(1, new Integer(countPeople() + "") - 2).size() + 1L;
+        }
         while (new File(fsdbdir + id + ".person").exists()) {
             id++;
         }
@@ -184,8 +195,9 @@ public class FileSystemService implements Service {
     @Override
     public Long insertTown(Town town) {
         Long id = 0L;
-        if (getTown(1, new Integer(countTown() + "") - 2).size() > 0)
+        if (getTown(1, new Integer(countTown() + "") - 2).size() > 0) {
             id = getTown(1, new Integer(countTown() + "") - 2).get(0).getTid() + 1L;
+        }
         while (new File(fsdbdir + id + ".town").exists()) {
             id++;
         }
@@ -330,8 +342,9 @@ public class FileSystemService implements Service {
 
     /**
      * Searches for files wich contain a spefic character chain
-     * 
-     * @param contains String to be contained in the found file names of the home directory
+     *
+     * @param contains String to be contained in the found file names of the
+     * home directory
      * @return All files found and passed the contains check
      * @see FilenameFilter
      */
@@ -341,7 +354,7 @@ public class FileSystemService implements Service {
 
     /**
      * Writes data to the file system
-     * 
+     *
      * @param data Data to write
      * @param file File path to store on
      * @see BufferedWriter
@@ -358,10 +371,12 @@ public class FileSystemService implements Service {
         } catch (IOException e) {
         } finally {
             try {
-                if (br != null)
+                if (br != null) {
                     br.close();
-                if (fr != null)
+                }
+                if (fr != null) {
                     fr.close();
+                }
             } catch (IOException e) {
             }
         }
@@ -369,7 +384,7 @@ public class FileSystemService implements Service {
 
     /**
      * Cleans all the local data on the file system related to this application
-     * 
+     *
      * @see BufferedWriter
      * @see FileWriter
      */

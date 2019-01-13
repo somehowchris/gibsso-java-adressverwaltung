@@ -25,21 +25,23 @@ import adressverwaltung.services.Service;
  *
  * @author Christof Weickhardt
  */
-public class JsonExport extends Export{
-    
+public class JsonExport extends Export {
+
     String jsonData;
-    
+
     /**
      * Constructor to export a list of people
+     *
      * @param connection Connection to get related data
      * @param people People to export
      */
     public JsonExport(Service connection, List<Person> people) {
         super(connection, people);
     }
-    
+
     /**
      * Constructor to export all
+     *
      * @param connection Connection to get all the data
      */
     public JsonExport(Service connection) {
@@ -48,6 +50,7 @@ public class JsonExport extends Export{
 
     /**
      * Constructor to export from given data set
+     *
      * @param connection Connection to get needed files
      * @param people People to export
      * @param towns Towns to export
@@ -63,11 +66,13 @@ public class JsonExport extends Export{
     public void render() {
 
         JSONArray jsonArray = new JSONArray();
-        
+
         people.stream().map((p) -> {
             JSONObject obj = new JSONObject();
             Town o = new Town();
-            if(p.getOid() != null)o = this.connection.getTown(p.getOid());
+            if (p.getOid() != null) {
+                o = this.connection.getTown(p.getOid());
+            }
             obj.put(PersonColumnEnum.ID.get(), p.getId());
             obj.put(PersonColumnEnum.LAST_NAME.get(), p.getLastName() == null ? "" : p.getLastName());
             obj.put(PersonColumnEnum.FIRST_NAME.get(), p.getFirstName() == null ? "" : p.getFirstName());
@@ -87,7 +92,7 @@ public class JsonExport extends Export{
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         jsonData = gson.toJson(json);
     }
-    
+
     /**
      * Custom json write function
      */
@@ -98,8 +103,8 @@ public class JsonExport extends Export{
             pw.write(jsonData);
             pw.close();
         } catch (FileNotFoundException ex) {
-            JOptionPane.showMessageDialog(null, "Couldnt write file: "+this.path);
+            JOptionPane.showMessageDialog(null, "Couldnt write file: " + this.path);
         }
     }
-    
+
 }

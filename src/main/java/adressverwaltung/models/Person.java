@@ -27,56 +27,57 @@ import javax.persistence.Id;
  */
 @Entity
 public class Person implements Serializable {
-    
+
     /**
      * Serial verrsion of uid for primary key
      */
     private static final long serialVersionUID = 1L;
-    
+
     /**
      * Primary key of the person object
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long pid;
-    
+
     /**
      * Last name of the person
      */
     private String lastName;
-    
+
     /**
      * First name of the person
      */
     private String firstName;
-    
+
     /**
      * Adress of the person
      */
     private String address;
-    
+
     /**
      * Town primary key
      */
     private long tid = -1;
-    
+
     /**
      * Phone nr of the person
      */
     private String phone;
-    
+
     /**
      * Mobile nrr of the person
      */
     private String mobile;
-    
+
     /**
      * Email of the person
      */
     private String email;
-    
+
     /**
      * Constructor to populate a person object
+     *
      * @param lastName Last name of the person
      * @param firstName First name of the person
      * @param street Street of the person
@@ -98,10 +99,12 @@ public class Person implements Serializable {
     /**
      * Constructor to create a empty person object
      */
-    public Person() {}
-    
+    public Person() {
+    }
+
     /**
      * Constructor to create a person with first and last anme
+     *
      * @param firstName First name of the person
      * @param lastName Last name of the person
      */
@@ -109,7 +112,7 @@ public class Person implements Serializable {
         this.lastName = lastName;
         this.firstName = firstName;
     }
-    
+
     /**
      * Needed function to create a hash out of the primary key
      */
@@ -122,6 +125,7 @@ public class Person implements Serializable {
 
     /**
      * Function to check if two objects are the same
+     *
      * @param object
      */
     @Override
@@ -138,6 +142,7 @@ public class Person implements Serializable {
 
     /**
      * Getter of the email
+     *
      * @return Returns the mail as a String
      */
     public String getEmail() {
@@ -146,6 +151,7 @@ public class Person implements Serializable {
 
     /**
      * Getter of the mobile nr
+     *
      * @return Returns the mobile as a String
      */
     public String getMobile() {
@@ -154,6 +160,7 @@ public class Person implements Serializable {
 
     /**
      * Getter of the last name
+     *
      * @return Returns the last anme
      */
     public String getLastName() {
@@ -162,6 +169,7 @@ public class Person implements Serializable {
 
     /**
      * Getter of the town primary key
+     *
      * @return Returns the id of the town
      */
     public Long getOid() {
@@ -170,6 +178,7 @@ public class Person implements Serializable {
 
     /**
      * Getter of the adress
+     *
      * @return Returns the adress as a String
      */
     public String getAddress() {
@@ -178,6 +187,7 @@ public class Person implements Serializable {
 
     /**
      * Getter of the phone nr
+     *
      * @return Returns the phone as a String
      */
     public String getPhone() {
@@ -186,6 +196,7 @@ public class Person implements Serializable {
 
     /**
      * Getter of the first name
+     *
      * @return Returns the first anme
      */
     public String getFirstName() {
@@ -194,14 +205,16 @@ public class Person implements Serializable {
 
     /**
      * Getter of the email
+     *
      * @param email Returns the email as a String
      */
     public void setEmail(String email) {
         this.email = email;
     }
-    
+
     /**
      * Setter of the mobile nr
+     *
      * @param mobile Mobile nr to set to
      */
     public void setMobile(String mobile) {
@@ -210,6 +223,7 @@ public class Person implements Serializable {
 
     /**
      * Setter of the last name
+     *
      * @param lastName Last name to set to
      */
     public void setLastName(String lastName) {
@@ -218,6 +232,7 @@ public class Person implements Serializable {
 
     /**
      * Setter of the town Primary key
+     *
      * @param oid Primary key of the town to set to
      */
     public void setOid(int oid) {
@@ -226,6 +241,7 @@ public class Person implements Serializable {
 
     /**
      * Setter of the person primary key
+     *
      * @param pid Primary key of the person to set to
      */
     public void setPid(Long pid) {
@@ -234,14 +250,16 @@ public class Person implements Serializable {
 
     /**
      * Setter of the adress
+     *
      * @param address Adress to set to
-     */ 
+     */
     public void setAddress(String address) {
         this.address = address;
     }
 
     /**
      * Setter of the phone nr
+     *
      * @param phone Phone nr to set to
      */
     public void setPhone(String phone) {
@@ -250,6 +268,7 @@ public class Person implements Serializable {
 
     /**
      * Setter of the first name
+     *
      * @param firstName First name to set to
      */
     public void setFirstName(String firstName) {
@@ -258,6 +277,7 @@ public class Person implements Serializable {
 
     /**
      * Getter of the person primary key
+     *
      * @return Returns the person ID
      */
     public Long getId() {
@@ -266,6 +286,7 @@ public class Person implements Serializable {
 
     /**
      * Setter of the person primary key
+     *
      * @param pid Primary key to set to
      */
     public void setId(Long pid) {
@@ -274,8 +295,9 @@ public class Person implements Serializable {
 
     /**
      * Setter to replace the current person object
+     *
      * @param person Person object to set to
-     * @deprecated 
+     * @deprecated
      */
     public void setAll(Person person) {
         this.lastName = person.getLastName();

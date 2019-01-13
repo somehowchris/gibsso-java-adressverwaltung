@@ -1,0 +1,358 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package forms;
+
+import TestingHelpers.UIUtils;
+import adressverwaltung.enums.DotEnvEnum;
+import adressverwaltung.enums.SystemPropertyEnum;
+import adressverwaltung.errors.CanNotConnectToDatabaseError;
+import adressverwaltung.forms.AddressForm;
+import adressverwaltung.models.Person;
+import adressverwaltung.models.Town;
+import adressverwaltung.utils.InOut;
+import ch.vorburger.exec.ManagedProcessException;
+import ch.vorburger.mariadb4j.DB;
+import com.github.javafaker.Faker;
+import java.awt.Color;
+import java.io.File;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Locale;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JTextField;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import static org.junit.Assert.*;
+
+/**
+ *
+ * @author chris
+ */
+public class AddressFormTest {
+
+    AddressForm af;
+    InOut io;
+    DB db;
+    Faker faker;
+    Person p1;
+    Person p2;
+    long p1id;
+    long p2id;
+
+    public AddressFormTest() {
+    }
+
+    @BeforeClass
+    public static void setUpClass() {
+    }
+
+    @AfterClass
+    public static void tearDownClass() {
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        int port = 3006;
+        try (ServerSocket socket = new ServerSocket(0)) {
+            port = socket.getLocalPort();
+            socket.close();
+        } catch (IOException ex) {
+        }
+
+        try {
+            db = DB.newEmbeddedDB(port);
+            db.start();
+            HashMap<String, String> fakeKeys = new HashMap<>();
+            fakeKeys.put(DotEnvEnum.DB_USE.get(), "true");
+            fakeKeys.put(DotEnvEnum.HOST.get(), "localhost");
+            fakeKeys.put(DotEnvEnum.PASSWORD.get(), "root");
+            fakeKeys.put(DotEnvEnum.USER.get(), "");
+            fakeKeys.put(DotEnvEnum.TABLE_NAME.get(), "test");
+            fakeKeys.put(DotEnvEnum.PORT.get(), db.getConfiguration().getPort() + "");
+            io = new InOut(fakeKeys);
+        } catch (ManagedProcessException | SQLException | CanNotConnectToDatabaseError ex) {
+            throw new Error("Could not create database on port " + db.getConfiguration().getPort());
+        }
+
+        File f;
+        if ((f = new File(SystemPropertyEnum.USER_HOME + "" + SystemPropertyEnum.FILE_SEPERATOR + ".env")).exists()) {
+            f.renameTo(new File(SystemPropertyEnum.USER_HOME + "" + SystemPropertyEnum.FILE_SEPERATOR + ".env.original"));
+        }
+
+        faker = new Faker(new Locale("de-CH"));
+
+        Town t = new Town(4800, "Zofingen");
+        try {
+            long tid = io.saveTown(t);
+            p1 = new Person(faker.name().lastName(), faker.name().firstName(), faker.address().streetAddress(), tid, faker.phoneNumber().phoneNumber(), "0799069867", faker.internet().emailAddress());
+            p2 = new Person(faker.name().lastName(), faker.name().firstName(), faker.address().streetAddress(), tid, faker.phoneNumber().phoneNumber(), "0799069867", faker.internet().emailAddress());
+            p1id = io.savePerson(p1);
+            p2id = io.savePerson(p2);
+            p1.setId(p1id);
+            p2.setId(p2id);
+        } catch (SQLException ex) {
+            throw new Exception("Couldnt save town");
+        }
+
+        try {
+            af = new AddressForm(io);
+        } catch (SQLException | CanNotConnectToDatabaseError ex) {
+            throw new Error("Could not connect to database");
+        }
+        af.setVisible(true);
+
+    }
+
+    @After
+    public void tearDown() {
+        File f;
+        if ((f = new File(SystemPropertyEnum.USER_HOME + "" + SystemPropertyEnum.FILE_SEPERATOR + ".env.original")).exists()) {
+            if (new File(SystemPropertyEnum.USER_HOME + "" + SystemPropertyEnum.FILE_SEPERATOR + ".env").exists()) {
+                new File(SystemPropertyEnum.USER_HOME + "" + SystemPropertyEnum.FILE_SEPERATOR + ".env").delete();
+            }
+            f.renameTo(new File(SystemPropertyEnum.USER_HOME + "" + SystemPropertyEnum.FILE_SEPERATOR + ".env"));
+        }
+    }
+
+    @Test
+    public void createNew() throws Exception {
+        Town t = new Town(4800, "Zofingen");
+        try {
+            io.saveTown(t);
+        } catch (SQLException ex) {
+            throw new Exception("Couldnt save town");
+        }
+
+        JTextField lastname = (JTextField) UIUtils.getChildNamed(af, "name");
+        JTextField firstname = (JTextField) UIUtils.getChildNamed(af, "firstname");
+        JTextField street = (JTextField) UIUtils.getChildNamed(af, "street");
+        JTextField phone = (JTextField) UIUtils.getChildNamed(af, "phone");
+        JTextField mobile = (JTextField) UIUtils.getChildNamed(af, "mobile");
+        JTextField email = (JTextField) UIUtils.getChildNamed(af, "email");
+
+        JComboBox plz = (JComboBox) UIUtils.getChildNamed(af, "plz");
+
+        JButton newOne = (JButton) UIUtils.getChildNamed(af, "newOne");
+        JButton save = (JButton) UIUtils.getChildNamed(af, "save");
+
+        assertNotNull(newOne);
+        assertNotNull(save);
+
+        assertNotNull(lastname);
+        assertNotNull(firstname);
+        assertNotNull(street);
+        assertNotNull(phone);
+        assertNotNull(mobile);
+        assertNotNull(email);
+
+        assertNotNull(plz);
+
+        newOne.doClick();
+
+        assertEquals(lastname.getText(), "");
+        assertEquals(firstname.getText(), "");
+        assertEquals(street.getText(), "");
+        assertEquals(phone.getText(), "");
+        assertEquals(mobile.getText(), "");
+        assertEquals(email.getText(), "");
+        assertEquals(plz.getSelectedIndex(), 0);
+
+        lastname.setText(faker.name().lastName());
+        firstname.setText(faker.name().firstName());
+        street.setText(faker.address().streetAddress());
+        phone.setText("0266753737");
+        mobile.setText("0799069867");
+        email.setText(faker.internet().emailAddress());
+
+        af.loadTowns();
+
+        plz.setSelectedItem(t.getPlz() + " " + t.getName());
+
+        save.doClick();
+
+        assertEquals(io.countPeople(), 3);
+    }
+
+    @Test
+    public void update() throws Exception {
+        JTextField lastname = (JTextField) UIUtils.getChildNamed(af, "name");
+        JTextField firstname = (JTextField) UIUtils.getChildNamed(af, "firstname");
+        JTextField street = (JTextField) UIUtils.getChildNamed(af, "street");
+
+        JButton newOne = (JButton) UIUtils.getChildNamed(af, "newOne");
+        JButton save = (JButton) UIUtils.getChildNamed(af, "save");
+
+        assertNotNull(save);
+
+        assertNotNull(lastname);
+        assertNotNull(firstname);
+        assertNotNull(street);
+
+        p1.setFirstName(faker.name().firstName());
+        p1.setLastName(faker.name().lastName());
+        p1.setAddress(faker.address().streetAddress());
+        lastname.setText(p1.getLastName());
+        firstname.setText(p1.getFirstName());
+        street.setText(p1.getAddress());
+
+        af.loadTowns();
+
+        save.doClick();
+
+        assertEquals(io.countPeople(), 2);
+
+        Person result = io.getPerson(p1id);
+
+        p1.setId(p1id);
+
+        assertEquals(result, result);
+
+    }
+
+    @Test
+    public void delete() {
+        JButton delete = (JButton) UIUtils.getChildNamed(af, "delete");
+
+        assertNotNull(delete);
+
+        delete.doClick();
+
+        assertEquals(1, io.countPeople());
+    }
+
+    @Test
+    public void navigate() {
+        JButton next = (JButton) UIUtils.getChildNamed(af, "next");
+        JButton previous = (JButton) UIUtils.getChildNamed(af, "previous");
+
+        JLabel state = (JLabel) UIUtils.getChildNamed(af, "controll");
+
+        assertNotNull(next);
+        assertNotNull(previous);
+        assertNotNull(state);
+
+        next.doClick();
+
+        assertEquals("2/2", state.getText());
+
+        previous.doClick();
+
+        assertEquals("1/2", state.getText());
+    }
+
+    @Test
+    public void editTownWithoutLoosingInputs() throws Exception {
+        JTextField firstname = (JTextField) UIUtils.getChildNamed(af, "firstname");
+        JButton save = (JButton) UIUtils.getChildNamed(af, "save");
+        JComboBox plz = (JComboBox) UIUtils.getChildNamed(af, "plz");
+
+        assertNotNull(firstname);
+        assertNotNull(save);
+        assertNotNull(plz);
+
+        io.deletePerson(p2);
+
+        p1.setFirstName(faker.name().firstName());
+
+        Town t = new Town(3212, "Gurmels");
+
+        try {
+            io.saveTown(t);
+        } catch (SQLException ex) {
+            throw new Exception("Could not save town");
+        }
+
+        af.loadTowns();
+
+        firstname.setText(p1.getFirstName());
+        plz.setSelectedIndex(2);
+        p1.setOid(new Integer(io.searchTown(4800, "Zofingen").get(0).getTid() + ""));
+        save.doClick();
+
+        Person result = io.getPerson(p1.getId());
+
+        assertEquals(p1, result);
+
+    }
+
+    @Test
+    public void validationCheck() {
+        JTextField lastname = (JTextField) UIUtils.getChildNamed(af, "name");
+        JTextField firstname = (JTextField) UIUtils.getChildNamed(af, "firstname");
+        JTextField street = (JTextField) UIUtils.getChildNamed(af, "street");
+        JTextField phone = (JTextField) UIUtils.getChildNamed(af, "phone");
+        JTextField mobile = (JTextField) UIUtils.getChildNamed(af, "mobile");
+        JTextField email = (JTextField) UIUtils.getChildNamed(af, "email");
+        JComboBox plz = (JComboBox) UIUtils.getChildNamed(af, "plz");
+        JButton save = (JButton) UIUtils.getChildNamed(af, "save");
+
+        assertNotNull(lastname);
+        assertNotNull(firstname);
+        assertNotNull(street);
+        assertNotNull(phone);
+        assertNotNull(mobile);
+        assertNotNull(email);
+        assertNotNull(plz);
+        assertNotNull(save);
+
+        lastname.setText("");
+        firstname.setText("");
+        street.setText("");
+        phone.setText("hello");
+        mobile.setText("world");
+        email.setText("none");
+        plz.setSelectedIndex(0);
+
+        assertEquals(lastname.getForeground(), Color.red);
+        assertEquals(firstname.getForeground(), Color.red);
+        assertEquals(street.getForeground(), Color.red);
+        assertEquals(phone.getForeground(), Color.red);
+        assertEquals(mobile.getForeground(), Color.red);
+        assertEquals(email.getForeground(), Color.red);
+        assertEquals(plz.getForeground(), Color.red);
+        assertEquals(save.isEnabled(), false);
+    }
+
+    @Test
+    public void search() throws Exception {
+        JTextField lastname = (JTextField) UIUtils.getChildNamed(af, "name");
+        JTextField firstname = (JTextField) UIUtils.getChildNamed(af, "firstname");
+        JButton search = (JButton) UIUtils.getChildNamed(af, "search");
+        JLabel state = (JLabel) UIUtils.getChildNamed(af, "controll");
+        JList list = (JList) UIUtils.getChildNamed(af, "list");
+
+        assertNotNull(lastname);
+        assertNotNull(firstname);
+        assertNotNull(search);
+        assertNotNull(state);
+        assertNotNull(list);
+
+        assertEquals(state.getText(), "1/2");
+        Person p;
+        try {
+            p = io.searchPerson(firstname.getText(), lastname.getText()).get(0);
+            assertNotNull(p);
+        } catch (SQLException ex) {
+            throw new Exception("Could not find person");
+        }
+
+        search.doClick();
+
+        list.setSelectedIndex(0);
+
+        assertEquals(state.getText(), "1/" + io.searchPerson(firstname.getText(), lastname.getText()).size());
+        assertEquals(list.getSelectedValue(), p.getFirstName() + " " + p.getLastName());
+    }
+
+}

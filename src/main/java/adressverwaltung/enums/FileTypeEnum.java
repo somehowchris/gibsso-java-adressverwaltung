@@ -16,62 +16,64 @@ public enum FileTypeEnum {
     /**
      * CSV file type
      */
-    CSV("CSV",".csv"),
-
+    CSV("CSV", ".csv"),
     /**
      * XML file type
      */
-    XML("XML",".xml"),
-
+    XML("XML", ".xml"),
     /**
      * Excel file type
      */
-    XLSX("Excel",".xlsx"),
-
+    XLSX("Excel", ".xlsx"),
     /**
      * Json file type
      */
-    JSON("Json",".json");
+    JSON("Json", ".json");
 
     String description;
     String ext;
-    FileTypeEnum(String description,String ext){
+
+    FileTypeEnum(String description, String ext) {
         this.description = description;
         this.ext = ext;
     }
 
     /**
      * Get the value of the enum
+     *
      * @return Key as String
      */
     public String get() {
         return description;
     }
-    
+
     /**
      * Get the extension of the selected file type
+     *
      * @return Extension as String
      */
-    public String getExtension(){
+    public String getExtension() {
         return ext;
     }
-    
+
     /**
      * Get the description of the selected file type
-     * @deprecated 
+     *
+     * @deprecated
      * @return Description as String
      */
-    public String getDescription(){
+    public String getDescription() {
         return description;
     }
-    
+
     /**
      * Get alls values of the enum type
+     *
      * @return String array of all values
      */
-    public static String[] getExtensions(){
+    public static String[] getExtensions() {
         ArrayList<String> values = new ArrayList<>();
-        for(FileTypeEnum enumType : FileTypeEnum.values()){
+        for (FileTypeEnum enumType : FileTypeEnum.values()) {
             values.add(enumType.getExtension());
         }
         return values.stream().toArray(String[]::new);
