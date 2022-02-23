@@ -95,15 +95,15 @@ public class XmlExport extends Export {
                 attr.setValue(p.getId() + "");
                 person.setAttributeNode(attr);
 
-                // firstname elements
-                Element firstname = doc.createElement(PersonColumnEnum.FIRST_NAME.get().toLowerCase());
-                firstname.appendChild(doc.createTextNode(p.getLastName() == null ? "" : p.getLastName()));
-                person.appendChild(firstname);
+                // first name elements
+                Element firstName = doc.createElement(PersonColumnEnum.FIRST_NAME.get().toLowerCase());
+                firstName.appendChild(doc.createTextNode(p.getLastName() == null ? "" : p.getLastName()));
+                person.appendChild(firstName);
 
-                // lastname elements
-                Element lastname = doc.createElement(PersonColumnEnum.LAST_NAME.get().toLowerCase());
-                lastname.appendChild(doc.createTextNode(p.getFirstName() == null ? "" : p.getFirstName()));
-                person.appendChild(lastname);
+                // last name elements
+                Element lastName = doc.createElement(PersonColumnEnum.LAST_NAME.get().toLowerCase());
+                lastName.appendChild(doc.createTextNode(p.getFirstName() == null ? "" : p.getFirstName()));
+                person.appendChild(lastName);
 
                 // street elements
                 Element street = doc.createElement(PersonColumnEnum.STREET.get().toLowerCase());

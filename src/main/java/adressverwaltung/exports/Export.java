@@ -71,7 +71,7 @@ public class Export {
     public Export(Service connection) {
         this.connection = connection;
         this.towns = this.connection.getTown();
-        this.people = this.connection.getPeople(new Integer(this.connection.countPeople() + ""), 0);
+        this.people = this.connection.getPeople(Integer.valueOf(this.connection.countPeople() + ""), 0);
     }
 
     /**
@@ -134,13 +134,13 @@ public class Export {
     }
 
     /**
-     * Methode to open the direcotry of the file exported
+     * Method to open the directory of the file exported
      */
     public void open() {
         try {
             openDirectoryOfFile(new File(path));
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Couldnt open file: " + path);
+            JOptionPane.showMessageDialog(null, "Couldn't open file: " + path);
         }
     }
 

@@ -27,10 +27,10 @@ import java.util.List;
 public class DotEnv {
 
     /**
-     * Local variable to save the file seperator of the current platform running
+     * Local variable to save the file separator of the current platform running
      * on
      */
-    static String sep = SystemPropertyEnum.FILE_SEPERATOR.get();
+    static String sep = SystemPropertyEnum.FILE_SEPARATOR.get();
 
     /**
      * Local variable to save the home of the current user running this
@@ -39,7 +39,7 @@ public class DotEnv {
     static String dir = SystemPropertyEnum.USER_HOME.get();
 
     /**
-     * Loacl list of keys to look out for
+     * Local list of keys to look out for
      *
      * @see DotEnvEnum
      */
@@ -49,7 +49,7 @@ public class DotEnv {
      * Public function to get the values needed from a .env file of the users
      * root if this exists
      *
-     * @return A list of key and values paires found in the .env file
+     * @return A list of key and values pairs found in the .env file
      * @see BufferedReader
      * @see HashMap
      */

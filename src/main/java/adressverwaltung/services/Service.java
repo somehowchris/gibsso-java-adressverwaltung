@@ -43,13 +43,13 @@ public interface Service {
 
     /**
      * @param person The person which is going to be inserted into your dataset
-     * @return The id of the inerted person
+     * @return The id of the inserted person
      */
     public Long insertPerson(Person person);
 
     /**
      * @param Town The town which is going to be inserted into your dataset
-     * @return The id of the inerted town
+     * @return The id of the inserted town
      */
     public Long insertTown(Town Town);
 

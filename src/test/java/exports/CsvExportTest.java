@@ -116,7 +116,7 @@ public class CsvExportTest {
      */
     @Test
     public void createCsvExport() {
-        path = SystemPropertyEnum.USER_DIR.get() + SystemPropertyEnum.FILE_SEPERATOR.get() + "test.csv";
+        path = SystemPropertyEnum.USER_DIR.get() + SystemPropertyEnum.FILE_SEPARATOR.get() + "test.csv";
         export = new CsvExport(io.connection);
         export.setPath(path);
         export.render();

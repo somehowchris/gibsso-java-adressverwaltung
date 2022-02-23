@@ -95,7 +95,7 @@ public class CsvExport extends Export {
             pw.write(csvData);
             pw.close();
         } catch (FileNotFoundException ex) {
-            JOptionPane.showMessageDialog(null, "Couldnt write file: " + this.path);
+            JOptionPane.showMessageDialog(null, "Couldn't write file: " + this.path);
         }
     }
 

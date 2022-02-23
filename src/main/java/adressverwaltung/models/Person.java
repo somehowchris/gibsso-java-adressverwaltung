@@ -19,7 +19,7 @@ import javax.persistence.Id;
 public class Person implements Serializable {
 
     /**
-     * Serial verrsion of uid for primary key
+     * Serial version of uid for primary key
      */
     private static final long serialVersionUID = 1L;
 
@@ -41,7 +41,7 @@ public class Person implements Serializable {
     private String firstName;
 
     /**
-     * Adress of the person
+     * Address of the person
      */
     private String address;
 
@@ -93,7 +93,7 @@ public class Person implements Serializable {
     }
 
     /**
-     * Constructor to create a person with first and last anme
+     * Constructor to create a person with first and last name
      *
      * @param firstName First name of the person
      * @param lastName Last name of the person
@@ -150,7 +150,7 @@ public class Person implements Serializable {
     /**
      * Getter of the last name
      *
-     * @return Returns the last anme
+     * @return Returns the last name
      */
     public String getLastName() {
         return lastName;
@@ -166,9 +166,9 @@ public class Person implements Serializable {
     }
 
     /**
-     * Getter of the adress
+     * Getter of the address
      *
-     * @return Returns the adress as a String
+     * @return Returns the address as a String
      */
     public String getAddress() {
         return address;
@@ -186,7 +186,7 @@ public class Person implements Serializable {
     /**
      * Getter of the first name
      *
-     * @return Returns the first anme
+     * @return Returns the first name
      */
     public String getFirstName() {
         return firstName;
@@ -238,9 +238,9 @@ public class Person implements Serializable {
     }
 
     /**
-     * Setter of the adress
+     * Setter of the address
      *
-     * @param address Adress to set to
+     * @param address Address to set to
      */
     public void setAddress(String address) {
         this.address = address;

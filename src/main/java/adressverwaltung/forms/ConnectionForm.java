@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Christof Weickarhdt
+ * @author Christof Weickhardt
  */
 public class ConnectionForm extends javax.swing.JFrame {
 
@@ -69,7 +69,7 @@ public class ConnectionForm extends javax.swing.JFrame {
             jTextField2.setText(dotEnv.containsKey("DATABASE_NAME") ? dotEnv.get("DATABASE_NAME") : "adv");
             jTextField3.setText(dotEnv.containsKey("DATABASE_USER") ? dotEnv.get("DATABASE_USER") : "root");
             jTextField4.setText(dotEnv.containsKey("DATABASE_PASSWORD") ? dotEnv.get("DATABASE_PASSWORD") : "");
-            jSpinner1.setValue(new Integer(dotEnv.containsKey("DATABASE_PORT") ? dotEnv.get("DATABASE_PORT") : "3306"));
+            jSpinner1.setValue(Integer.valueOf(dotEnv.containsKey("DATABASE_PORT") ? dotEnv.get("DATABASE_PORT") : "3306"));
             if (dotEnv.get("DATABASE_USE").equals("true")) {
                 jTextField1.setEnabled(true);
                 jTextField2.setEnabled(true);
@@ -340,7 +340,7 @@ public class ConnectionForm extends javax.swing.JFrame {
             }
             DotEnv.setDotEnv(connectionMap);
             main.setupConnection(null);
-            main.viewAdressForm();
+            main.viewAddressForm();
         } catch (IOException | SQLException | CanNotConnectToDatabaseError ex) {
             Logger.getLogger(ConnectionForm.class.getName()).log(Level.SEVERE, null, ex);
         }

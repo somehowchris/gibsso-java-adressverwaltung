@@ -103,7 +103,7 @@ public class JsonExport extends Export {
             pw.write(jsonData);
             pw.close();
         } catch (FileNotFoundException ex) {
-            JOptionPane.showMessageDialog(null, "Couldnt write file: " + this.path);
+            JOptionPane.showMessageDialog(null, "Couldn't write file: " + this.path);
         }
     }
 

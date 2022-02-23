@@ -13,13 +13,13 @@ import javax.persistence.Id;
 
 /**
  *
- * @author Chirstof Weickhardt
+ * @author Christof Weickhardt
  */
 @Entity
 public class Town implements Serializable, Comparable<Town> {
 
     /**
-     * Serial verrsion of uid for primary key
+     * Serial version of uid for primary key
      */
     private static final long serialVersionUID = 1L;
 
@@ -91,7 +91,7 @@ public class Town implements Serializable, Comparable<Town> {
      */
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the tid fields are not set
+        // FIXME: Warning - this method won't work in the case the tid fields are not set
         if (!(object instanceof Town)) {
             return false;
         }

@@ -60,13 +60,13 @@ public class FileSystemServiceTest {
     @Before
     public void setUp() {
         try {
-            File f = new File(SystemPropertyEnum.USER_DIR.get() + SystemPropertyEnum.FILE_SEPERATOR.get() + ".test" + count);
+            File f = new File(SystemPropertyEnum.USER_DIR.get() + SystemPropertyEnum.FILE_SEPARATOR.get() + ".test" + count);
             if (f.exists() && f.isDirectory()) {
                 FileUtils.deleteDirectory(new File(path));
             }
             f.mkdir();
             path = f.getAbsolutePath();
-            dbService = new FileSystemService(path, SystemPropertyEnum.FILE_SEPERATOR.get());
+            dbService = new FileSystemService(path, SystemPropertyEnum.FILE_SEPARATOR.get());
             count++;
         } catch (IOException ex) {
             Logger.getLogger(FileSystemServiceTest.class.getName()).log(Level.SEVERE, null, ex);

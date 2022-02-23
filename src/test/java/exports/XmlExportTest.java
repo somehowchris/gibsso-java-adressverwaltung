@@ -115,7 +115,7 @@ public class XmlExportTest {
      */
     @Test
     public void createXmlExport() {
-        path = SystemPropertyEnum.USER_DIR.get() + SystemPropertyEnum.FILE_SEPERATOR.get() + "test.xml";
+        path = SystemPropertyEnum.USER_DIR.get() + SystemPropertyEnum.FILE_SEPARATOR.get() + "test.xml";
         export = new ExcelExport(io.connection);
         export.setPath(path);
         export.render();

@@ -35,7 +35,7 @@ public class main {
     public static InOut io;
 
     /**
-     * Static available adress form
+     * Static available address form
      */
     public static AddressForm af;
 
@@ -94,13 +94,13 @@ public class main {
     }
 
     /**
-     * Function to distplay the adress form
+     * Function to display the address form
      *
-     * @throws SQLException If not able to get informations from the database
+     * @throws SQLException If not able to get information from the database
      * @throws CanNotConnectToDatabaseError If not able to connect to the
      * database
      */
-    public static void viewAdressForm() throws SQLException, CanNotConnectToDatabaseError {
+    public static void viewAddressForm() throws SQLException, CanNotConnectToDatabaseError {
         if (af == null) {
             af = new AddressForm(io);
         }
@@ -120,7 +120,7 @@ public class main {
      *
      * @throws CanNotConnectToDatabaseError If not able to connect to the
      * database
-     * @throws SQLException If not able to get informations from the database
+     * @throws SQLException If not able to get information from the database
      */
     public static void viewTownForm() throws CanNotConnectToDatabaseError, SQLException {
         if (tf == null) {

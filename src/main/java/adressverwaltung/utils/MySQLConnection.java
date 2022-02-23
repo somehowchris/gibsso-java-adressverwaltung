@@ -103,7 +103,7 @@ public class MySQLConnection {
             try (Statement st = connection.createStatement()) {
                 st.executeUpdate("DROP DATABASE IF EXISTS " + name);
             }
-            System.out.println("Droped database!");
+            System.out.println("Dropped database!");
             return true;
         } catch (SQLException e) {
             throw new CanNotConnectToDatabaseError();

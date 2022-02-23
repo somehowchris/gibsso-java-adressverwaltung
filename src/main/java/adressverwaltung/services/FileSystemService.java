@@ -26,16 +26,16 @@ import java.util.HashMap;
  */
 public class FileSystemService implements Service {
 
-    String fsdbdir;
+    String fsDBdir;
 
-    HashMap<Long, Person> redismapPeople = new HashMap<>();
-    HashMap<Long, Town> redismapTown = new HashMap<>();
+    HashMap<Long, Person> inMemoryMapPeople = new HashMap<>();
+    HashMap<Long, Town> inMemoryMapTowns = new HashMap<>();
 
     /**
      * Constructor to open a FileSystemService
      *
      * @param dir Directory of the data set
-     * @param sep Platform depending seperator of uris
+     * @param sep Platform depending separator of uris
      */
     public FileSystemService(String dir, String sep) {
         if (dir.split("")[dir.split("").length - 1] == null ? sep != null : !dir.split("")[dir.split("").length - 1].equals(sep)) {
@@ -44,7 +44,7 @@ public class FileSystemService implements Service {
         if (!new File(dir + ".fsdb" + sep).exists()) {
             new File(dir + ".fsdb" + sep).mkdir();
         }
-        fsdbdir = dir + ".fsdb" + sep;
+        fsDBdir = dir + ".fsdb" + sep;
     }
 
     /**
@@ -52,10 +52,10 @@ public class FileSystemService implements Service {
      */
     @Override
     public Person getPerson(Long id) {
-        if (redismapPeople.containsKey(id)) {
-            return redismapPeople.get(id);
+        if (inMemoryMapPeople.containsKey(id)) {
+            return inMemoryMapPeople.get(id);
         }
-        File f = new File(fsdbdir + id + ".person");
+        File f = new File(fsDBdir + id + ".person");
         if (f.exists()) {
             BufferedReader reader;
             try {
@@ -66,7 +66,7 @@ public class FileSystemService implements Service {
                 while ((line = reader.readLine()) != null) {
                     switch (i) {
                         case 0:
-                            p.setPid(new Long(line));
+                            p.setPid(Long.valueOf(line));
                             break;
                         case 1:
                             p.setLastName(line);
@@ -78,7 +78,7 @@ public class FileSystemService implements Service {
                             p.setAddress(line);
                             break;
                         case 4:
-                            p.setOid(new Integer(line));
+                            p.setOid(Integer.valueOf(line));
                         case 5:
                             p.setPhone(line);
                             break;
@@ -92,7 +92,7 @@ public class FileSystemService implements Service {
                     i++;
                 }
                 reader.close();
-                redismapPeople.put(id, p);
+                inMemoryMapPeople.put(id, p);
                 return p;
             } catch (IOException e) {
             }
@@ -105,10 +105,10 @@ public class FileSystemService implements Service {
      */
     @Override
     public Town getTown(Long id) {
-        if (redismapTown.containsKey(id)) {
-            return redismapTown.get(id);
+        if (inMemoryMapTowns.containsKey(id)) {
+            return inMemoryMapTowns.get(id);
         }
-        File f = new File(fsdbdir + id + ".town");
+        File f = new File(fsDBdir + id + ".town");
         if (f.exists()) {
             BufferedReader reader;
             try {
@@ -119,19 +119,19 @@ public class FileSystemService implements Service {
                 while ((line = reader.readLine()) != null) {
                     switch (i) {
                         case 0:
-                            o.setTid(new Long(line));
+                            o.setTid(Long.valueOf(line));
                             break;
                         case 1:
                             o.setName(line);
                             break;
                         case 2:
-                            o.setPlz(new Integer(line));
+                            o.setPlz(Integer.valueOf(line));
                             break;
                     }
                     i++;
                 }
                 reader.close();
-                redismapTown.put(id, o);
+                inMemoryMapTowns.put(id, o);
                 return o;
             } catch (IOException e) {
             }
@@ -147,7 +147,7 @@ public class FileSystemService implements Service {
         String[] files = searchInDir(".person");
         ArrayList<Person> people = new ArrayList<>();
         for (String file : files) {
-            Person p = getPerson(new Long(file.replace(".person", "")));
+            Person p = getPerson(Long.valueOf(file.replace(".person", "")));
             if (p.getLastName().toLowerCase().contains(person.getLastName().toLowerCase()) && p.getFirstName().toLowerCase().contains(person.getFirstName().toLowerCase())) {
                 people.add(p);
             }
@@ -161,15 +161,15 @@ public class FileSystemService implements Service {
     @Override
     public ArrayList<Town> searchTown(Town town) {
         String[] files = searchInDir(".town");
-        ArrayList<Town> townlist = new ArrayList<>();
+        ArrayList<Town> townList = new ArrayList<>();
         for (String file : files) {
-            Town o = getTown(new Long(file.replace(".town", "")));
+            Town o = getTown(Long.valueOf(file.replace(".town", "")));
             System.out.println();
             if (o.getName().toLowerCase().contains(town.getName().toLowerCase())) {
-                townlist.add(o);
+                townList.add(o);
             }
         }
-        return townlist;
+        return townList;
     }
 
     /**
@@ -178,10 +178,10 @@ public class FileSystemService implements Service {
     @Override
     public Long insertPerson(Person person) {
         Long id = 0L;
-        if (getPeople(1, new Integer(countPeople() + "") - 2).size() > 0) {
-            id = getPeople(1, new Integer(countPeople() + "") - 2).size() + 1L;
+        if (getPeople(1, Integer.valueOf(countPeople() + "") - 2).size() > 0) {
+            id = getPeople(1, Integer.valueOf(countPeople() + "") - 2).size() + 1L;
         }
-        while (new File(fsdbdir + id + ".person").exists()) {
+        while (new File(fsDBdir + id + ".person").exists()) {
             id++;
         }
         person.setId(id);
@@ -195,10 +195,10 @@ public class FileSystemService implements Service {
     @Override
     public Long insertTown(Town town) {
         Long id = 0L;
-        if (getTown(1, new Integer(countTown() + "") - 2).size() > 0) {
-            id = getTown(1, new Integer(countTown() + "") - 2).get(0).getTid() + 1L;
+        if (getTown(1, Integer.valueOf(countTown() + "") - 2).size() > 0) {
+            id = getTown(1, Integer.valueOf(countTown() + "") - 2).get(0).getTid() + 1L;
         }
-        while (new File(fsdbdir + id + ".town").exists()) {
+        while (new File(fsDBdir + id + ".town").exists()) {
             id++;
         }
         town.setTid(id);
@@ -211,13 +211,13 @@ public class FileSystemService implements Service {
      */
     @Override
     public Long updatePerson(Person person) {
-        String linesep = SystemPropertyEnum.LINE_SEPERATOR.get();
-        String data = person.getId() + linesep + person.getLastName() + linesep + person.getFirstName() + linesep
-                + person.getAddress() + linesep + person.getOid() + linesep + person.getPhone() + linesep
-                + person.getMobile() + linesep + person.getEmail();
-        String file = fsdbdir + person.getId() + ".person";
+        String lineSeparator = SystemPropertyEnum.LINE_SEPARATOR.get();
+        String data = person.getId() + lineSeparator + person.getLastName() + lineSeparator + person.getFirstName() + lineSeparator
+                + person.getAddress() + lineSeparator + person.getOid() + lineSeparator + person.getPhone() + lineSeparator
+                + person.getMobile() + lineSeparator + person.getEmail();
+        String file = fsDBdir + person.getId() + ".person";
         writeData(data, file);
-        redismapPeople.put(person.getId(), person);
+        inMemoryMapPeople.put(person.getId(), person);
         return person.getId();
     }
 
@@ -226,11 +226,11 @@ public class FileSystemService implements Service {
      */
     @Override
     public Long updateTown(Town town) {
-        String data = town.getTid() + SystemPropertyEnum.LINE_SEPERATOR.get() + town.getName()
-                + SystemPropertyEnum.LINE_SEPERATOR.get() + town.getPlz();
-        String file = fsdbdir + town.getTid() + ".town";
+        String data = town.getTid() + SystemPropertyEnum.LINE_SEPARATOR.get() + town.getName()
+                + SystemPropertyEnum.LINE_SEPARATOR.get() + town.getPlz();
+        String file = fsDBdir + town.getTid() + ".town";
         writeData(data, file);
-        redismapTown.put(town.getTid(), town);
+        inMemoryMapTowns.put(town.getTid(), town);
         return town.getTid();
     }
 
@@ -239,10 +239,10 @@ public class FileSystemService implements Service {
      */
     @Override
     public void deletePerson(Person person) {
-        File f = new File(fsdbdir + person.getId() + ".person");
+        File f = new File(fsDBdir + person.getId() + ".person");
         if (f.exists()) {
             f.delete();
-            redismapPeople.remove(person.getId());
+            inMemoryMapPeople.remove(person.getId());
         }
     }
 
@@ -251,13 +251,13 @@ public class FileSystemService implements Service {
      */
     @Override
     public void deleteTown(Town town) {
-        File f = new File(fsdbdir + town.getTid() + ".town");
-        long references = getPeople(new Integer(countPeople() + ""), 0).stream().filter(el -> {
+        File f = new File(fsDBdir + town.getTid() + ".town");
+        long references = getPeople(Integer.valueOf(countPeople() + ""), 0).stream().filter(el -> {
             return el.getOid().equals(town.getTid());
         }).count();
         if (f.exists() && references == 0) {
             f.delete();
-            redismapTown.remove(town.getTid());
+            inMemoryMapTowns.remove(town.getTid());
         } else {
             throw new Error("References on this place still exist " + town.getTid());
         }
@@ -269,17 +269,17 @@ public class FileSystemService implements Service {
     @Override
     public ArrayList<Person> getPeople(int amount, int offset) {
         String[] consideredFiles = searchInDir(".person");
-        ArrayList<Person> townlist = new ArrayList<>();
+        ArrayList<Person> townList = new ArrayList<>();
         try {
             for (int i = offset; i < offset + amount; i++) {
                 if (consideredFiles.length > i && i >= 0) {
-                    townlist.add(getPerson(new Long(consideredFiles[i].replace(".person", ""))));
+                    townList.add(getPerson(Long.valueOf(consideredFiles[i].replace(".person", ""))));
 
                 }
             }
         } catch (NumberFormatException e) {
         }
-        return townlist;
+        return townList;
     }
 
     /**
@@ -289,16 +289,16 @@ public class FileSystemService implements Service {
     public ArrayList<Town> getTown(int amount, int offset) {
         String[] consideredFiles = searchInDir(".town");
 
-        ArrayList<Town> townlist = new ArrayList<>();
+        ArrayList<Town> townList = new ArrayList<>();
         try {
             for (int i = offset; i < offset + amount; i++) {
                 if (consideredFiles.length > i && i >= 0) {
-                    townlist.add(getTown(new Long(consideredFiles[i].replace(".town", ""))));
+                    townList.add(getTown(Long.valueOf(consideredFiles[i].replace(".town", ""))));
                 }
             }
         } catch (NumberFormatException e) {
         }
-        return townlist;
+        return townList;
     }
 
     /**
@@ -307,19 +307,19 @@ public class FileSystemService implements Service {
     @Override
     public ArrayList<Town> getTown() {
         int offset = 0;
-        int amount = new Integer(countTown() + "");
+        int amount = Integer.valueOf(countTown() + "");
         String[] consideredFiles = searchInDir(".town");
 
-        ArrayList<Town> townlist = new ArrayList<>();
+        ArrayList<Town> townList = new ArrayList<>();
         try {
             for (int i = offset; i < offset + amount; i++) {
                 if (consideredFiles.length >= i) {
-                    townlist.add(getTown(new Long(consideredFiles[i].replace(".town", ""))));
+                    townList.add(getTown(Long.valueOf(consideredFiles[i].replace(".town", ""))));
                 }
             }
         } catch (NumberFormatException e) {
         }
-        return townlist;
+        return townList;
     }
 
     /**
@@ -327,7 +327,7 @@ public class FileSystemService implements Service {
      */
     @Override
     public Long countPeople() {
-        Long total = new Long(searchInDir(".person").length);
+        Long total = Long.valueOf(searchInDir(".person").length);
         return total;
     }
 
@@ -336,12 +336,12 @@ public class FileSystemService implements Service {
      */
     @Override
     public Long countTown() {
-        Long total = new Long(searchInDir(".town").length);
+        Long total = Long.valueOf(searchInDir(".town").length);
         return total;
     }
 
     /**
-     * Searches for files wich contain a spefic character chain
+     * Searches for files which contain a specific character chain
      *
      * @param contains String to be contained in the found file names of the
      * home directory
@@ -349,7 +349,7 @@ public class FileSystemService implements Service {
      * @see FilenameFilter
      */
     private String[] searchInDir(String contains) {
-        return new File(fsdbdir).list((File dir, String name) -> name.contains(contains));
+        return new File(fsDBdir).list((File dir, String name) -> name.contains(contains));
     }
 
     /**
@@ -363,7 +363,7 @@ public class FileSystemService implements Service {
     private void writeData(String data, String file) {
         BufferedWriter br = null;
         FileWriter fr = null;
-        String dataWithNewLine = data + SystemPropertyEnum.LINE_SEPERATOR.get();
+        String dataWithNewLine = data + SystemPropertyEnum.LINE_SEPARATOR.get();
         try {
             fr = new FileWriter(file);
             br = new BufferedWriter(fr);
@@ -389,18 +389,18 @@ public class FileSystemService implements Service {
      * @see FileWriter
      */
     public void clean() {
-        String[] townlist = searchInDir(".town");
+        String[] townList = searchInDir(".town");
         String[] people = searchInDir(".person");
-        for (String pstrg : people) {
+        for (String pString : people) {
             Person p = new Person();
-            p.setId(new Long(pstrg.replace(".person", "")));
+            p.setId(Long.valueOf(pString.replace(".person", "")));
             deletePerson(p);
         }
 
-        for (String ostrg : townlist) {
-            Town o = new Town();
-            o.setTid(new Long(ostrg.replace(".town", "")));
-            deleteTown(o);
+        for (String tString : townList) {
+            Town t = new Town();
+            t.setTid(Long.valueOf(tString.replace(".town", "")));
+            deleteTown(t);
         }
     }
 }

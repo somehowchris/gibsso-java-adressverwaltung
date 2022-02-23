@@ -43,7 +43,7 @@ public class TownForm extends javax.swing.JFrame {
     /**
      * Creates new form TownForm
      *
-     * @param io adsf
+     * @param io
      * @throws adressverwaltung.errors.CanNotConnectToDatabaseError adf
      * @throws java.sql.SQLException asdf
      */
@@ -126,7 +126,7 @@ public class TownForm extends javax.swing.JFrame {
                     if (jTextField2.getText().trim().isEmpty()) {
                         validators.put("PLZ", false);
                         jTextField2.setForeground(Color.red);
-                    } else if (new Integer(jTextField2.getText().trim()) > 0 && new Integer(jTextField2.getText().trim()) < 10000) {
+                    } else if (Integer.valueOf(jTextField2.getText().trim()) > 0 && Integer.valueOf(jTextField2.getText().trim()) < 10000) {
                         validators.put("PLZ", true);
                         jTextField2.setForeground(Color.black);
                         validateInput();
@@ -363,8 +363,8 @@ public class TownForm extends javax.swing.JFrame {
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton5ActionPerformed
         if (count >= current || current == count + 1) {
             current--;
-            setCurrentTown(search ? searchResults.get(new Integer(current - 1 + ""))
-                    : ioLayer.getTowns(1, new Integer(current - 1 + "")).get(0));
+            setCurrentTown(search ? searchResults.get(Integer.valueOf(current - 1 + ""))
+                    : ioLayer.getTowns(1, Integer.valueOf(current - 1 + "")).get(0));
             setPlayerButtons();
         }
     }// GEN-LAST:event_jButton5ActionPerformed
@@ -372,8 +372,8 @@ public class TownForm extends javax.swing.JFrame {
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton6ActionPerformed
         if (count > current) {
             current++;
-            setCurrentTown(search ? searchResults.get(new Integer(current - 1 + ""))
-                    : ioLayer.getTowns(1, new Integer(current - 1 + "")).get(0));
+            setCurrentTown(search ? searchResults.get(Integer.valueOf(current - 1 + ""))
+                    : ioLayer.getTowns(1, Integer.valueOf(current - 1 + "")).get(0));
             setPlayerButtons();
         }
     }// GEN-LAST:event_jButton6ActionPerformed
@@ -392,7 +392,7 @@ public class TownForm extends javax.swing.JFrame {
                 while (current > count) {
                     current--;
                 }
-                setCurrentTown(ioLayer.getTowns(1, new Integer((current > 0L ? current - 1L : 0L) + "")).get(0));
+                setCurrentTown(ioLayer.getTowns(1, Integer.valueOf((current > 0L ? current - 1L : 0L) + "")).get(0));
                 setPlayerButtons();
             } else {
                 town = new Town();
@@ -453,7 +453,7 @@ public class TownForm extends javax.swing.JFrame {
         try {
             search = !search;
             if (search) {
-                searchResults = ioLayer.searchTown(new Integer(jTextField2.getText()), jTextField1.getText());
+                searchResults = ioLayer.searchTown(Integer.valueOf(jTextField2.getText()), jTextField1.getText());
                 if (searchResults.size() > 0) {
                     count = searchResults.size();
                     current = 1;
@@ -491,7 +491,7 @@ public class TownForm extends javax.swing.JFrame {
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton7ActionPerformed
         try {
-            main.viewAdressForm();
+            main.viewAddressForm();
         } catch (SQLException | CanNotConnectToDatabaseError ex) {
             Logger.getLogger(TownForm.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -538,7 +538,7 @@ public class TownForm extends javax.swing.JFrame {
      */
     private Town getCurrentTown() {
         town.setName(jTextField1.getText());
-        town.setPlz(new Integer(jTextField2.getText()));
+        town.setPlz(Integer.valueOf(jTextField2.getText()));
         return town;
     }
 

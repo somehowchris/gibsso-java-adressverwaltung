@@ -30,7 +30,7 @@ import adressverwaltung.services.Service;
 public class ExcelExport extends Export {
 
     // Create a Workbook
-    Workbook workbook = new XSSFWorkbook(); // new HSSFWorkbook() for generating `.xls` file
+    Workbook workbook = new XSSFWorkbook(); // new XSSFWorkbook() for generating `.xls` file
 
     /**
      * Constructor to export a list tf people
@@ -87,9 +87,9 @@ public class ExcelExport extends Export {
             fileOut.close();
             workbook.close();
         } catch (FileNotFoundException ex) {
-            JOptionPane.showMessageDialog(null, "Couldnt write file: " + this.path);
+            JOptionPane.showMessageDialog(null, "Couldn't write file: " + this.path);
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Couldnt write file: " + this.path);
+            JOptionPane.showMessageDialog(null, "Couldn't write file: " + this.path);
         }
 
     }

@@ -38,11 +38,11 @@ public class DatabaseService implements Service {
     /**
      *
      * @param connectionValues Connection Values to use
-     * @throws adressverwaltung.errors.WrongSchemaError If database schmea is corrupted
+     * @throws adressverwaltung.errors.WrongSchemaError If database schema is corrupted
      * @throws adressverwaltung.errors.CanNotConnectToDatabaseError If not able to connect to database
      */
     public DatabaseService(HashMap<String, String> connectionValues) throws WrongSchemaError, CanNotConnectToDatabaseError {
-        Map properties = new HashMap();
+        Map<String, String> properties = new HashMap<String, String>();
         properties.put("javax.persistence.jdbc.driver", "com.mysql.jdbc.Driver");
         properties.put("javax.persistence.jdbc.url", "jdbc:mysql://" + connectionValues.get("DATABASE_HOST") + ":" + connectionValues.get("DATABASE_PORT") + "/" + connectionValues.get("DATABASE_NAME") + "?zeroDateTimeBehavior=convertToNull");
         properties.put("javax.persistence.jdbc.user", connectionValues.get("DATABASE_USER"));
@@ -54,10 +54,10 @@ public class DatabaseService implements Service {
         try{
             em = (EntityManager) emf.createEntityManager();
             Person p = new Person("test", "test");
-            long pid = insertPerson(p);
+            insertPerson(p);
             deletePerson(p);
             Town t = new Town(999, "test");
-            long tid = insertTown(t);
+            insertTown(t);
             deleteTown(t);
         }catch(Exception e){
             MySQLConnection con = new MySQLConnection(connectionValues.get(DotEnvEnum.HOST.get()), connectionValues.get(DotEnvEnum.PASSWORD.get()), connectionValues.get(DotEnvEnum.TABLE_NAME.get()), connectionValues.get(DotEnvEnum.PORT.get()), connectionValues.get(DotEnvEnum.USER.get()), true, "mysql");

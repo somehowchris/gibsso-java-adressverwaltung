@@ -30,7 +30,7 @@ public class InOut {
 
     /**
      * Service connection which will be used to get data out of databases and
-     * the file sytem
+     * the file system
      */
     public Service connection = null;
 
@@ -40,7 +40,7 @@ public class InOut {
     String home = SystemPropertyEnum.USER_HOME.get();
 
     /**
-     * Prepares the connnection.&nbsp;Checks on all the variables to get the
+     * Prepares the connection.&nbsp;Checks on all the variables to get the
      * best connection
      *
      * @param dotEnv List of preset values to get the chosen connection type
@@ -70,16 +70,16 @@ public class InOut {
 
                         }
                     case "false":
-                        connection = new FileSystemService(home, SystemPropertyEnum.FILE_SEPERATOR.get());
+                        connection = new FileSystemService(home, SystemPropertyEnum.FILE_SEPARATOR.get());
                         break;
                     default:
                         throw new CanNotConnectToDatabaseError();
                 }
             } else {
-                connection = new FileSystemService(home, SystemPropertyEnum.FILE_SEPERATOR.get());
+                connection = new FileSystemService(home, SystemPropertyEnum.FILE_SEPARATOR.get());
             }
         } else {
-            connection = new FileSystemService(home, SystemPropertyEnum.FILE_SEPERATOR.get());
+            connection = new FileSystemService(home, SystemPropertyEnum.FILE_SEPARATOR.get());
         }
     }
 
@@ -96,7 +96,7 @@ public class InOut {
     }
 
     /**
-     * Save a person.&nbsp; no matterr if creating or updating
+     * Save a person.&nbsp; no matter if creating or updating
      *
      * @param p Person to save
      * @return Return the id of the person
@@ -132,7 +132,7 @@ public class InOut {
     }
 
     /**
-     * Get a signle person
+     * Get a single person
      *
      * @param id ID of the person
      * @return Return the requested person if it exists
@@ -142,7 +142,7 @@ public class InOut {
     }
 
     /**
-     * Counts all the pople in your data set
+     * Counts all the people in your data set
      *
      * @return Amount of people in data set
      */
@@ -200,7 +200,7 @@ public class InOut {
      * Gets a specific range of towns
      *
      * @param amount Amount of towns to get
-     * @param offset Offset of wich to count on from
+     * @param offset Offset of which to count on from
      * @return Returns a list of towns
      */
     public List<Town> getTowns(int amount, int offset) {

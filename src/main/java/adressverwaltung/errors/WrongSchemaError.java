@@ -7,7 +7,7 @@ package adressverwaltung.errors;
 
 /**
  *
- * @author Chrristof Weickhardt
+ * @author Christof Weickhardt
  */
 public class WrongSchemaError extends Exception{
     /**

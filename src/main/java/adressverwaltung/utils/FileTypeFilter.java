@@ -27,7 +27,7 @@ public class FileTypeFilter extends FileFilter {
     /**
      * Constructor given a custom supported file type
      *
-     * @param fileType Representive file type
+     * @param fileType Representative file type
      */
     public FileTypeFilter(FileTypeEnum fileType) {
         this.fileType = fileType;

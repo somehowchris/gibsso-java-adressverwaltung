@@ -24,7 +24,7 @@ public enum SystemPropertyEnum {
     /**
      * System property file separator
      */
-    FILE_SEPERATOR(System.getProperty("file.separator")),
+    FILE_SEPARATOR(System.getProperty("file.separator")),
     /**
      * System property java home
      */
@@ -36,7 +36,7 @@ public enum SystemPropertyEnum {
     /**
      * System property line separator
      */
-    LINE_SEPERATOR(System.getProperty("line.separator"));
+    LINE_SEPARATOR(System.getProperty("line.separator"));
 
     String value;
 
